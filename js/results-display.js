@@ -1,5 +1,6 @@
 // Import utility functions for data fetching and toast notifications
-import { fetchData, showToast } from './client-utils.js';
+import { showToast } from './utils/uiUtils.js';
+import { fetchData } from './utils/apiUtils.js';
 
 /**
  * Fetches and displays the voting results.
