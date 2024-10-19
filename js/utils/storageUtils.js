@@ -1,4 +1,15 @@
-// storageUtils.js
+/**
+ * storageUtils.js
+ * 
+ * This utility file provides functions for interacting with localStorage.
+ * It includes:
+ * 
+ * 1. getFromLocalStorage: Retrieves and parses data from localStorage
+ * 2. saveToLocalStorage: Saves data to localStorage
+ * 
+ * These utilities handle JSON parsing/stringifying and error handling,
+ * simplifying localStorage operations throughout the application.
+ */
 
 import { showToast } from './uiUtils.js';
 
