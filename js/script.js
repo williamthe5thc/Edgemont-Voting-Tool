@@ -204,19 +204,27 @@ async function submitToVercelKV(votes) {
     return await response.json();
 }
 
+/**
+ * Submits votes to Google Sheets via a hidden form submission
+ * @param {Object} votes - The votes object to submit
+ * @returns {Promise} A promise that resolves when the submission is complete
+ */
 function submitToGoogleSheets(votes) {
     return new Promise((resolve, reject) => {
+        // Create a hidden form
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = 'https://script.google.com/macros/s/AKfycbzXFKZVM1EhLT8b7sz21RY5u2AzrpwktrkmGTz6UV5DXS-nQEk0MFGZGQT0pIcQJjMz/exec';
         form.target = 'hidden-iframe';
 
+        // Create a hidden input to hold the votes data
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = 'data';
         input.value = JSON.stringify(votes);
         form.appendChild(input);
 
+        // Create or reuse a hidden iframe for the form submission
         let iframe = document.getElementById('hidden-iframe');
         if (!iframe) {
             iframe = document.createElement('iframe');
@@ -225,20 +233,24 @@ function submitToGoogleSheets(votes) {
             document.body.appendChild(iframe);
         }
 
+        // Set up success handler
         iframe.onload = () => {
             document.body.removeChild(form);
             resolve();
         };
 
+        // Set up error handler
         iframe.onerror = () => {
             document.body.removeChild(form);
             reject(new Error('Failed to submit to Google Sheets'));
         };
 
+        // Submit the form
         document.body.appendChild(form);
         form.submit();
     });
 }
+
 
 async function init() {
     document.querySelector('h1').textContent = THEME;
