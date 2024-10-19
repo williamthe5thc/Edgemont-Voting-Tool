@@ -1,4 +1,14 @@
-// validationUtils.js
+/**
+ * validationUtils.js
+ * 
+ * This utility file provides functions for validating user votes.
+ * It includes:
+ * 
+ * 1. validateVotes: Checks if the votes object is valid according to competition rules
+ * 
+ * This utility ensures that votes meet the required criteria before submission,
+ * improving data integrity and user experience.
+ */
 
 import { CATEGORIES } from './constants.js';
 
