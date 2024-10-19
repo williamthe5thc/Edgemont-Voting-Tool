@@ -5,6 +5,7 @@
  * Centralizing these constants ensures consistency across the application
  * and makes it easier to update competition details in the future.
  */
+console.log("constants.js loading");
 
 /**
  * CATEGORIES
@@ -31,3 +32,4 @@ export const CATEGORIES = [
  * Changing this value will update the theme across the entire application.
  */
 export const THEME = "Dia de Los Ancestros";
+console.log("constants.js loaded");
