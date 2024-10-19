@@ -29,10 +29,17 @@ dia-de-los-ancestros-voting-tool/
 ├── admin.html
 ├── results.html
 ├── styles.css
-├── script.js
-├── admin.js
-├── results-display.js
-├── client-utils.js
+│
+├── js/
+│   ├── constants.js
+│   ├── script.js
+│   ├── admin.js
+│   ├── results-display.js
+│   └── utils/
+│       ├── storageUtils.js
+│       ├── uiUtils.js
+│       ├── apiUtils.js
+│       └── validationUtils.js
 │
 └── api/
     ├── vote.js
@@ -122,19 +129,18 @@ To run the project locally:
 
 ## Security Considerations
 
-- The system currently lacks authentication for admin functions
-- Input validation should be enhanced for improved security
+- Implement authentication for admin functions
+- Enhance input validation for improved security
 
 ## Future Improvements
 
-- Implement user authentication for admin functions
-- Enhance input validation and error handling
-- Add the ability for users to edit their submitted votes
-- Implement comprehensive testing (unit tests, integration tests)
-- Optimize performance for larger-scale voting events
+- Add user authentication for admin functions
 - Implement rate limiting for API endpoints
 - Add caching mechanisms for frequently accessed data
 - Improve error logging and monitoring
+- Implement comprehensive testing (unit tests, integration tests)
+- Add the ability for users to edit their submitted votes
+- Optimize performance for larger-scale voting events
 
 ## Contributing
 
