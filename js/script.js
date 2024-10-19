@@ -22,7 +22,7 @@ import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
 import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
 import { validateVotes } from './utils/validationUtils.js';
-
+console.log("script.js loading");
 // Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
 
@@ -269,3 +269,4 @@ init().catch(error => {
     console.error("Unhandled error in init:", error);
     showToast('An unexpected error occurred. Please refresh the page.', 'error');
 });
+console.log("script.js loaded");
