@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dia de Los Ancestros Cooking Competition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dia de los ancestros Cooking Competition</h1>
+        
+        <div class="instructions">
+            <h2>Voting Instructions</h2>
+            <ul>
+                <li>For each category, select up to 2 of your favorite dishes.</li>
+                <li>Enter the number associated with the dish in each category you want to vote for.</li>
+                <li>You can select either one, two or no dishes per category.</li>
+            </ul>
+        </div>
+        <div id="loading-spinner" class="loading-spinner" style="display: none;">
+  <div class="spinner"></div>
+</div>
+        <div id="categories"></div>
+        <button id="submitVotes" type="button">Submit Your Votes</button>
+    </div>
+    <div id="toastContainer"></div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
