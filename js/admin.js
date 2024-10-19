@@ -1,3 +1,20 @@
+/**
+ * admin.js
+ * 
+ * This file contains the logic for the admin panel of the voting application.
+ * It handles the following key functionalities:
+ * 
+ * 1. Loading and displaying current competition settings
+ * 2. Updating competition settings (number of dishes per category)
+ * 3. Clearing all votes from the system
+ * 4. Input validation for admin settings
+ * 5. Displaying feedback to admin users via toast notifications
+ * 
+ * The script interacts with the backend API to fetch and update settings,
+ * as well as to clear votes. It uses utility functions for UI updates and
+ * API calls, and relies on constants for category information.
+ */
+
 // Import utility functions and constants
 import { CATEGORIES } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
