@@ -1,4 +1,21 @@
-// script.js
+/**
+ * script.js
+ * 
+ * This file contains the main logic for the voting application's user interface.
+ * It handles the following key functionalities:
+ * 
+ * 1. Fetching and applying competition settings
+ * 2. Dynamically loading voting categories
+ * 3. Managing user input for votes
+ * 4. Saving and loading votes from local storage
+ * 5. Validating user votes
+ * 6. Submitting votes to both Vercel KV and Google Sheets
+ * 7. Displaying vote summaries and feedback to users
+ * 
+ * The script interacts with various utility modules to handle storage,
+ * UI updates, API calls, and validation. It also uses constants defined
+ * in a separate module to maintain consistency across the application.
+ */
 
 import { CATEGORIES, THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
