@@ -7,6 +7,7 @@
  * 1. showToast: Displays toast notifications to the user
  * 2. Other UI-related utility functions as needed
  */
+console.log("uiUtills.js loading");
 
 /**
  * Displays a toast notification
@@ -42,3 +43,5 @@ export function showToast(message, type = 'info') {
         }, { once: true });
     }, 3000);
 }
+console.log("uiUtills.js loaded");
+
