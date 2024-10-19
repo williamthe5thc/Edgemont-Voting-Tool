@@ -11,7 +11,13 @@ async function init() {
     try {
         console.log("Fetching settings");
         const settings = await getSettings();
-        setDishesPerCategory(settings.dishesPerCategory); // Add this line
+        console.log("Received settings in main:", settings); // Add this line for debugging
+        if (settings && settings.dishesPerCategory) {
+            setDishesPerCategory(settings.dishesPerCategory);
+        } else {
+            console.error("Invalid settings structure:", settings);
+            showToast('Error loading settings. Using default values.', 'error');
+        }
         console.log("Settings fetched, loading categories");
         await loadCategoriesProgressively();
         console.log("Categories loaded");
