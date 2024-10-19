@@ -12,7 +12,7 @@
  */
 
 import { showToast } from './uiUtils.js';
-
+console.log("sotrageUtils.js loading");
 /**
  * Retrieves data from localStorage
  * @param {string} key - The key to retrieve from localStorage
@@ -42,3 +42,4 @@ export function saveToLocalStorage(key, value) {
         showToast('Failed to save data locally', 'error');
     }
 }
+console.log("sotrageUtils.js loaded");
