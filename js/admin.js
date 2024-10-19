@@ -118,23 +118,27 @@ async function updateSettings() {
 }
 
 /**
- * Sets up event listeners for admin actions
+ * Sets up input validation for dish count inputs
+ * This function ensures that:
+ * 1. The input is always a number
+ * 2. The number is between 1 and 100 (inclusive)
+ * 3. Invalid inputs are automatically corrected
  */
-function setupEventListeners() {
-    const updateButton = document.getElementById('updateSettings');
-    const clearButton = document.getElementById('clearVotes');
-
-    if (updateButton) {
-        updateButton.addEventListener('click', updateSettings);
-    } else {
-        console.error('Update settings button not found');
-    }
-
-    if (clearButton) {
-        clearButton.addEventListener('click', clearVotes);
-    } else {
-        console.error('Clear votes button not found');
-    }
+function setupValidation() {
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            // If the input is not a number or less than 1, set it to 1
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+            // If the input is greater than 100, set it to 100
+            } else if (value > 100) {
+                this.value = 100;
+            }
+            // If the input is a valid number between 1 and 100, it remains unchanged
+        });
+    });
 }
 
 /**
