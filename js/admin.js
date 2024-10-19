@@ -1,5 +1,7 @@
 // Import utility functions and constants
-import { fetchData, showToast, CATEGORIES } from './client-utils.js';
+import { CATEGORIES } from './constants.js';
+import { showToast } from './utils/uiUtils.js';
+import { fetchData } from './utils/apiUtils.js';
 
 /**
  * Loads current competition settings and populates the admin interface
