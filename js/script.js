@@ -157,11 +157,30 @@ function displayVoteSummary(votes) {
     return summary;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM fully loaded, setting up event listeners");
+    
+    const submitButton = document.getElementById('submitVotes');
+    if (submitButton) {
+        console.log("Submit button found, adding event listener");
+        submitButton.addEventListener('click', submitVotes);
+    } else {
+        console.error("Submit button not found");
+    }
+
+    init().catch(error => {
+        console.error("Unhandled error in init:", error);
+        showToast('An unexpected error occurred. Please refresh the page.', 'error');
+    });
+});
+
 async function submitVotes(e) {
     e.preventDefault();
+    console.log("Submit votes function called");
     
     saveVotesToLocalStorage();
     const votes = getFromLocalStorage('currentVotes');
+    console.log("Votes to submit:", votes);
     
     const { isValid, invalidCategories } = validateVotes(votes);
     if (!isValid) {
@@ -178,8 +197,9 @@ async function submitVotes(e) {
     submitButton.disabled = true;
     
     try {
+        console.log("Submitting votes to Vercel KV");
         await submitToVercelKV(votes);
-        await submitToGoogleSheets(votes);
+        console.log("Votes submitted to Vercel KV successfully");
 
         showToast('Thank you for voting!', 'success');
         localStorage.removeItem('currentVotes');
@@ -195,12 +215,16 @@ async function submitVotes(e) {
 }
 
 async function submitToVercelKV(votes) {
+    console.log("Sending votes to /api/vote:", votes);
     const response = await fetch('/api/vote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(votes),
     });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
     return await response.json();
 }
 
