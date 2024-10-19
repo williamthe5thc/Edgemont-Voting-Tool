@@ -1,6 +1,3 @@
-// Import utility functions for KV operations and error handling
-import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-
 /**
  * API handler for recording votes
  * @param {Object} req - The request object
@@ -17,12 +14,16 @@ export default async function handler(req, res) {
       let votes = await getKVData('votes') || {};
       console.log('Current votes:', JSON.stringify(votes));
       const newVote = req.body;
+      
       // Process each category in the new vote
+      // votes structure: { category: { dishNumber: { 1: count, 2: count } } }
+      // newVote structure: { category: [dishNumber1, dishNumber2] }
       Object.entries(newVote).forEach(([category, selectedDishes]) => {
         if (!votes[category]) {
           votes[category] = {};
         }
         // Update vote counts for each selected dish
+        // Increment the count for the 1st and 2nd choice dishes
         selectedDishes.forEach((dish, index) => {
           if (!votes[category][dish]) {
             votes[category][dish] = { 1: 0, 2: 0 };
@@ -30,6 +31,7 @@ export default async function handler(req, res) {
           votes[category][dish][index + 1]++;
         });
       });
+      
       console.log('Updated votes:', JSON.stringify(votes));
       // Save updated votes to KV store
       await setKVData('votes', votes);
