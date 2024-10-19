@@ -10,7 +10,7 @@
  * improving data integrity and user experience.
  */
 
-import { CATEGORIES } from './constants.js';
+import { CATEGORIES } from '/js/constants.js';
 console.log("validationUtils.js loading");
 
 /**
