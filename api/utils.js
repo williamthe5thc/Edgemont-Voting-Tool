@@ -1,11 +1,11 @@
-// Import the Vercel KV client
+// utils.js
+
 import { kv } from '@vercel/kv';
 
 /**
  * Retrieves data from the KV store.
  * @param {string} key - The key to retrieve.
  * @returns {Promise<any>} The value associated with the key.
- * @throws {Error} If retrieval fails.
  */
 export async function getKVData(key) {
   try {
@@ -20,7 +20,6 @@ export async function getKVData(key) {
  * Sets data in the KV store.
  * @param {string} key - The key to set.
  * @param {any} value - The value to store.
- * @throws {Error} If setting the value fails.
  */
 export async function setKVData(key, value) {
   try {
