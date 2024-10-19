@@ -18,7 +18,7 @@ A web-based voting system for the "Dia de los Ancestros" Cooking Competition, al
 - Frontend: HTML, CSS, JavaScript
 - Backend: Vercel Serverless Functions
 - Database: Vercel KV (Key-Value storage)
-- Google Apps Script (for redundant vote storage)
+- Redundant Storage: Google Apps Script
 
 ## Project Structure
 
@@ -41,13 +41,16 @@ dia-de-los-ancestros-voting-tool/
 │       ├── apiUtils.js
 │       └── validationUtils.js
 │
-└── api/
-    ├── vote.js
-    ├── results.js
-    ├── clear-votes.js
-    ├── get-settings.js
-    ├── update-settings.js
-    └── utils.js
+├── api/
+│   ├── vote.js
+│   ├── results.js
+│   ├── clear-votes.js
+│   ├── get-settings.js
+│   ├── update-settings.js
+│   └── utils.js
+│
+└── google-apps-script/
+    └── Code.gs
 ```
 
 ## Installation
@@ -74,7 +77,7 @@ dia-de-los-ancestros-voting-tool/
 
 5. Set up Google Apps Script:
    - Create a new Google Apps Script project
-   - Set up the necessary functions for redundant vote storage
+   - Copy the contents of `google-apps-script/Code.gs` into your script
    - Deploy the script as a web app and note the URL
 
 6. Configure environment variables:
@@ -122,25 +125,6 @@ To run the project locally:
    ```
 
 3. Open `http://localhost:3000` in your browser
-
-## Styling
-- The project uses CSS custom properties for theming
-- Optimized for mobile devices with a responsive design
-
-## Security Considerations
-
-- Implement authentication for admin functions
-- Enhance input validation for improved security
-
-## Future Improvements
-
-- Add user authentication for admin functions
-- Implement rate limiting for API endpoints
-- Add caching mechanisms for frequently accessed data
-- Improve error logging and monitoring
-- Implement comprehensive testing (unit tests, integration tests)
-- Add the ability for users to edit their submitted votes
-- Optimize performance for larger-scale voting events
 
 ## Contributing
 
