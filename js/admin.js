@@ -19,6 +19,8 @@ import { CATEGORIES } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
 
+console.log("admin.js loading");
+
 /**
  * Loads current competition settings and populates the admin interface
  */
@@ -181,3 +183,4 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+console.log("admin.js loaded");
