@@ -26,16 +26,10 @@ import { validateVotes } from './utils/validationUtils.js';
 // Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
 
-/**
- * Fetches competition settings from the server and sets up DISHES_PER_CATEGORY
- * If fetching fails, it uses default values
- * DISHES_PER_CATEGORY structure: { category: { min: number, max: number } }
- */
 async function getSettings() {
     try {
         const settings = await fetchData('/api/get-settings');
         
-        // Set up DISHES_PER_CATEGORY based on fetched settings or use defaults
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
             const categorySettings = settings.dishesPerCategory[category] || {};
             acc[category] = {
@@ -47,7 +41,6 @@ async function getSettings() {
     } catch (error) {
         console.error('Error fetching settings:', error);
         showToast('Error loading settings. Using default values.', 'error');
-        // Use default values if fetching fails
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
             acc[category] = { min: 1, max: 50 };
             return acc;
@@ -55,10 +48,6 @@ async function getSettings() {
     }
 }
 
-/**
- * Loads voting categories progressively with a loading animation
- * Creates input fields for each category based on the competition settings
- */
 async function loadCategoriesProgressively() {
     const skeletonLoader = document.getElementById('loading-spinner');
     const categoriesContainer = document.getElementById('categories');
@@ -90,7 +79,6 @@ async function loadCategoriesProgressively() {
             `;
             
             categoriesContainer.appendChild(categoryDiv);
-            // Small delay for progressive loading effect
             await new Promise(resolve => setTimeout(resolve, 100));
         }
     } catch (error) {
@@ -103,6 +91,7 @@ async function loadCategoriesProgressively() {
     setupVoting();
     loadVotesFromLocalStorage();
 }
+
 
 function setupVoting() {
     document.querySelectorAll('.vote-input').forEach(input => {
@@ -264,10 +253,6 @@ function submitToGoogleSheets(votes) {
     });
 }
 
-/**
- * Initializes the application
- * Sets the competition theme, fetches settings, and loads categories
- */
 async function init() {
     document.querySelector('h1').textContent = THEME;
     try {
@@ -278,9 +263,6 @@ async function init() {
         showToast('Failed to initialize the voting system. Please refresh the page.', 'error');
     }
 }
-
-// Event listener for vote submission
-document.getElementById('submitVotes').addEventListener('click', submitVotes);
 
 // Initialize the application
 init().catch(error => {
