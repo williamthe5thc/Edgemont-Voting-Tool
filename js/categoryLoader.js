@@ -10,15 +10,22 @@ let categoriesLoaded = false;
 export async function getSettings() {
     try {
         const settings = await fetchData('/api/get-settings');
-        
+        console.log("Received settings:", settings); // Add this line for debugging
+
+        if (!settings || typeof settings !== 'object') {
+            throw new Error('Invalid settings received from server');
+        }
+
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
-            const categorySettings = settings.dishesPerCategory[category] || {};
+            const categorySettings = settings.dishesPerCategory?.[category] || {};
             acc[category] = {
                 min: categorySettings.min || 1,
                 max: categorySettings.max || 50
             };
             return acc;
         }, {});
+
+        return { dishesPerCategory: DISHES_PER_CATEGORY };
     } catch (error) {
         console.error('Error fetching settings:', error);
         showToast('Error loading settings. Using default values.', 'error');
@@ -26,6 +33,7 @@ export async function getSettings() {
             acc[category] = { min: 1, max: 50 };
             return acc;
         }, {});
+        return { dishesPerCategory: DISHES_PER_CATEGORY };
     }
 }
 
