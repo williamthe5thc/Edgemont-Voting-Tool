@@ -2,15 +2,20 @@
  * constants.js
  * 
  * This file defines constant values used throughout the application.
- * It includes:
- * 
- * 1. CATEGORIES: An array of competition categories
- * 2. THEME: The theme of the cooking competition
- * 
  * Centralizing these constants ensures consistency across the application
  * and makes it easier to update competition details in the future.
  */
 
+/**
+ * CATEGORIES
+ * 
+ * An array of competition categories.
+ * These categories are used to structure the voting process and results display.
+ * Modifying this array will affect the entire application, including:
+ * - The voting form structure
+ * - The results calculation and display
+ * - The admin settings interface
+ */
 export const CATEGORIES = [
     'Bread',
     'Appetizers',
@@ -18,4 +23,11 @@ export const CATEGORIES = [
     'Entrée'
 ];
 
+/**
+ * THEME
+ * 
+ * The theme of the cooking competition.
+ * This constant is used in various places to display the competition name.
+ * Changing this value will update the theme across the entire application.
+ */
 export const THEME = "Dia de Los Ancestros";
