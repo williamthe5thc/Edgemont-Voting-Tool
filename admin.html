@@ -3,27 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Dia de los ancestros Voting</title>
+    <title>Dia de los Ancestros Cooking Competition - Admin Panel</title>
+    <!-- Link to the main stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Main container for the admin panel -->
     <div class="container">
         <h1>Admin Panel</h1>
-        
-        <section class="admin-section">
-            <h2>Update Number of Dishes</h2>
-            <div id="dishCountContainer">
-                <!-- Dish count inputs will be dynamically added here -->
-            </div>
-            <button id="updateDishCount" class="admin-btn">Update Dish Count</button>
-        </section>
 
-        <section class="admin-section">
+        <!-- Section for updating dish counts -->
+        <div class="section admin-section">
+            <h2>Update Number of Dishes</h2>
+            <!-- Container for dynamically loaded dish count inputs -->
+            <div id="dishCountContainer">
+                <!-- Dish count inputs will be dynamically inserted here by JavaScript -->
+            </div>
+            <button id="updateSettings">Update Dish Count</button>
+        </div>
+
+        <!-- Section for clearing votes -->
+        <div class="section admin-section">
             <h2>Clear Votes</h2>
-            <button id="clearVotes" class="admin-btn danger-btn">Clear All Votes</button>
-        </section>
+            <button id="clearVotes">Clear All Votes</button>
+        </div>
     </div>
 
-    <script type="module" src="admin.js"></script>
+    <!-- Container for toast notifications -->
+    <div id="toastContainer"></div>
+
+    <!-- JavaScript module imports -->
+    <script type="module" src="js/constants.js"></script>
+    <script type="module" src="js/utils/storageUtils.js"></script>
+    <script type="module" src="js/utils/uiUtils.js"></script>
+    <script type="module" src="js/utils/apiUtils.js"></script>
+    <script type="module" src="js/admin.js"></script>
 </body>
 </html>
