@@ -1,7 +1,7 @@
 {
   "name": "dia-de-los-ancestros-voting-tool",
   "version": "1.0.0",
-  "description": "A web-based voting system for the Dia de los Ancestros Cooking Competition",
+  "description": "A web-based voting system for the Dia de los Ancestros Cooking Competition with Google Apps Script integration",
   "main": "index.js",
   "scripts": {
     "start": "vercel dev",
@@ -27,6 +27,7 @@
     "cooking competition",
     "dia de los ancestros",
     "vercel",
-    "serverless"
+    "serverless",
+    "google apps script"
   ]
 }
