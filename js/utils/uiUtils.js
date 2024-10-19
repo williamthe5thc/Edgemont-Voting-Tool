@@ -1,4 +1,15 @@
-// storageUtils.js
+/**
+ * uiUtils.js
+ * 
+ * This utility file should provide functions for common UI operations.
+ * It's expected to include:
+ * 
+ * 1. showToast: Displays toast notifications to the user
+ * 2. Other UI-related utility functions as needed
+ * 
+ * Note: The current content of this file appears to be incorrect.
+ * It should be updated to include the appropriate UI utility functions.
+ */
 
 import { showToast } from './uiUtils.js';
 
