@@ -1,3 +1,18 @@
+/**
+ * results-display.js
+ * 
+ * This file handles the display of voting results for the cooking competition.
+ * It includes the following main functionalities:
+ * 
+ * 1. Fetching voting results from the API
+ * 2. Dynamically generating and displaying result content
+ * 3. Handling cases where no votes have been recorded
+ * 4. Error handling and displaying appropriate messages to users
+ * 
+ * The script uses utility functions for API calls and UI updates,
+ * ensuring a smooth user experience when viewing competition results.
+ */
+
 // Import utility functions for data fetching and toast notifications
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
