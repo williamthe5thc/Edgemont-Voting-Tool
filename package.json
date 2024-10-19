@@ -1,10 +1,10 @@
 {
   "name": "dia-de-los-ancestros-voting-tool",
   "version": "1.0.0",
-  "description": "A web-based voting system for the Dia de los Ancestros Cooking Competition with Google Apps Script integration",
+  "description": "A web-based voting system for the Dia de los Ancestros Cooking Competition with Vercel KV integration",
   "main": "index.js",
   "scripts": {
-    "start": "vercel dev",
+    "dev": "vercel dev",
     "deploy": "vercel deploy --prod"
   },
   "dependencies": {
@@ -17,17 +17,5 @@
     "node": ">=14.0.0"
   },
   "author": "William Charles",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/williamthe5thc/dia-de-los-ancestros-voting-tool.git"
-  },
-  "keywords": [
-    "voting",
-    "cooking competition",
-    "dia de los ancestros",
-    "vercel",
-    "serverless",
-    "google apps script"
-  ]
+  "license": "MIT"
 }
