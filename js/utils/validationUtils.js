@@ -11,6 +11,7 @@
  */
 
 import { CATEGORIES } from './constants.js';
+console.log("validationUtils.js loading");
 
 /**
  * Validates the votes object
@@ -34,3 +35,4 @@ export function validateVotes(votes) {
 
     return { isValid, invalidCategories };
 }
+console.log("validationUtils.js loaded");
