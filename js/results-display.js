@@ -16,6 +16,7 @@
 // Import utility functions for data fetching and toast notifications
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
+console.log("results-display.js loading");
 
 /**
  * Fetches and displays the voting results.
@@ -64,3 +65,4 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
 });
+console.log("results-display.js loaded");
