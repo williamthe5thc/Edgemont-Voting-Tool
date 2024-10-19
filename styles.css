@@ -1,16 +1,28 @@
 /* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap');
 
-/* Define CSS variables for easy theming */
+/* Define CSS custom properties for easy theming */
 :root {
-  --primary-color: #FF6B6B; /* Soft red for accents */
-  --secondary-color: #FFD166; /* Warm yellow for category headings */
-  --text-color: #FFFFFF; /* White for main text */
-  --background-color: #1A1A1A; /* Dark background */
-  --input-background: #333333; /* Darker gray for input backgrounds */
-  --input-text-color: #FFFFFF; /* White text for inputs */
-  --placeholder-color: #999999; /* Light gray for placeholders */
-  --border-color: #FFD166; /* Warm yellow for borders */
+  /* Colors */
+  --primary-color: #FF6B6B;
+  --secondary-color: #FFD166;
+  --text-color: #FFFFFF;
+  --background-color: #1A1A1A;
+  --input-background: #333333;
+  --input-text-color: #FFFFFF;
+  --placeholder-color: #999999;
+  --border-color: #FFD166;
+  
+  /* Font sizes */
+  --font-size-small: 14px;
+  --font-size-medium: 16px;
+  --font-size-large: 18px;
+  --font-size-xlarge: 24px;
+  
+  /* Spacing */
+  --spacing-small: 10px;
+  --spacing-medium: 20px;
+  --spacing-large: 30px;
 }
 
 /* General styles */
@@ -26,7 +38,7 @@ body {
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: var(--spacing-medium);
 }
 
 /* Header styles */
@@ -34,33 +46,33 @@ h1 {
   font-family: 'Lobster', cursive;
   color: var(--primary-color);
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--spacing-large);
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  font-size: 2.5rem;
+  font-size: var(--font-size-xlarge);
 }
 
 /* Styles for instructions and category sections */
 .instructions, .category {
   background-color: rgba(255, 255, 255, 0.1);
-  margin-bottom: 1.5rem;
-  padding: 1.5rem;
+  margin-bottom: var(--spacing-medium);
+  padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .instructions ul {
-  padding-left: 20px;
+  padding-left: var(--spacing-medium);
 }
 
 .instructions li {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-small);
 }
 
 .category h2 {
   color: var(--secondary-color);
   margin-top: 0;
-  font-size: 1.8rem;
+  font-size: var(--font-size-large);
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
@@ -71,7 +83,7 @@ h1 {
   margin-bottom: 10px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  font-size: 16px;
+  font-size: var(--font-size-medium);
   background-color: var(--input-background);
   color: var(--input-text-color);
 }
@@ -89,11 +101,11 @@ h1 {
   color: var(--text-color);
   border: none;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: var(--font-size-large);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 1rem;
+  margin-top: var(--spacing-medium);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -163,7 +175,7 @@ h1 {
   max-width: 90%;
   width: 300px;
   text-align: center;
-  font-size: 16px;
+  font-size: var(--font-size-medium);
 }
 
 .toast.show {
@@ -183,15 +195,15 @@ h1 {
 @media screen and (max-width: 600px) {
   .container {
     width: 95%;
-    padding: 1rem;
+    padding: var(--spacing-small);
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: var(--font-size-large);
   }
 
   #submitVotes {
-    font-size: 16px;
+    font-size: var(--font-size-medium);
     padding: 12px;
   }
 }
@@ -203,14 +215,14 @@ h1 {
   
   .toast {
     padding: 10px 16px;
-    font-size: 14px;
+    font-size: var(--font-size-small);
     width: 85%;
   }
 }
 
 @media screen and (max-width: 320px) {
   .vote-input {
-    font-size: 14px;
+    font-size: var(--font-size-small);
     padding: 10px;
   }
 }
@@ -218,6 +230,6 @@ h1 {
 /* Touch device optimization */
 @media (hover: none) and (pointer: coarse) {
   .vote-input {
-    min-height: 44px;
+    min-height: 44px; /* Ensures touch targets are at least 44px high */
   }
 }
