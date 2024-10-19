@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dia de Los Ancestros Cooking Competition</title>
+    <title>Dia de los Ancestros Cooking Competition - Voting</title>
+    <!-- Link to the main stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Main container for the voting application -->
     <div class="container">
-        <h1>Dia de los ancestros Cooking Competition</h1>
-        
+        <h1>Dia de los Ancestros Cooking Competition</h1>
+
+        <!-- Instructions section -->
         <div class="instructions">
             <h2>Voting Instructions</h2>
             <ul>
@@ -18,13 +21,30 @@
                 <li>You can select either one, two or no dishes per category.</li>
             </ul>
         </div>
+
+        <!-- Loading spinner (hidden by default) -->
         <div id="loading-spinner" class="loading-spinner" style="display: none;">
-  <div class="spinner"></div>
-</div>
-        <div id="categories"></div>
-        <button id="submitVotes" type="button">Submit Your Votes</button>
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Container for dynamically loaded categories -->
+        <div id="categories">
+            <!-- Categories will be dynamically inserted here by JavaScript -->
+        </div>
+
+        <!-- Submit button for votes -->
+        <button id="submitVotes">Submit Your Votes</button>
     </div>
+
+    <!-- Container for toast notifications -->
     <div id="toastContainer"></div>
-    <script type="module" src="script.js"></script>
+
+    <!-- JavaScript module imports -->
+    <script type="module" src="js/constants.js"></script>
+    <script type="module" src="js/utils/storageUtils.js"></script>
+    <script type="module" src="js/utils/uiUtils.js"></script>
+    <script type="module" src="js/utils/apiUtils.js"></script>
+    <script type="module" src="js/utils/validationUtils.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
