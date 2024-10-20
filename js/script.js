@@ -1,20 +1,31 @@
 /**
  * script.js
  * 
- * This file contains the main logic for the voting application's user interface.
- * It handles the following key functionalities:
+ * This file serves as the main JavaScript file for the voting application's user interface.
+ * It orchestrates the core functionalities of the voting process, including:
  * 
- * 1. Fetching and applying competition settings
- * 2. Dynamically loading voting categories
- * 3. Managing user input for votes
- * 4. Saving and loading votes from local storage
- * 5. Validating user votes
- * 6. Submitting votes to both Vercel KV and Google Sheets
- * 7. Displaying vote summaries and feedback to users
+ * 1. Initialization of the application
+ * 2. Fetching and applying competition settings
+ * 3. Dynamically loading voting categories
+ * 4. Managing user input for votes
+ * 5. Handling vote persistence through local storage
+ * 6. Validating user votes
+ * 7. Submitting votes to both Vercel KV and Google Sheets
+ * 8. Providing user feedback through UI updates and toast notifications
  * 
- * The script interacts with various utility modules to handle storage,
- * UI updates, API calls, and validation. It also uses constants defined
- * in a separate module to maintain consistency across the application.
+ * Key functions:
+ * - getSettings: Fetches competition settings from the server
+ * - loadCategoriesProgressively: Dynamically loads voting categories into the UI
+ * - setupVoting: Initializes vote input fields and their event listeners
+ * - validateInput: Ensures individual vote inputs are valid
+ * - saveVotesToLocalStorage / loadVotesFromLocalStorage: Manages vote persistence
+ * - submitVotes: Handles the entire vote submission process
+ * - submitToVercelKV / submitToGoogleSheets: Submits votes to different storage systems
+ * - init: Initializes the entire application
+ * 
+ * This file interacts with various utility modules and constants to maintain
+ * a modular and maintainable codebase. It's the central point of coordination
+ * for the voting application's client-side functionality.
  */
 
 import { CATEGORIES, THEME } from './constants.js';
@@ -23,6 +34,7 @@ import { fetchData } from './utils/apiUtils.js';
 import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
 import { validateVotes } from './utils/validationUtils.js';
 console.log("script.js loading");
+
 // Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
 
@@ -91,7 +103,6 @@ async function loadCategoriesProgressively() {
     setupVoting();
     loadVotesFromLocalStorage();
 }
-
 
 function setupVoting() {
     document.querySelectorAll('.vote-input').forEach(input => {
@@ -228,13 +239,6 @@ async function submitToVercelKV(votes) {
     return await response.json();
 }
 
-
-/**
- * Submits votes to Google Sheets via a hidden form submission
- * This method is used to provide redundancy in vote storage
- * @param {Object} votes - The votes object to submit
- * @returns {Promise} A promise that resolves when the submission is complete
- */
 function submitToGoogleSheets(votes) {
     return new Promise((resolve, reject) => {
         // Create a hidden form
