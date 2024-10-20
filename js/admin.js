@@ -25,6 +25,7 @@ console.log("admin.js loading");
  * Loads current competition settings and populates the admin interface
  */
 async function loadCurrentSettings() {
+    console.log("loading current settings");
     try {
         const settings = await fetchData('/api/get-settings');
         const dishCountContainer = document.getElementById('dishCountContainer');
@@ -64,6 +65,7 @@ async function loadCurrentSettings() {
  * 3. Invalid inputs are automatically corrected
  */
 function setupValidation() {
+    console.log("setup Validation");
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.addEventListener('input', function() {
@@ -89,6 +91,7 @@ function setupValidation() {
  * 4. Provides feedback to the admin user
  */
 async function updateSettings() {
+    console.log("updating setting");
     const dishesPerCategory = {};
     let isValid = true;
 
@@ -137,6 +140,7 @@ async function updateSettings() {
  * This function sends a request to the server to reset all vote counts
  */
 async function clearVotes() {
+    console.log("clearing Votes");
     try {
         const response = await fetch('/api/clear-votes', {
             method: 'POST',
@@ -158,6 +162,7 @@ async function clearVotes() {
  * Sets up event listeners for the admin panel
  */
 function setupEventListeners() {
+    console.log("setupevent");
     const updateSettingsButton = document.querySelector('.admin-section button');
     if (updateSettingsButton) {
         updateSettingsButton.addEventListener('click', updateSettings);
