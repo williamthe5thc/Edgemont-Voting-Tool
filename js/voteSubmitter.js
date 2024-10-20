@@ -132,7 +132,7 @@ function displayVoteSummary(votes) {
 }
 
 async function submitToVercelKV(votes) {
-    console.log("submitting to vercel KV);
+    console.log("submitting to vercel KV");
     const response = await fetch('/api/vote', {
         method: 'POST',
         headers: {
