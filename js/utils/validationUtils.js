@@ -33,8 +33,6 @@ export function validateVotes(votes) {
         }
     });
 
-    let isValid = true;
-    let invalidCategories = [];
 
     Object.entries(votes).forEach(([category, selectedDishes]) => {
         if (selectedDishes.length > 2) {
@@ -44,7 +42,7 @@ export function validateVotes(votes) {
         } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
             isValid = false;
             invalidCategories.push(`${category}`);
-            showToast(`Duplicate entries detected for ${category}. Please choose 2 different favorite dishes.`, 'error', category);
+            showToast(`Duplicate entries detected for ${category}. Please choose 2 unique favorite dishes.`, 'error', category);
         }
     });
 
