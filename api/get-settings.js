@@ -7,18 +7,11 @@
  */
 
 import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-
+import {CATEGORIES} from '/js/constants.js'
 // Default values for dish counts
 const DEFAULT_MIN_DISH_COUNT = 1;
 const DEFAULT_MAX_DISH_COUNT = 5;
 
-// List of competition categories
-const CATEGORIES = [
-    'Bread',
-    'Appetizers',
-    'Dessert',
-    'Entrée'
-];
 
 /**
  * API handler for retrieving competition settings
