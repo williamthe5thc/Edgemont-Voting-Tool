@@ -189,14 +189,13 @@ h1 {
 }
 
 /* Toast notification styles */
-/* Toast notification styles */
 #toastContainer {
   position: fixed;
-  top: 20px;
+  bottom: 20px; /* Changed from top to bottom */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse; /* Reverse the order so new toasts appear at the bottom */
   align-items: center;
   z-index: 1000;
   pointer-events: none;
@@ -210,10 +209,10 @@ h1 {
   padding: 12px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 10px;
+  margin-top: 10px; /* Changed from margin-bottom to margin-top */
   transition: opacity 0.3s, transform 0.3s;
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateY(20px); /* Changed direction to move up */
   pointer-events: auto;
   width: 100%;
   text-align: center;
@@ -240,43 +239,12 @@ h1 {
 @media screen and (max-width: 480px) {
   #toastContainer {
     max-width: 90%;
+    bottom: 10px; /* Adjust for smaller screens */
   }
   
   .toast {
     padding: 10px 16px;
     font-size: var(--font-size-small);
-  }
-}
-
-/* Responsive design */
-@media screen and (max-width: 600px) {
-  :root {
-    --font-size-small: 14px;
-    --font-size-medium: 16px;
-    --font-size-large: 20px;
-    --font-size-xlarge: 28px;
-  }
-
-  .container {
-    width: 95%;
-    padding: var(--spacing-small);
-  }
-
-  .btn-primary {
-    font-size: var(--font-size-medium);
-    padding: 12px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  #toastContainer {
-    top: 10px;
-  }
-  
-  .toast {
-    padding: 10px 16px;
-    font-size: var(--font-size-small);
-    width: 85%;
   }
 }
 
