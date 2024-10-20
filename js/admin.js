@@ -170,6 +170,7 @@ function setupEventListeners() {
 
     const clearVotesButton = document.querySelector('.admin-section:nth-child(2) button');
     if (clearVotesButton) {
+        console.log("clear button clicked");
         clearVotesButton.addEventListener('click', clearVotes);
     }
 }
