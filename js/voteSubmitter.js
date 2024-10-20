@@ -40,19 +40,24 @@ export function validateInput(input) {
 
     if (input.value === '') return;
 
-if (isNaN(value) || value < 1 || value > max) {
+    if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
         console.log(`Validation failed for ${category}. Showing toast.`);
         showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error', category);
+        return;
     }
-    
+
     // Check for duplicate entries within the same category
     const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-    const values = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
+    const categoryVotes = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
     
-    if (new Set(values).size !== values.length) {
-        showToast(`Duplicate entries detected for ${category}. Please choose 2 different favorite dishes.`, 'error');
+    const { isValid, invalidCategories } = validateVotes({ [category]: categoryVotes });
+    
+    if (!isValid) {
+        console.log(`Validation failed for ${category}. Reason: ${invalidCategories[0]}`);
         input.value = '';
+    } else {
+        console.log(`Input validated successfully for ${category}.`);
     }
 }
 export function saveVotesToLocalStorage() {
