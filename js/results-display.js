@@ -9,6 +9,9 @@
  * 3. Handling cases where no votes have been recorded
  * 4. Error handling and displaying appropriate messages to users
  * 
+ * Functions:
+ * - displayResults: Main function to fetch and display voting results
+ * 
  * The script uses utility functions for API calls and UI updates,
  * ensuring a smooth user experience when viewing competition results.
  */
@@ -16,11 +19,21 @@
 // Import utility functions for data fetching and toast notifications
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
+
 console.log("results-display.js loading");
 
 /**
  * Fetches and displays the voting results.
- * This function is the main entry point for displaying results.
+ * @async
+ * @function displayResults
+ * @returns {Promise<void>}
+ * 
+ * This function:
+ * 1. Fetches results from the API
+ * 2. Clears any existing content in the results container
+ * 3. Handles the case where no votes have been recorded
+ * 4. Iterates through each category and displays the top dishes
+ * 5. Handles any errors that occur during the process
  */
 async function displayResults() {
     try {
@@ -59,11 +72,17 @@ async function displayResults() {
     }
 }
 
-// Initialize results display when the DOM is fully loaded
+/**
+ * Event listener for DOMContentLoaded
+ * 
+ * This ensures that the displayResults function is called only after
+ * the DOM is fully loaded and ready to be manipulated.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     displayResults().catch(error => {
         console.error('Unhandled error in displayResults:', error);
         showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
 });
+
 console.log("results-display.js loaded");
