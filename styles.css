@@ -194,6 +194,9 @@ h1 {
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
 }
 
 .toast {
@@ -201,13 +204,17 @@ h1 {
     color: white;
     padding: 10px 20px;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-top: 10px;
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(-20px);
+    max-width: 300px;
+    width: 100%;
 }
 
 .toast.show {
     opacity: 1;
+    transform: translateY(0);
 }
 
 .toast.success {
