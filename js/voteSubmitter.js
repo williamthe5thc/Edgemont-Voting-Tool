@@ -107,13 +107,13 @@ export async function submitVotes(e) {
     
     try {
         console.log("Submitting votes to Vercel KV and Google Sheets");
-    const [vercelResponse, googleSheetsResponse] = await Promise.all([
-        submitToVercelKV(votes),
-        submitToGoogleSheets(votes)
-    ]);
-    console.log("Votes submitted successfully");
-    console.log("Vercel KV response:", vercelResponse);
-    console.log("Google Sheets response:", googleSheetsResponse);
+        const [vercelResponse, googleSheetsResponse] = await Promise.all([
+            submitToVercelKV(votes),
+            submitToGoogleSheets(votes)
+        ]);
+        console.log("Votes submitted successfully");
+        console.log("Vercel KV response:", vercelResponse);
+        console.log("Google Sheets response:", googleSheetsResponse);
 
         showToast('Thank you for voting!', 'success');
         localStorage.removeItem('currentVotes');
@@ -126,25 +126,6 @@ export async function submitVotes(e) {
         submitButton.textContent = 'Submit Votes';
         submitButton.disabled = false;
     }
-}
-
-function displayVoteSummary(votes) {
-    let summary = 'Your Vote Summary:\n\n';
-    
-    CATEGORIES.forEach(category => {
-        const categoryVotes = votes[category] || [];
-        summary += `${category}:\n`;
-        if (categoryVotes.length === 0) {
-            summary += '  No votes\n';
-        } else {
-            categoryVotes.forEach((dish, index) => {
-                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
-            });
-        }
-        summary += '\n';
-    });
-    
-    return summary;
 }
 
 async function submitToVercelKV(votes) {
