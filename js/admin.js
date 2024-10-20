@@ -4,6 +4,14 @@
  * This file contains the logic for the admin panel of the voting application.
  * It handles loading current settings, updating competition settings, 
  * clearing votes, and managing the admin interface.
+ * 
+ * Functions:
+ * - loadCurrentSettings: Fetches and displays current competition settings.
+ * - setupValidation: Sets up input validation for dish count inputs.
+ * - updateSettings: Validates and sends updated settings to the server.
+ * - clearVotes: Sends a request to clear all votes from the system.
+ * - setupEventListeners: Attaches event listeners to admin panel buttons.
+ * - init: Initializes the admin panel.
  */
 
 import { CATEGORIES } from './constants.js';
@@ -14,6 +22,15 @@ console.log("admin.js loading");
 
 /**
  * Loads current competition settings and populates the admin interface
+ * @async
+ * @function loadCurrentSettings
+ * @returns {Promise<void>}
+ * 
+ * This function:
+ * 1. Fetches current settings from the API
+ * 2. Creates input fields for min and max dish counts for each category
+ * 3. Populates these fields with current values
+ * 4. Sets up validation for the input fields
  */
 async function loadCurrentSettings() {
     try {
@@ -50,10 +67,13 @@ async function loadCurrentSettings() {
 
 /**
  * Sets up input validation for dish count inputs
- * This function ensures that:
- * 1. The input is always a number
- * 2. The number is between 1 and 100 (inclusive)
- * 3. Invalid inputs are automatically corrected
+ * @function setupValidation
+ * 
+ * This function:
+ * 1. Selects all number input fields
+ * 2. Adds an event listener to each input
+ * 3. Ensures the input is always a number between 1 and 100
+ * 4. Automatically corrects invalid inputs
  */
 function setupValidation() {
     const inputs = document.querySelectorAll('input[type="number"]');
@@ -74,6 +94,10 @@ function setupValidation() {
 
 /**
  * Updates competition settings based on admin input
+ * @async
+ * @function updateSettings
+ * @returns {Promise<void>}
+ * 
  * This function:
  * 1. Validates the input for each category
  * 2. Constructs the new settings object
@@ -126,7 +150,13 @@ async function updateSettings() {
 
 /**
  * Clears all votes from the system
- * This function sends a request to the server to reset all vote counts
+ * @async
+ * @function clearVotes
+ * @returns {Promise<void>}
+ * 
+ * This function:
+ * 1. Sends a request to the server to reset all vote counts
+ * 2. Provides feedback on the success or failure of the operation
  */
 async function clearVotes() {
     try {
@@ -148,6 +178,11 @@ async function clearVotes() {
 
 /**
  * Sets up event listeners for the admin panel
+ * @function setupEventListeners
+ * 
+ * This function:
+ * 1. Attaches click event listeners to the "Update Settings" and "Clear Votes" buttons
+ * 2. Calls the appropriate functions when these buttons are clicked
  */
 function setupEventListeners() {
     const updateSettingsButton = document.querySelector('.admin-section button');
@@ -163,6 +198,11 @@ function setupEventListeners() {
 
 /**
  * Initializes the admin panel
+ * @function init
+ * 
+ * This function:
+ * 1. Calls loadCurrentSettings to populate the admin interface
+ * 2. Sets up event listeners for admin actions
  */
 function init() {
     loadCurrentSettings();
