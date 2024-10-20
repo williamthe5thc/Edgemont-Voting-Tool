@@ -33,12 +33,17 @@ export function validateVotes(votes) {
         }
     });
 
-      if (new Set(values).size !== values.length) {
+       // Check for duplicate entries within the same category
+    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+    const values = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
+    
+    if (new Set(values).size !== values.length) {
         console.log(`Duplicate entry detected for ${category}. Showing toast.`);
         showToast(`Duplicate entries detected for ${category}. Please choose different dishes.`, 'error', category);
         input.value = '';
         return;
     }
+    
     return { isValid, invalidCategories };
 }
 console.log("validationUtils.js loaded");
