@@ -63,7 +63,7 @@ export function showToast(message, type = 'info', category = 'general') {
     }, 5000);
 
     // Limit the number of visible toasts
-    const maxVisibleToasts = 3;
+    const maxVisibleToasts = 10;
     const toasts = toastContainer.getElementsByClassName('toast');
     if (toasts.length > maxVisibleToasts) {
         toastContainer.removeChild(toasts[0]);
