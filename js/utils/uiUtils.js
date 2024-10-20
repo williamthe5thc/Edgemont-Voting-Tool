@@ -32,9 +32,10 @@ export function showToast(message, type = 'info') {
     // Force a reflow
     toast.offsetHeight;
     
-    requestAnimationFrame(() => {
+    // Use setTimeout to add the 'show' class in the next frame
+    setTimeout(() => {
         toast.classList.add('show');
-    });
+    }, 10);
     
     setTimeout(() => {
         toast.classList.remove('show');
@@ -43,5 +44,6 @@ export function showToast(message, type = 'info') {
         }, { once: true });
     }, 3000);
 }
-console.log("uiUtills.js loaded");
+
+console.log("uiUtils.js loaded");
 
