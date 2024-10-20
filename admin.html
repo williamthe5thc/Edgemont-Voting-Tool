@@ -3,40 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dia de los Ancestros Cooking Competition - Admin Panel</title>
-    <!-- Link to the main stylesheet -->
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Main container for the admin panel -->
     <div class="container">
         <h1>Admin Panel</h1>
 
-        <!-- Section for updating dish counts -->
         <div class="section admin-section">
             <h2>Update Number of Dishes</h2>
-            <!-- Container for dynamically loaded dish count inputs -->
-            <div id="dishCountContainer">
-                <!-- Dish count inputs will be dynamically inserted here by JavaScript -->
-            </div>
+            <div id="dishCountContainer"></div>
             <button id="updateDishCount" class="btn-primary">Update Dish Count</button>
         </div>
 
-        <!-- Section for clearing votes -->
         <div class="section admin-section">
             <h2>Clear Votes</h2>
             <button id="clearVotes" class="btn-primary">Clear All Votes</button>
         </div>
     </div>
 
-    <!-- Container for toast notifications -->
     <div id="toastContainer"></div>
 
-    <!-- JavaScript module imports -->
-    <script type="module" src="js/constants.js"></script>
-    <script type="module" src="js/utils/storageUtils.js"></script>
-    <script type="module" src="js/utils/uiUtils.js"></script>
-    <script type="module" src="js/utils/apiUtils.js"></script>
     <script type="module" src="js/admin.js"></script>
 </body>
 </html>
