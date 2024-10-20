@@ -2,12 +2,12 @@
 
 ## Overview
 
-This project is a web-based voting system designed for the Dia de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories, and provides an admin interface for managing the competition settings and viewing results.
+This project is a web-based voting system designed for the Dia de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories and provides an admin interface for managing the competition settings and viewing results.
 
 ## Features
 
 - User-friendly voting interface
-- Multiple categories for voting (e.g., Bread, Appetizers, Dessert, Entrée)
+- Multiple categories for voting (Bread, Appetizers, Dessert, Entrée)
 - Real-time input validation
 - Local storage for saving incomplete votes
 - Admin panel for managing competition settings
@@ -50,16 +50,6 @@ This project is a web-based voting system designed for the Dia de los Ancestros 
 ├── styles.css
 └── package.json
 ```
-
-### Key Components
-
-- `api/`: Contains serverless functions for backend operations
-- `js/`: Client-side JavaScript files
-- `admin.html`: Admin panel interface
-- `index.html`: Main voting interface
-- `results.html`: Results display page
-- `styles.css`: Global styles for the application
-- `package.json`: Project dependencies and scripts
 
 ## Setup
 
