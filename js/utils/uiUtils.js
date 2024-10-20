@@ -1,19 +1,16 @@
 /**
  * uiUtils.js
  * 
- * This utility file provides functions for common UI operations.
- * It includes:
- * 
- * 1. showToast: Displays toast notifications to the user
- * 
- * This utility ensures consistent toast notifications across the application.
+ * This utility file provides functions for common UI operations,
+ * particularly focused on displaying toast notifications.
  */
+
 console.log("uiUtils.js loading");
 
 /**
  * Displays a toast notification
  * @param {string} message - The message to display
- * @param {string} type - The type of toast (e.g., 'info', 'error', 'success')
+ * @param {string} [type='info'] - The type of toast (e.g., 'info', 'error', 'success')
  * @param {string} [category='general'] - The category of the toast (e.g., 'general', 'Bread', 'Appetizers')
  */
 export function showToast(message, type = 'info', category = 'general') {
@@ -22,15 +19,10 @@ export function showToast(message, type = 'info', category = 'general') {
     const toastContainerId = category === 'general' ? 'toastContainer' : `toastContainer-${category}`;
     let toastContainer = document.getElementById(toastContainerId);
     
+    // Create a general toast container if it doesn't exist
     if (!toastContainer && category === 'general') {
         console.log('Creating new general toast container');
-        toastContainer = document.createElement('div');
-        toastContainer.id = toastContainerId;
-        toastContainer.style.position = 'fixed';
-        toastContainer.style.top = '20px';
-        toastContainer.style.left = '50%';
-        toastContainer.style.transform = 'translateX(-50%)';
-        toastContainer.style.zIndex = '1000';
+        toastContainer = createToastContainer(toastContainerId);
         document.body.appendChild(toastContainer);
         console.log('General toast container created and appended to body');
     }
@@ -42,35 +34,86 @@ export function showToast(message, type = 'info', category = 'general') {
     
     console.log(`Toast container found for ${category}`);
     
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
+    const toast = createToastElement(message, type);
     
-    toastContainer.appendChild(toast);
-    console.log(`Toast appended to container for ${category}`);
+    // Insert the new toast at the beginning of the container
+    toastContainer.insertBefore(toast, toastContainer.firstChild);
+    console.log(`Toast prepended to container for ${category}`);
     
-    // Force a reflow
+    // Force a reflow to ensure transition works
     toast.offsetHeight;
     
+    // Show the toast
     requestAnimationFrame(() => {
         toast.classList.add('show');
         console.log(`Show class added to toast for ${category}`);
     });
     
+    // Set up toast removal after a delay
+    setupToastRemoval(toast, toastContainer, category);
+
+    // Limit the number of visible toasts
+    limitVisibleToasts(toastContainer, category);
+}
+
+/**
+ * Creates a toast container element
+ * @param {string} id - The ID for the container
+ * @returns {HTMLElement} The created toast container
+ */
+function createToastContainer(id) {
+    const container = document.createElement('div');
+    container.id = id;
+    container.style.position = 'fixed';
+    container.style.top = '20px';
+    container.style.left = '50%';
+    container.style.transform = 'translateX(-50%)';
+    container.style.zIndex = '1000';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column-reverse';
+    return container;
+}
+
+/**
+ * Creates a toast element
+ * @param {string} message - The message for the toast
+ * @param {string} type - The type of toast
+ * @returns {HTMLElement} The created toast element
+ */
+function createToastElement(message, type) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    return toast;
+}
+
+/**
+ * Sets up the removal of a toast after a delay
+ * @param {HTMLElement} toast - The toast element
+ * @param {HTMLElement} container - The toast container
+ * @param {string} category - The category of the toast
+ */
+function setupToastRemoval(toast, container, category) {
     setTimeout(() => {
         console.log(`Preparing to remove toast for ${category}`);
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
-            toastContainer.removeChild(toast);
+            container.removeChild(toast);
             console.log(`Toast removed for ${category}`);
         }, { once: true });
-    }, 5000);
+    }, 10000);
+}
 
-    // Limit the number of visible toasts
+/**
+ * Limits the number of visible toasts in a container
+ * @param {HTMLElement} container - The toast container
+ * @param {string} category - The category of the toasts
+ */
+function limitVisibleToasts(container, category) {
     const maxVisibleToasts = 3;
-    const toasts = toastContainer.getElementsByClassName('toast');
+    const toasts = container.getElementsByClassName('toast');
     if (toasts.length > maxVisibleToasts) {
-        toastContainer.removeChild(toasts[0]);
+        container.removeChild(toasts[toasts.length - 1]);
         console.log(`Excess toast removed for ${category}`);
     }
 }
