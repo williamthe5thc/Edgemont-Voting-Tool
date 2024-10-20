@@ -17,33 +17,45 @@ console.log("uiUtills.js loading");
 export function showToast(message, type = 'info') {
     console.log(`Toast: ${type} - ${message}`);
     
-    const toastContainer = document.getElementById('toastContainer');
+    let toastContainer = document.getElementById('toastContainer');
     
     if (!toastContainer) {
-        console.error('Toast container not found');
-        return;
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toastContainer';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.top = '20px';
+        toastContainer.style.left = '50%';
+        toastContainer.style.transform = 'translateX(-50%)';
+        toastContainer.style.zIndex = '1000';
+        document.body.appendChild(toastContainer);
     }
     
     const toast = document.createElement('div');
     toast.textContent = message;
     toast.className = `toast ${type}`;
+    toast.style.backgroundColor = type === 'error' ? '#ff6b6b' : '#4caf50';
+    toast.style.color = 'white';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '5px';
+    toast.style.marginBottom = '10px';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease-in-out';
+    
     toastContainer.appendChild(toast);
     
     // Force a reflow
     toast.offsetHeight;
     
-    // Use setTimeout to add the 'show' class in the next frame
-    setTimeout(() => {
-        toast.classList.add('show');
-    }, 10);
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+    });
     
     setTimeout(() => {
-        toast.classList.remove('show');
+        toast.style.opacity = '0';
         toast.addEventListener('transitionend', () => {
             toastContainer.removeChild(toast);
         }, { once: true });
     }, 3000);
 }
-
-console.log("uiUtils.js loaded");
+console.log("uiutils loaded");
 
