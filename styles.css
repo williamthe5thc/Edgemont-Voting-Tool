@@ -1,17 +1,17 @@
-/* Import fonts */
+/* Font imports */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap');
 
-/* Define CSS custom properties for easy theming */
+/* CSS Custom Properties (Variables) */
 :root {
-  /* Colors */
-  --primary-color: #FF6B6B;
-  --secondary-color: #FFD166;
-  --text-color: #FFFFFF;
-  --background-color: #1A1A1A;
-  --input-background: #333333;
-  --input-text-color: #FFFFFF;
-  --placeholder-color: #999999;
-  --border-color: #FFD166;
+  /* Colors - Fall-inspired palette */
+  --primary-color: #FF6B35;    /* Warm orange */
+  --secondary-color: #F7C59F;  /* Light peach */
+  --text-color: #2B2B2B;       /* Dark gray for better readability */
+  --background-color: #EFEFD0; /* Light cream */
+  --input-background: #FFFFFF; /* White */
+  --input-text-color: #2B2B2B; /* Dark gray */
+  --placeholder-color: #999999; /* Light gray */
+  --border-color: #CD7F32;     /* Bronze */
   
   /* Font sizes */
   --font-size-small: 14px;
@@ -25,7 +25,7 @@
   --spacing-large: 30px;
 }
 
-/* General styles */
+/* Base Styles */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--background-color);
@@ -41,31 +41,32 @@ body {
   padding: var(--spacing-medium);
 }
 
-/* Updated header styles */
+/* Header Styles */
 h1 {
   font-family: 'Lobster', cursive;
   color: var(--primary-color);
   text-align: center;
   margin: 0 auto var(--spacing-large);
   padding: var(--spacing-medium);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--secondary-color);
   border-radius: 10px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Styles for instructions and category sections */
-.instructions, .category {
-  background-color: rgba(255, 255, 255, 0.1);
+/* Section Styles (Instructions and Categories) */
+.instructions,
+.category {
+  background-color: var(--secondary-color);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .instructions ul {
@@ -77,13 +78,13 @@ h1 {
 }
 
 .category h2 {
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin-top: 0;
   font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Input styles */
+/* Form Input Styles */
 .vote-input {
   width: calc(100% - 30px);
   padding: 15px;
@@ -99,13 +100,13 @@ h1 {
   color: var(--placeholder-color);
 }
 
-/* Button styles */
+/* Button Styles */
 .btn-primary {
   display: block;
   width: 100%;
   padding: 15px;
   background: var(--primary-color);
-  color: var(--text-color);
+  color: var(--input-background);
   border: none;
   border-radius: 8px;
   font-size: var(--font-size-large);
@@ -117,7 +118,7 @@ h1 {
 }
 
 .btn-primary:hover {
-  background: #FF8C8C;
+  background: #FF8C5A; /* Lighter shade of primary color */
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
@@ -127,7 +128,53 @@ h1 {
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive design */
+/* Toast Notification Styles */
+#toastContainer {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.toast {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  transition: opacity 0.3s, transform 0.3s;
+  opacity: 0;
+  transform: translateY(-50px);
+  pointer-events: auto;
+  max-width: 90%;
+  width: 300px;
+  text-align: center;
+  font-size: var(--font-size-medium);
+  border: 2px solid var(--border-color);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.error {
+  background-color: #FFD1D1;
+  border-color: #FF6B6B;
+}
+
+.toast.success {
+  background-color: #D1FFD1;
+  border-color: #4CAF50;
+}
+
+/* Responsive Design */
 @media screen and (max-width: 600px) {
   .container {
     width: 95%;
@@ -140,28 +187,28 @@ h1 {
   }
 }
 
-@media screen and (max-width: 480px) {
-  #toastContainer {
-    top: 10px;
-  }
-  
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
   .toast {
-    padding: 10px 16px;
-    font-size: var(--font-size-small);
-    width: 85%;
+    transition: none;
   }
 }
 
-@media screen and (max-width: 320px) {
-  .vote-input {
-    font-size: var(--font-size-small);
-    padding: 10px;
+/* Print Styles */
+@media print {
+  body {
+    background: none;
+    color: black;
   }
-}
 
-/* Touch device optimization */
-@media (hover: none) and (pointer: coarse) {
-  .vote-input {
-    min-height: 44px;
+  .container {
+    width: 100%;
+    max-width: none;
+  }
+
+  .btn-primary,
+  #toastContainer {
+    display: none;
   }
 }
