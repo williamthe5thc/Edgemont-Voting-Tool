@@ -51,26 +51,14 @@ h1 {
   font-size: var(--font-size-xlarge);
 }
 
-/* Unified styles for sections */
-.section {
+/* Styles for instructions and category sections */
+.instructions, .category {
   background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.section h2 {
-  color: var(--secondary-color);
-  margin-top: 0;
-  font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-/* Styles for instructions */
-.instructions {
-  margin-bottom: var(--spacing-large);
 }
 
 .instructions ul {
@@ -81,19 +69,18 @@ h1 {
   margin-bottom: var(--spacing-small);
 }
 
+.category h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
 /* Input styles */
-.input-container {
-  margin-bottom: var(--spacing-small);
-}
-
-.input-container label {
-  display: block;
-  margin-bottom: var(--spacing-small);
-}
-
-.input {
+.vote-input {
   width: calc(100% - 30px);
   padding: 15px;
+  margin-bottom: 10px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: var(--font-size-medium);
@@ -101,22 +88,11 @@ h1 {
   color: var(--input-text-color);
 }
 
-.input::placeholder {
+.vote-input::placeholder {
   color: var(--placeholder-color);
 }
 
-/* Voting specific styles */
-.category {
-  margin-bottom: var(--spacing-medium);
-}
-
-.vote-input {
-  width: calc(50% - 15px);
-  display: inline-block;
-  margin-right: 10px;
-}
-
-/* Button styles */
+/* Button styles (updated for consistency) */
 .btn-primary {
   display: block;
   width: 100%;
@@ -144,21 +120,21 @@ h1 {
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Results list styles */
-.results-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.results-list li {
-  margin-bottom: var(--spacing-small);
-  font-size: var(--font-size-medium);
-}
-
-/* Admin specific styles */
+/* Admin panel styles */
 .admin-section {
-  margin-bottom: var(--spacing-large);
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--spacing-medium);
+  padding: var(--spacing-medium);
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.admin-section h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .dish-count-input {
@@ -178,14 +154,6 @@ h1 {
   border-radius: 4px;
   background-color: var(--input-background);
   color: var(--input-text-color);
-}
-
-/* Message styles */
-.message {
-  text-align: center;
-  font-size: var(--font-size-large);
-  color: var(--text-color);
-  margin: var(--spacing-large) 0;
 }
 
 /* Loading spinner styles */
@@ -289,7 +257,7 @@ h1 {
 }
 
 @media screen and (max-width: 320px) {
-  .input {
+  .vote-input {
     font-size: var(--font-size-small);
     padding: 10px;
   }
@@ -297,7 +265,7 @@ h1 {
 
 /* Touch device optimization */
 @media (hover: none) and (pointer: coarse) {
-  .input {
+  .vote-input {
     min-height: 44px; /* Ensures touch targets are at least 44px high */
   }
 }
