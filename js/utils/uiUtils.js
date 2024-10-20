@@ -17,45 +17,59 @@ console.log("uiUtills.js loading");
 export function showToast(message, type = 'info', category = null) {
     console.log(`Attempting to show toast: ${type} - ${message} for category: ${category}`);
     
-    let toastContainerId = category ? `toastContainer-${category}` : 'toastContainer';
-    let toastContainer = document.getElementById(toastContainerId);
+    let toastContainer;
+    if (category) {
+        toastContainer = document.getElementById(`toastContainer-${category}`);
+    } else {
+        toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toastContainer';
+            toastContainer.style.position = 'fixed';
+            toastContainer.style.top = '20px';
+            toastContainer.style.left = '50%';
+            toastContainer.style.transform = 'translateX(-50%)';
+            toastContainer.style.zIndex = '1000';
+            document.body.appendChild(toastContainer);
+        }
+    }
     
     if (!toastContainer) {
-        console.error(`Toast container for category ${category} not found. Container ID: ${toastContainerId}`);
+        console.error(`Toast container not found. Category: ${category}`);
         return;
     }
     
-    console.log(`Toast container found for ${category}`);
+    console.log(`Toast container found for ${category || 'general'}`);
     
     const toast = document.createElement('div');
     toast.textContent = message;
     toast.className = `toast ${type}`;
     
     toastContainer.appendChild(toast);
-    console.log(`Toast appended to container for ${category}`);
+    console.log(`Toast appended to container for ${category || 'general'}`);
     
     // Force a reflow
     toast.offsetHeight;
     
     requestAnimationFrame(() => {
         toast.classList.add('show');
-        console.log(`Show class added to toast for ${category}`);
+        console.log(`Show class added to toast for ${category || 'general'}`);
     });
     
     setTimeout(() => {
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
             toastContainer.removeChild(toast);
-            console.log(`Toast removed for ${category}`);
+            console.log(`Toast removed for ${category || 'general'}`);
         }, { once: true });
     }, 5000);
 
-    // Limit the number of visible toasts per category
-    const maxVisibleToasts = 2;
+    // Limit the number of visible toasts
+    const maxVisibleToasts = 3;
     const toasts = toastContainer.getElementsByClassName('toast');
     if (toasts.length > maxVisibleToasts) {
         toastContainer.removeChild(toasts[0]);
-        console.log(`Excess toast removed for ${category}`);
+        console.log(`Excess toast removed for ${category || 'general'}`);
     }
 }
 console.log("uiutils loaded");
