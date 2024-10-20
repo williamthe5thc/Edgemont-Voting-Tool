@@ -93,11 +93,13 @@ export async function submitVotes(e) {
     
     try {
         console.log("Submitting votes to Vercel KV and Google Sheets");
-        await Promise.all([
-            submitToVercelKV(votes),
-            submitToGoogleSheets(votes)
-        ]);
-        console.log("Votes submitted successfully");
+    const [vercelResponse, googleSheetsResponse] = await Promise.all([
+        submitToVercelKV(votes),
+        submitToGoogleSheets(votes)
+    ]);
+    console.log("Votes submitted successfully");
+    console.log("Vercel KV response:", vercelResponse);
+    console.log("Google Sheets response:", googleSheetsResponse);
 
         showToast('Thank you for voting!', 'success');
         localStorage.removeItem('currentVotes');
@@ -132,7 +134,7 @@ function displayVoteSummary(votes) {
 }
 
 async function submitToVercelKV(votes) {
-    console.log("submitting to vercel KV");
+    console.log("Submitting to Vercel KV");
     const response = await fetch('/api/vote', {
         method: 'POST',
         headers: {
@@ -141,16 +143,18 @@ async function submitToVercelKV(votes) {
         body: JSON.stringify(votes),
     });
 
+    const responseData = await response.text();
+    console.log("Vercel KV response:", responseData);
+
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
     }
 
-    return await response.json();
+    return JSON.parse(responseData);
 }
 
 async function submitToGoogleSheets(votes) {
-    console.log("submitting to google");
+    console.log("Submitting to Google Sheets");
     const response = await fetch('https://script.google.com/macros/s/AKfycbw-mf4ET7v5owXHVXlxcQup74TcFaQdnxuZWGwch0xpsDefewipZ2tsUWxRDptW5yU/exec', {
         method: 'POST',
         body: JSON.stringify(votes),
@@ -159,10 +163,12 @@ async function submitToGoogleSheets(votes) {
         },
     });
 
+    const responseData = await response.text();
+    console.log("Google Sheets response:", responseData);
+
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
     }
 
-    return await response.json();
+    return JSON.parse(responseData);
 }
