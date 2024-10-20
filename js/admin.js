@@ -146,13 +146,16 @@ async function clearVotes() {
 function setupEventListeners() {
     const updateSettingsButton = document.querySelector('.admin-section:nth-child(1) button');
     if (updateSettingsButton) {
+        console.log("update settings");
         updateSettingsButton.addEventListener('click', updateSettings);
+        
     } else {
         console.error("Update settings button not found");
     }
 
     const clearVotesButton = document.querySelector('.admin-section:nth-child(2) button');
     if (clearVotesButton) {
+        console.log("cleaer votes true");
         clearVotesButton.addEventListener('click', clearVotes);
     } else {
         console.error("Clear votes button not found");
