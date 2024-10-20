@@ -4,7 +4,7 @@
 /* Define CSS custom properties for easy theming */
 :root {
   /* Colors */
-  --primary-color: #FF6B6B;
+  --primary-color: #FF5722; /* Changed to Deep Orange */
   --secondary-color: #FFD166;
   --text-color: #333333;
   --background-color: #F5F5F5;
@@ -18,7 +18,7 @@
   --font-size-small: 14px;
   --font-size-medium: 16px;
   --font-size-large: 18px;
-  --font-size-xlarge: 36px;  /* Increased from 24px to 36px */
+  --font-size-xlarge: 36px;
   
   /* Spacing */
   --spacing-small: 10px;
@@ -50,8 +50,8 @@ h1 {
   margin-bottom: var(--spacing-large);
   text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   font-size: var(--font-size-xlarge);
-  line-height: 1.2;  /* Added to improve readability for larger text */
-  padding: 20px 0;  /* Added to give more space around the title */
+  line-height: 1.2;
+  padding: 20px 0;
 }
 
 
