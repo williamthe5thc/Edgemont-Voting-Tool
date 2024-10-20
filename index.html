@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dia de los Ancestros Cooking Competition - Voting</title>
-    <!-- Link to the main stylesheet -->
+    <title>Dia de los Ancestros Cooking Competition</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Main container for the voting application -->
     <div class="container">
         <h1>Dia de los Ancestros Cooking Competition</h1>
 
-        <!-- Instructions section -->
-        <div class="instructions">
+        <div class="section instructions">
             <h2>Voting Instructions</h2>
             <ul>
                 <li>For each category, select up to 2 of your favorite dishes.</li>
@@ -22,29 +19,17 @@
             </ul>
         </div>
 
-        <!-- Loading spinner (hidden by default) -->
         <div id="loading-spinner" class="loading-spinner" style="display: none;">
             <div class="spinner"></div>
         </div>
 
-        <!-- Container for dynamically loaded categories -->
-        <div id="categories">
-            <!-- Categories will be dynamically inserted here by JavaScript -->
-        </div>
+        <div id="categories"></div>
 
-        <!-- Submit button for votes -->
         <button id="submitVotes" class="btn-primary">Submit Your Votes</button>
     </div>
 
-    <!-- Container for toast notifications -->
     <div id="toastContainer"></div>
 
-    <!-- JavaScript module imports -->
-    <script type="module" src="js/constants.js"></script>
-    <script type="module" src="js/utils/storageUtils.js"></script>
-    <script type="module" src="js/utils/uiUtils.js"></script>
-    <script type="module" src="js/utils/apiUtils.js"></script>
-    <script type="module" src="js/utils/validationUtils.js"></script>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
