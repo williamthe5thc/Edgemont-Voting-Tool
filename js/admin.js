@@ -2,17 +2,7 @@
  * admin.js
  * 
  * This file contains the logic for the admin panel of the voting application.
- * It handles the following key functionalities:
- * 
- * 1. Loading and displaying current competition settings
- * 2. Updating competition settings (number of dishes per category)
- * 3. Clearing all votes from the system
- * 4. Input validation for admin settings
- * 5. Displaying feedback to admin users via toast notifications
- * 
- * The script interacts with the backend API to fetch and update settings,
- * as well as to clear votes. It uses utility functions for UI updates and
- * API calls, and relies on constants for category information.
+ * It handles updating competition settings and clearing votes.
  */
 
 import { CATEGORIES } from './constants.js';
@@ -21,9 +11,6 @@ import { fetchData } from './utils/apiUtils.js';
 
 console.log("admin.js loading");
 
-/**
- * Loads current competition settings and populates the admin interface
- */
 async function loadCurrentSettings() {
     try {
         const settings = await fetchData('/api/get-settings');
@@ -35,7 +22,6 @@ async function loadCurrentSettings() {
 
         dishCountContainer.innerHTML = '';
 
-        // Create input fields for min and max dish counts for each category
         CATEGORIES.forEach(category => {
             const minCount = settings.dishesPerCategory?.[category]?.min || 1;
             const maxCount = settings.dishesPerCategory?.[category]?.max || 5;
@@ -56,9 +42,6 @@ async function loadCurrentSettings() {
     }
 }
 
-/**
- * Sets up input validation for dish count inputs
- */
 function setupValidation() {
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
@@ -73,10 +56,8 @@ function setupValidation() {
     });
 }
 
-/**
- * Updates competition settings based on admin input
- */
 async function updateSettings() {
+    console.log("updateSettings function called");
     const dishesPerCategory = {};
     let isValid = true;
 
@@ -119,10 +100,8 @@ async function updateSettings() {
     }
 }
 
-/**
- * Clears all votes from the system
- */
 async function clearVotes() {
+    console.log("clearVotes function called");
     try {
         const response = await fetch('/api/clear-votes', {
             method: 'POST',
@@ -140,40 +119,36 @@ async function clearVotes() {
     }
 }
 
-/**
- * Sets up event listeners for the admin panel
- */
 function setupEventListeners() {
-    const updateSettingsButton = document.querySelector('.admin-section:nth-child(1) button');
+    console.log("Setting up event listeners");
+    const updateSettingsButton = document.querySelector('#updateDishCount');
+    const clearVotesButton = document.querySelector('#clearVotes');
+
     if (updateSettingsButton) {
-        console.log("update settings");
+        console.log("Update settings button found");
         updateSettingsButton.addEventListener('click', updateSettings);
-        
     } else {
         console.error("Update settings button not found");
     }
 
-    const clearVotesButton = document.querySelector('.admin-section:nth-child(2) button');
     if (clearVotesButton) {
-        console.log("cleaer votes true");
+        console.log("Clear votes button found");
         clearVotesButton.addEventListener('click', clearVotes);
     } else {
         console.error("Clear votes button not found");
     }
 }
 
-/**
- * Initializes the admin panel
- */
 function init() {
+    console.log("Initializing admin panel");
     loadCurrentSettings();
     setupEventListeners();
 }
 
-// Initialize the admin panel when the DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
 }
+
 console.log("admin.js loaded");
