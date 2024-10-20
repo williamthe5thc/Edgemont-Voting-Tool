@@ -1,130 +1,132 @@
-# Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
+# Dia de los Ancestros Cooking Competition Voting System
 
-A web-based voting system for the "Dia de los Ancestros" Cooking Competition, allowing participants to vote for their favorite dishes across multiple categories.
+## Overview
+
+This project is a web-based voting system designed for the Dia de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories, and provides an admin interface for managing the competition settings and viewing results.
 
 ## Features
 
-- Dynamic loading of competition categories
-- User-friendly voting interface with local storage for temporary vote persistence
-- Admin panel for managing competition settings and clearing votes
-- Results page displaying top-ranked dishes
-- Responsive design optimized for mobile devices
-- Toast notification system for user feedback
-- Error handling and logging
-- Redundant vote storage using Google Apps Script and Vercel KV
+- User-friendly voting interface
+- Multiple categories for voting (e.g., Bread, Appetizers, Dessert, Entrée)
+- Real-time input validation
+- Local storage for saving incomplete votes
+- Admin panel for managing competition settings
+- Results page for viewing competition outcomes
+- Integration with Vercel KV for data storage
 
-## Tech Stack
+## Technology Stack
 
 - Frontend: HTML, CSS, JavaScript
-- Backend: Vercel Serverless Functions
-- Database: Vercel KV (Key-Value storage)
-- Redundant Storage: Google Apps Script
+- Backend: Node.js with Vercel Serverless Functions
+- Database: Vercel KV (Key-Value store)
 
 ## Project Structure
 
 ```
-dia-de-los-ancestros-voting-tool/
-│
-├── index.html
-├── admin.html
-├── results.html
-├── styles.css
-│
-├── js/
-│   ├── constants.js
-│   ├── script.js
-│   ├── admin.js
-│   ├── results-display.js
-│   └── utils/
-│       ├── storageUtils.js
-│       ├── uiUtils.js
-│       ├── apiUtils.js
-│       └── validationUtils.js
-│
+/
 ├── api/
-│   ├── vote.js
-│   ├── results.js
 │   ├── clear-votes.js
 │   ├── get-settings.js
+│   ├── results.js
 │   ├── update-settings.js
-│   └── utils.js
-│
-└── google-apps-script/
-    └── Code.gs
+│   └── vote.js
+├── js/
+│   ├── utils/
+│   │   ├── apiUtils.js
+│   │   ├── storageUtils.js
+│   │   ├── uiUtils.js
+│   │   └── validationUtils.js
+│   ├── admin.js
+│   ├── categoryLoader.js
+│   ├── constants.js
+│   ├── main.js
+│   ├── results-display.js
+│   ├── script.js
+│   └── voteSubmitter.js
+├── admin.html
+├── index.html
+├── results.html
+├── styles.css
+└── package.json
 ```
 
-## Installation
+### Key Components
+
+- `api/`: Contains serverless functions for backend operations
+  - `clear-votes.js`: Handles clearing all votes
+  - `get-settings.js`: Retrieves competition settings
+  - `results.js`: Calculates and returns voting results
+  - `update-settings.js`: Updates competition settings
+  - `vote.js`: Processes and stores votes
+
+- `js/`: Client-side JavaScript files
+  - `utils/`: Utility functions for various operations
+  - `admin.js`: Manages admin panel functionality
+  - `categoryLoader.js`: Handles loading of voting categories
+  - `constants.js`: Defines constant values used across the application
+  - `main.js`: Main entry point for the voting application
+  - `results-display.js`: Manages the display of voting results
+  - `script.js`: Contains core voting logic
+  - `voteSubmitter.js`: Handles the vote submission process
+
+- `admin.html`: Admin panel interface
+- `index.html`: Main voting interface
+- `results.html`: Results display page
+- `styles.css`: Global styles for the application
+- `package.json`: Project dependencies and scripts
+
+- 
+## Setup
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/dia-de-los-ancestros-voting-tool.git
+   git clone https://github.com/your-username/dia-de-los-ancestros-voting.git
+   cd dia-de-los-ancestros-voting
    ```
 
-2. Navigate to the project directory:
-   ```
-   cd dia-de-los-ancestros-voting-tool
-   ```
-
-3. Install dependencies:
+2. Install dependencies:
    ```
    npm install
    ```
 
-4. Set up Vercel KV:
-   - Create a Vercel account if you haven't already
-   - Set up a new KV database in your Vercel project
-   - Configure the KV connection string in your Vercel project settings
+3. Set up Vercel KV:
+   - Create a Vercel account if you don't have one
+   - Set up a new KV store in your Vercel dashboard
+   - Add your KV connection string to your Vercel project's environment variables
 
-5. Set up Google Apps Script:
-   - Create a new Google Apps Script project
-   - Copy the contents of `google-apps-script/Code.gs` into your script
-   - Deploy the script as a web app and note the URL
-
-6. Configure environment variables:
-   - Create a `.env.local` file in the project root
-   - Add the following variables:
-     ```
-     KV_URL=your_kv_url
-     KV_REST_API_URL=your_kv_rest_api_url
-     KV_REST_API_TOKEN=your_kv_rest_api_token
-     GOOGLE_APPS_SCRIPT_URL=your_google_apps_script_url
-     ```
-
-7. Deploy to Vercel:
+4. Deploy to Vercel:
    ```
    vercel
    ```
 
 ## Usage
 
-### Voting Page (index.html)
-- Users can select up to 2 favorite dishes for each category
-- Votes are temporarily saved in local storage
-- Submitted votes are sent to the server and Google Apps Script
+### For Voters
 
-### Admin Panel (admin.html)
-- Clear all votes
-- Update the number of dishes per category
-- View current competition settings
+1. Navigate to the main page of the deployed application.
+2. Enter your votes for each category (up to two dishes per category).
+3. Submit your votes.
 
-### Results Page (results.html)
-- Displays the top dishes for each category based on votes
+### For Admins
+
+1. Navigate to the `/admin.html` page of the deployed application.
+2. Update the number of dishes per category as needed.
+3. Use the "Clear Votes" function to reset all votes (use with caution).
+
+### Viewing Results
+
+1. Navigate to the `/results.html` page to view the current standings.
 
 ## Development
 
 To run the project locally:
 
-1. Install the Vercel CLI:
+1. Start the development server:
    ```
-   npm i -g vercel
-   ```
-
-2. Run the development server:
-   ```
-   vercel dev
+   npm run dev
    ```
 
-3. Open `http://localhost:3000` in your browser
+2. Open `http://localhost:3000` in your browser.
 
 ## Contributing
 
