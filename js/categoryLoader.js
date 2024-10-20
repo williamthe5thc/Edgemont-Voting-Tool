@@ -96,11 +96,12 @@ export async function loadCategoriesProgressively() {
             `).join('')}
             <div id="toastContainer-${category}" class="toast-container"></div>
         `;
-            
-            categoriesContainer.appendChild(categoryDiv);
-            // Small delay to allow for progressive loading effect
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
+        
+        categoriesContainer.appendChild(categoryDiv);
+        console.log(`Category ${category} loaded. Toast container ID: toastContainer-${category}`);
+        // Small delay to allow for progressive loading effect
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
         console.log("All categories loaded");
         categoriesLoaded = true;
     } catch (error) {
