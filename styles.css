@@ -4,21 +4,20 @@
 /* Define CSS custom properties for easy theming */
 :root {
   /* Colors */
-  --primary-color: #FF5722; /* Deep Orange */
+  --primary-color: #FF6B6B;
   --secondary-color: #FFD166;
-  --text-color: #333333;
-  --background-color: #F5F5F5;
-  --input-background: #FFFFFF;
-  --input-text-color: #333333;
+  --text-color: #FFFFFF;
+  --background-color: #1A1A1A;
+  --input-background: #333333;
+  --input-text-color: #FFFFFF;
   --placeholder-color: #999999;
   --border-color: #FFD166;
-  --section-background: rgba(255, 255, 255, 0.8);
   
   /* Font sizes */
   --font-size-small: 14px;
   --font-size-medium: 16px;
   --font-size-large: 18px;
-  --font-size-xlarge: 36px;
+  --font-size-xlarge: 24px;
   
   /* Spacing */
   --spacing-small: 10px;
@@ -42,58 +41,31 @@ body {
   padding: var(--spacing-medium);
 }
 
-/* Header styles */
+/* Updated header styles */
 h1 {
   font-family: 'Lobster', cursive;
   color: var(--primary-color);
   text-align: center;
-  margin-bottom: var(--spacing-large);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-  font-size: var(--font-size-xlarge);
-  line-height: 1.2;
-  padding: 20px 0;
+  margin: 0 auto var(--spacing-large);
+  padding: var(--spacing-medium);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  max-width: 100%;
+  box-sizing: border-box;
 }
-h1 {
-    font-family: 'Lobster', cursive;
-    color: var(--primary-color);
-    text-align: center;
-    margin-bottom: var(--spacing-large);
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    font-size: 2.5rem; /* Increased base font size */
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 600px) {
-    h1 {
-        font-size: 2rem; /* Slightly smaller on medium-sized screens, but still prominent */
-    }
-
-    .container {
-        width: 95%;
-        padding: var(--spacing-small);
-    }
-
-    .btn-primary {
-        font-size: var(--font-size-medium);
-        padding: 12px;
-    }
-}
-
-@media screen and (max-width: 400px) {
-    h1 {
-        font-size: 1.8rem; /* Adjusted size for very small screens */
-    }
-}
-
 
 /* Styles for instructions and category sections */
 .instructions, .category {
-  background-color: var(--section-background);
+  background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .instructions ul {
@@ -105,10 +77,10 @@ h1 {
 }
 
 .category h2 {
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin-top: 0;
   font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 /* Input styles */
@@ -133,7 +105,7 @@ h1 {
   width: 100%;
   padding: 15px;
   background: var(--primary-color);
-  color: #FFFFFF;
+  color: var(--text-color);
   border: none;
   border-radius: 8px;
   font-size: var(--font-size-large);
@@ -160,10 +132,6 @@ h1 {
   .container {
     width: 95%;
     padding: var(--spacing-small);
-  }
-
-  h1 {
-    font-size: var(--font-size-large);
   }
 
   .btn-primary {
