@@ -13,6 +13,8 @@ export function showToast(message, type = 'info', category = 'general') {
         toastContainer.style.left = '50%';
         toastContainer.style.transform = 'translateX(-50%)';
         toastContainer.style.zIndex = '1000';
+        toastContainer.style.display = 'flex';
+        toastContainer.style.flexDirection = 'column-reverse';
         document.body.appendChild(toastContainer);
         console.log('General toast container created and appended to body');
     }
@@ -28,8 +30,9 @@ export function showToast(message, type = 'info', category = 'general') {
     toast.textContent = message;
     toast.className = `toast ${type}`;
     
-    toastContainer.appendChild(toast);
-    console.log(`Toast appended to container for ${category}`);
+    // Insert the new toast at the beginning of the container
+    toastContainer.insertBefore(toast, toastContainer.firstChild);
+    console.log(`Toast prepended to container for ${category}`);
     
     // Force a reflow
     toast.offsetHeight;
@@ -52,7 +55,8 @@ export function showToast(message, type = 'info', category = 'general') {
     const maxVisibleToasts = 3;
     const toasts = toastContainer.getElementsByClassName('toast');
     if (toasts.length > maxVisibleToasts) {
-        toastContainer.removeChild(toasts[0]);
+        toastContainer.removeChild(toasts[toasts.length - 1]);
         console.log(`Excess toast removed for ${category}`);
     }
 }
+console.log("uiUtils finished loading");
