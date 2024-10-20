@@ -51,14 +51,26 @@ h1 {
   font-size: var(--font-size-xlarge);
 }
 
-/* Styles for instructions and category sections */
-.instructions, .category {
+/* Unified styles for sections (categories, results, admin sections) */
+.section {
   background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.section h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Styles for instructions */
+.instructions {
+  margin-bottom: var(--spacing-large);
 }
 
 .instructions ul {
@@ -69,18 +81,19 @@ h1 {
   margin-bottom: var(--spacing-small);
 }
 
-.category h2 {
-  color: var(--secondary-color);
-  margin-top: 0;
-  font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+/* Input styles */
+.input-container {
+  margin-bottom: var(--spacing-small);
 }
 
-/* Input styles */
-.vote-input {
+.input-container label {
+  display: block;
+  margin-bottom: var(--spacing-small);
+}
+
+.input {
   width: calc(100% - 30px);
   padding: 15px;
-  margin-bottom: 10px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: var(--font-size-medium);
@@ -88,11 +101,11 @@ h1 {
   color: var(--input-text-color);
 }
 
-.vote-input::placeholder {
+.input::placeholder {
   color: var(--placeholder-color);
 }
 
-/* Button styles (updated for consistency) */
+/* Button styles */
 .btn-primary {
   display: block;
   width: 100%;
@@ -120,40 +133,24 @@ h1 {
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Admin panel styles */
-.admin-section {
-  background-color: rgba(255, 255, 255, 0.1);
-  margin-bottom: var(--spacing-medium);
-  padding: var(--spacing-medium);
-  border-radius: 10px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+/* Results list styles */
+.results-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-.admin-section h2 {
-  color: var(--secondary-color);
-  margin-top: 0;
-  font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-.dish-count-input {
+.results-list li {
   margin-bottom: var(--spacing-small);
+  font-size: var(--font-size-medium);
 }
 
-.dish-count-input label {
-  display: inline-block;
-  width: 100px;
-  margin-right: var(--spacing-small);
-}
-
-.dish-count-input input {
-  width: 60px;
-  padding: 5px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background-color: var(--input-background);
-  color: var(--input-text-color);
+/* Message styles */
+.message {
+  text-align: center;
+  font-size: var(--font-size-large);
+  color: var(--text-color);
+  margin: var(--spacing-large) 0;
 }
 
 /* Loading spinner styles */
@@ -257,7 +254,7 @@ h1 {
 }
 
 @media screen and (max-width: 320px) {
-  .vote-input {
+  .input {
     font-size: var(--font-size-small);
     padding: 10px;
   }
@@ -265,7 +262,7 @@ h1 {
 
 /* Touch device optimization */
 @media (hover: none) and (pointer: coarse) {
-  .vote-input {
+  .input {
     min-height: 44px; /* Ensures touch targets are at least 44px high */
   }
 }
