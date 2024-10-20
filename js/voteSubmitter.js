@@ -71,6 +71,25 @@ export function saveVotesToLocalStorage() {
     saveToLocalStorage('currentVotes', votes);
 }
 
+function displayVoteSummary(votes) {
+    let summary = 'Your Vote Summary:\n\n';
+    
+    CATEGORIES.forEach(category => {
+        const categoryVotes = votes[category] || [];
+        summary += `${category}:\n`;
+        if (categoryVotes.length === 0) {
+            summary += '  No votes\n';
+        } else {
+            categoryVotes.forEach((dish, index) => {
+                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
+            });
+        }
+        summary += '\n';
+    });
+    
+    return summary;
+}
+
 export function loadVotesFromLocalStorage() {
     const votes = getFromLocalStorage('currentVotes');
     if (votes) {
@@ -82,6 +101,7 @@ export function loadVotesFromLocalStorage() {
         });
     }
 }
+
 
 export async function submitVotes(e) {
     e.preventDefault();
