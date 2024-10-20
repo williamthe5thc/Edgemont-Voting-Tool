@@ -1,16 +1,47 @@
-// voteSubmitter.js
+/**
+ * voteSubmitter.js
+ * 
+ * This file is responsible for managing the vote submission process in the cooking competition application.
+ * It handles various aspects of the voting system, including:
+ * 
+ * 1. Setting up and managing vote input fields
+ * 2. Validating user inputs in real-time
+ * 3. Saving and loading votes from local storage to persist user progress
+ * 4. Submitting final votes to the server (Vercel KV)
+ * 5. Providing user feedback through toast notifications and UI updates
+ * 
+ * Key functions:
+ * - setDishesPerCategory: Sets the number of dishes for each category based on competition settings
+ * - setupVoting: Initializes event listeners for vote inputs
+ * - validateInput: Ensures individual vote inputs are valid
+ * - saveVotesToLocalStorage / loadVotesFromLocalStorage: Manages vote persistence in local storage
+ * - submitVotes: Handles the entire vote submission process, including validation and server communication
+ * 
+ * This file interacts closely with other modules like constants.js for competition categories,
+ * uiUtils.js for displaying notifications, storageUtils.js for local storage operations,
+ * and validationUtils.js for vote validation logic.
+ */
 
 import { CATEGORIES } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
 import { validateVotes } from './utils/validationUtils.js';
 
+// Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
 
+/**
+ * Sets the number of dishes per category
+ * @param {Object} dishes - Object containing dish counts for each category
+ */
 export function setDishesPerCategory(dishes) {
     DISHES_PER_CATEGORY = dishes;
 }
 
+/**
+ * Sets up event listeners for voting inputs
+ * This function is called once the voting interface is loaded
+ */
 export function setupVoting() {
     document.querySelectorAll('.vote-input').forEach(input => {
         input.addEventListener('input', function(e) {
@@ -21,6 +52,10 @@ export function setupVoting() {
     });
 }
 
+/**
+ * Validates a single input field
+ * @param {HTMLInputElement} input - The input element to validate
+ */
 export function validateInput(input) {
     const value = parseInt(input.value);
     const category = input.dataset.category;
@@ -34,6 +69,9 @@ export function validateInput(input) {
     }
 }
 
+/**
+ * Saves the current votes to local storage
+ */
 export function saveVotesToLocalStorage() {
     const votes = {};
     CATEGORIES.forEach(category => {
@@ -45,6 +83,9 @@ export function saveVotesToLocalStorage() {
     saveToLocalStorage('currentVotes', votes);
 }
 
+/**
+ * Loads votes from local storage and populates the input fields
+ */
 export function loadVotesFromLocalStorage() {
     const votes = getFromLocalStorage('currentVotes');
     if (votes) {
@@ -57,6 +98,10 @@ export function loadVotesFromLocalStorage() {
     }
 }
 
+/**
+ * Handles the vote submission process
+ * @param {Event} e - The submit event
+ */
 export async function submitVotes(e) {
     e.preventDefault();
     console.log("Submit votes function called");
@@ -97,6 +142,11 @@ export async function submitVotes(e) {
     }
 }
 
+/**
+ * Generates a summary of the votes
+ * @param {Object} votes - The votes object
+ * @returns {string} A formatted summary of the votes
+ */
 function displayVoteSummary(votes) {
     let summary = 'Your Vote Summary:\n\n';
     
@@ -116,6 +166,11 @@ function displayVoteSummary(votes) {
     return summary;
 }
 
+/**
+ * Submits votes to the Vercel KV store
+ * @param {Object} votes - The votes object to submit
+ * @returns {Promise} A promise that resolves with the server response
+ */
 async function submitToVercelKV(votes) {
     const response = await fetch('/api/vote', {
         method: 'POST',
