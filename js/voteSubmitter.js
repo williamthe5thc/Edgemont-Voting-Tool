@@ -40,12 +40,12 @@ export function validateInput(input) {
 
     if (input.value === '') return;
 
-    if (isNaN(value) || value < 1 || value > max) {
+if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
-        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error');
-        return;
+        console.log(`Validation failed for ${category}. Showing toast.`);
+        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error', category);
     }
-
+    
     // Check for duplicate entries within the same category
     const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
     const values = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
