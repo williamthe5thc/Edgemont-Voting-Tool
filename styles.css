@@ -190,17 +190,18 @@ h1 {
 
 /* Toast notification styles */
 #toastContainer {
-  position: fixed;
-  bottom: 20px; /* Changed from top to bottom */
-  left: 50%;
-  transform: translateX(-50%);
+  position: sticky;
+  top: 100%; /* Position at the bottom of its container */
+  left: 0;
+  right: 0;
   display: flex;
-  flex-direction: column-reverse; /* Reverse the order so new toasts appear at the bottom */
+  flex-direction: column;
   align-items: center;
   z-index: 1000;
   pointer-events: none;
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
+  margin-top: 10px; /* Add some space between inputs and toasts */
 }
 
 .toast {
@@ -209,12 +210,13 @@ h1 {
   padding: 12px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin-top: 10px; /* Changed from margin-bottom to margin-top */
+  margin-bottom: 10px;
   transition: opacity 0.3s, transform 0.3s;
   opacity: 0;
-  transform: translateY(20px); /* Changed direction to move up */
+  transform: translateY(-10px);
   pointer-events: auto;
-  width: 100%;
+  width: calc(100% - 40px); /* Full width minus some padding */
+  max-width: 400px;
   text-align: center;
   font-size: var(--font-size-medium);
   border: 2px solid var(--border-color);
@@ -237,11 +239,6 @@ h1 {
 
 /* Responsive adjustments for toast */
 @media screen and (max-width: 480px) {
-  #toastContainer {
-    max-width: 90%;
-    bottom: 10px; /* Adjust for smaller screens */
-  }
-  
   .toast {
     padding: 10px 16px;
     font-size: var(--font-size-small);
