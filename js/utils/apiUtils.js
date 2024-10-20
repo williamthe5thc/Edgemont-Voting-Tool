@@ -10,10 +10,12 @@
  * providing consistent error handling and response parsing.
  */
 console.log("apiUtils.js loading");
+
 /**
  * Fetches data from a given URL
  * @param {string} url - The URL to fetch data from
  * @returns {Promise<any>} The parsed JSON response
+ * @throws {Error} If the fetch request fails or returns a non-OK status
  */
 export async function fetchData(url) {
     const response = await fetch(url);
@@ -22,4 +24,5 @@ export async function fetchData(url) {
     }
     return await response.json();
 }
+
 console.log("apiUtils.js loaded");
