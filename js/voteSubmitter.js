@@ -132,6 +132,7 @@ function displayVoteSummary(votes) {
 }
 
 async function submitToVercelKV(votes) {
+    console.log("submitting to vercel KV);
     const response = await fetch('/api/vote', {
         method: 'POST',
         headers: {
@@ -149,7 +150,8 @@ async function submitToVercelKV(votes) {
 }
 
 async function submitToGoogleSheets(votes) {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbyBmEHcN4IfA9YT-mYi-sQGximBKjLxV6V0bbaRarDfwxSk3-B_brBXWxIhDraWjhcY/exec', {
+    console.log("submitting to google");
+    const response = await fetch('https://script.google.com/macros/s/AKfycbw-mf4ET7v5owXHVXlxcQup74TcFaQdnxuZWGwch0xpsDefewipZ2tsUWxRDptW5yU/exec', {
         method: 'POST',
         body: JSON.stringify(votes),
         headers: {
