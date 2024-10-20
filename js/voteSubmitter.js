@@ -43,9 +43,18 @@ export function validateInput(input) {
     if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
         showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error');
+        return;
+    }
+
+    // Check for duplicate entries within the same category
+    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+    const values = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
+    
+    if (new Set(values).size !== values.length) {
+        showToast(`Duplicate entries detected for ${category}. Please choose 2 different favorite dishes.`, 'error');
+        input.value = '';
     }
 }
-
 export function saveVotesToLocalStorage() {
     const votes = {};
     CATEGORIES.forEach(category => {
