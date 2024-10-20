@@ -4,6 +4,17 @@
  * This is the main entry point for the voting application.
  * It handles the initialization of the app, including setting up the UI,
  * loading competition settings, and setting up event listeners.
+ * 
+ * Functions:
+ * - init: Initializes the application
+ * 
+ * This file coordinates the following actions:
+ * 1. Setting the page title
+ * 2. Fetching competition settings
+ * 3. Loading voting categories
+ * 4. Setting up voting functionality
+ * 5. Loading any saved votes
+ * 6. Setting up the submit button
  */
 
 import { THEME } from './constants.js';
@@ -13,7 +24,17 @@ import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCatego
 
 /**
  * Initializes the application
- * This function is responsible for setting up the entire voting interface
+ * @async
+ * @function init
+ * @returns {Promise<void>}
+ * 
+ * This function is responsible for setting up the entire voting interface:
+ * 1. Sets the page title to the competition theme
+ * 2. Fetches competition settings from the server
+ * 3. Loads the voting categories into the UI
+ * 4. Sets up event listeners for the voting inputs
+ * 5. Loads any previously saved votes from local storage
+ * 6. Sets up the submit button event listener
  */
 async function init() {
     console.log("Initializing application");
@@ -53,7 +74,12 @@ async function init() {
     }
 }
 
-// Initialize the application when the DOM is fully loaded
+/**
+ * Event listener for DOMContentLoaded
+ * 
+ * This ensures that the init function is called only after
+ * the DOM is fully loaded and ready to be manipulated.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM fully loaded, initializing application");
     init().catch(error => {
