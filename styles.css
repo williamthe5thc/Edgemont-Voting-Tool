@@ -6,12 +6,13 @@
   /* Colors */
   --primary-color: #FF6B6B;
   --secondary-color: #FFD166;
-  --text-color: #FFFFFF;
-  --background-color: #1A1A1A;
-  --input-background: #333333;
-  --input-text-color: #FFFFFF;
+  --text-color: #333333;
+  --background-color: #F5F5F5;
+  --input-background: #FFFFFF;
+  --input-text-color: #333333;
   --placeholder-color: #999999;
   --border-color: #FFD166;
+  --section-background: rgba(255, 255, 255, 0.8);
   
   /* Font sizes */
   --font-size-small: 14px;
@@ -47,18 +48,18 @@ h1 {
   color: var(--primary-color);
   text-align: center;
   margin-bottom: var(--spacing-large);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
   font-size: var(--font-size-xlarge);
 }
 
 /* Styles for instructions and category sections */
 .instructions, .category {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--section-background);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .instructions ul {
@@ -70,10 +71,10 @@ h1 {
 }
 
 .category h2 {
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin-top: 0;
   font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 /* Input styles */
@@ -92,13 +93,13 @@ h1 {
   color: var(--placeholder-color);
 }
 
-/* Button styles (updated for consistency) */
+/* Button styles */
 .btn-primary {
   display: block;
   width: 100%;
   padding: 15px;
   background: var(--primary-color);
-  color: var(--text-color);
+  color: #FFFFFF;
   border: none;
   border-radius: 8px;
   font-size: var(--font-size-large);
@@ -110,7 +111,7 @@ h1 {
 }
 
 .btn-primary:hover {
-  background: #FF8C8C; /* Lighter shade of primary color */
+  background: #FF8C8C;
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
@@ -118,113 +119,6 @@ h1 {
 .btn-primary:active {
   transform: translateY(-1px);
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Admin panel styles */
-.admin-section {
-  background-color: rgba(255, 255, 255, 0.1);
-  margin-bottom: var(--spacing-medium);
-  padding: var(--spacing-medium);
-  border-radius: 10px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.admin-section h2 {
-  color: var(--secondary-color);
-  margin-top: 0;
-  font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-}
-
-.dish-count-input {
-  margin-bottom: var(--spacing-small);
-}
-
-.dish-count-input label {
-  display: inline-block;
-  width: 100px;
-  margin-right: var(--spacing-small);
-}
-
-.dish-count-input input {
-  width: 60px;
-  padding: 5px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background-color: var(--input-background);
-  color: var(--input-text-color);
-}
-
-/* Loading spinner styles */
-.loading-spinner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--secondary-color);
-  border-top: 5px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Toast notification styles */
-#toastContainer {
-  position: fixed;
-  top: 20px;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 1000;
-  pointer-events: none;
-}
-
-.toast {
-  background-color: rgba(51, 51, 51, 0.9);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
-  transition: opacity 0.3s, transform 0.3s;
-  opacity: 0;
-  transform: translateY(-50px);
-  pointer-events: auto;
-  max-width: 90%;
-  width: 300px;
-  text-align: center;
-  font-size: var(--font-size-medium);
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.toast.error {
-  background-color: rgba(230, 57, 70, 0.9);
-}
-
-.toast.success {
-  background-color: rgba(0, 204, 102, 0.9);
 }
 
 /* Responsive design */
@@ -266,6 +160,6 @@ h1 {
 /* Touch device optimization */
 @media (hover: none) and (pointer: coarse) {
   .vote-input {
-    min-height: 44px; /* Ensures touch targets are at least 44px high */
+    min-height: 44px;
   }
 }
