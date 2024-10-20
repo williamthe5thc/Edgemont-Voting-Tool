@@ -1,6 +1,19 @@
+/**
+ * vote.js
+ * 
+ * This file handles the server-side logic for processing and storing votes.
+ * It receives vote data, updates the vote counts in the KV store,
+ * and returns a confirmation of the vote being recorded.
+ */
+
 import { kv } from '@vercel/kv';
 import { handleApiError, methodNotAllowed } from './utils';
 
+/**
+ * API handler for processing votes
+ * @param {Object} req - The request object
+ * @param {Object} res - The response object
+ */
 export default async function handler(req, res) {
     console.log('Received request method:', req.method);
     console.log('Received request body:', JSON.stringify(req.body));
@@ -13,6 +26,7 @@ export default async function handler(req, res) {
             
             const newVote = req.body;
             
+            // Update vote counts
             Object.entries(newVote).forEach(([category, selectedDishes]) => {
                 if (!votes[category]) {
                     votes[category] = {};
