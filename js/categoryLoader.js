@@ -4,18 +4,26 @@ import { CATEGORIES, THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
 
+// Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
+// Flag to prevent duplicate loading of categories
 let categoriesLoaded = false;
 
+/**
+ * Fetches competition settings from the server
+ * @returns {Object} The settings object containing dishesPerCategory
+ */
 export async function getSettings() {
     try {
+        // Fetch settings from the server
         const settings = await fetchData('/api/get-settings');
-        console.log("Received settings:", settings); // Add this line for debugging
+        console.log("Received settings:", settings);
 
         if (!settings || typeof settings !== 'object') {
             throw new Error('Invalid settings received from server');
         }
 
+        // Process the settings and set up DISHES_PER_CATEGORY
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
             const categorySettings = settings.dishesPerCategory?.[category] || {};
             acc[category] = {
@@ -29,6 +37,7 @@ export async function getSettings() {
     } catch (error) {
         console.error('Error fetching settings:', error);
         showToast('Error loading settings. Using default values.', 'error');
+        // Set default values if settings fetch fails
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
             acc[category] = { min: 1, max: 50 };
             return acc;
@@ -37,6 +46,9 @@ export async function getSettings() {
     }
 }
 
+/**
+ * Loads categories progressively into the UI
+ */
 export async function loadCategoriesProgressively() {
     console.log("Starting to load categories");
     if (categoriesLoaded) {
@@ -52,11 +64,13 @@ export async function loadCategoriesProgressively() {
         return;
     }
 
+    // Show loading spinner
     skeletonLoader.style.display = 'flex';
     categoriesContainer.innerHTML = '';
 
     try {
         console.log("Categories to load:", CATEGORIES);
+        // Iterate through each category and create UI elements
         for (let category of CATEGORIES) {
             console.log(`Loading category: ${category}`);
             const categoryDiv = document.createElement('div');
@@ -76,6 +90,7 @@ export async function loadCategoriesProgressively() {
             `;
             
             categoriesContainer.appendChild(categoryDiv);
+            // Small delay to allow for progressive loading effect
             await new Promise(resolve => setTimeout(resolve, 100));
         }
         console.log("All categories loaded");
@@ -84,7 +99,7 @@ export async function loadCategoriesProgressively() {
         console.error('Error loading categories:', error);
         showToast('Failed to load categories. Please refresh the page.', 'error');
     } finally {
+        // Hide loading spinner
         skeletonLoader.style.display = 'none';
     }
 }
-
