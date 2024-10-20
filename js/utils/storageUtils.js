@@ -12,11 +12,12 @@
  */
 
 import { showToast } from './uiUtils.js';
-console.log("sotrageUtils.js loading");
+console.log("storageUtils.js loading");
+
 /**
  * Retrieves data from localStorage
  * @param {string} key - The key to retrieve from localStorage
- * @returns {any|null} The parsed value from localStorage or null if not found
+ * @returns {any|null} The parsed value from localStorage or null if not found or on error
  */
 export function getFromLocalStorage(key) {
     try {
@@ -32,7 +33,7 @@ export function getFromLocalStorage(key) {
 /**
  * Saves data to localStorage
  * @param {string} key - The key to use in localStorage
- * @param {any} value - The value to store
+ * @param {any} value - The value to store (will be JSON stringified)
  */
 export function saveToLocalStorage(key, value) {
     try {
@@ -42,4 +43,5 @@ export function saveToLocalStorage(key, value) {
         showToast('Failed to save data locally', 'error');
     }
 }
-console.log("sotrageUtils.js loaded");
+
+console.log("storageUtils.js loaded");
