@@ -51,7 +51,7 @@ h1 {
   font-size: var(--font-size-xlarge);
 }
 
-/* Unified styles for sections (categories, results, admin sections) */
+/* Unified styles for sections */
 .section {
   background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-medium);
@@ -105,6 +105,17 @@ h1 {
   color: var(--placeholder-color);
 }
 
+/* Voting specific styles */
+.category {
+  margin-bottom: var(--spacing-medium);
+}
+
+.vote-input {
+  width: calc(50% - 15px);
+  display: inline-block;
+  margin-right: 10px;
+}
+
 /* Button styles */
 .btn-primary {
   display: block;
@@ -143,6 +154,30 @@ h1 {
 .results-list li {
   margin-bottom: var(--spacing-small);
   font-size: var(--font-size-medium);
+}
+
+/* Admin specific styles */
+.admin-section {
+  margin-bottom: var(--spacing-large);
+}
+
+.dish-count-input {
+  margin-bottom: var(--spacing-small);
+}
+
+.dish-count-input label {
+  display: inline-block;
+  width: 100px;
+  margin-right: var(--spacing-small);
+}
+
+.dish-count-input input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--input-text-color);
 }
 
 /* Message styles */
