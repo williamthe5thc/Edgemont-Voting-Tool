@@ -1,4 +1,9 @@
-// categoryLoader.js
+/**
+ * categoryLoader.js
+ * 
+ * This file handles the loading of categories and competition settings for the voting application.
+ * It includes functions to fetch settings from the server and dynamically load category inputs.
+ */
 
 import { CATEGORIES, THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
@@ -6,12 +11,13 @@ import { fetchData } from './utils/apiUtils.js';
 
 // Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
+
 // Flag to prevent duplicate loading of categories
 let categoriesLoaded = false;
 
 /**
  * Fetches competition settings from the server
- * @returns {Object} The settings object containing dishesPerCategory
+ * @returns {Promise<Object>} The settings object containing dishesPerCategory
  */
 export async function getSettings() {
     try {
@@ -48,6 +54,7 @@ export async function getSettings() {
 
 /**
  * Loads categories progressively into the UI
+ * This function creates input fields for each category and handles loading animations
  */
 export async function loadCategoriesProgressively() {
     console.log("Starting to load categories");
