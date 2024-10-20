@@ -11,14 +11,16 @@
  */
 
 import { CATEGORIES } from '/js/constants.js';
-import { showToast } from './uiUtils.js';
-
 console.log("validationUtils.js loading");
 
 /**
  * Validates the votes object
  * @param {Object} votes - The votes object to validate
  * @returns {Object} An object containing isValid flag and invalidCategories array
+ * 
+ * Validation rules:
+ * - Each category should have no more than 2 votes
+ * - The two votes for a category must be different
  */
 export function validateVotes(votes) {
     let isValid = true;
@@ -35,20 +37,7 @@ export function validateVotes(votes) {
         }
     });
 
-
-    Object.entries(votes).forEach(([category, selectedDishes]) => {
-        if (selectedDishes.length > 2) {
-            isValid = false;
-            invalidCategories.push(category);
-            showToast(`Too many selections for ${category}. Please choose up to 2 dishes.`, 'error', category);
-        } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
-            isValid = false;
-            invalidCategories.push(`${category}`);
-            showToast(`Duplicate entries detected for ${category}. Please choose 2 unique favorite dishes.`, 'error', category);
-        }
-    });
-
     return { isValid, invalidCategories };
-    
 }
+
 console.log("validationUtils.js loaded");
