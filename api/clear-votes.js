@@ -1,56 +1,32 @@
 /**
- * get-settings.js
+ * clear-votes.js
  * 
- * This file handles the server-side logic for retrieving competition settings.
- * It's essential for initializing the application with the correct parameters,
- * such as the number of dishes allowed per category.
+ * This file handles the server-side logic for clearing all votes from the system.
+ * It's a critical admin function that resets the voting state, typically used
+ * when starting a new competition or if there's a need to restart voting.
  */
 
-import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-import {CATEGORIES} from '/js/constants.js';
-
-// Default values for dish counts
-const DEFAULT_MIN_DISH_COUNT = 1;
-const DEFAULT_MAX_DISH_COUNT = 50;
-
-
+import { setKVData, handleApiError, methodNotAllowed } from './utils';
 
 /**
- * API handler for retrieving competition settings
+ * API handler for clearing all votes
  * @param {Object} req - The request object
  * @param {Object} res - The response object
  */
 export default async function handler(req, res) {
-    // Only allow GET requests for fetching settings
-    if (req.method === 'GET') {
+    // Only allow POST requests for clearing votes
+    if (req.method === 'POST') {
         try {
-            // Attempt to retrieve settings from KV store
-            let settings = await getKVData('settings');
-            
-            // If settings don't exist, create default settings
-            // This ensures the application always has a valid configuration
-            if (!settings || !settings.dishesPerCategory) {
-                settings = {
-                    dishesPerCategory: CATEGORIES.reduce((acc, category) => {
-                        acc[category] = {
-                            min: DEFAULT_MIN_DISH_COUNT,
-                            max: DEFAULT_MAX_DISH_COUNT
-                        };
-                        return acc;
-                    }, {})
-                };
-                // Save default settings to KV store for future use
-                await setKVData('settings', settings);
-            }
-            
-            // Return settings as JSON response
-            res.status(200).json(settings);
+            // Clear votes by setting an empty object in the KV store
+            // This effectively resets all vote counts to zero
+            await setKVData('votes', {});
+            res.status(200).json({ message: 'Votes cleared successfully' });
         } catch (error) {
             // Handle any errors that occur during the process
-            handleApiError(res, error, 'Failed to fetch settings');
+            handleApiError(res, error, 'Failed to clear votes');
         }
     } else {
-        // If the request method is not GET, return a method not allowed error
-        methodNotAllowed(res, ['GET']);
+        // If the request method is not POST, return a method not allowed error
+        methodNotAllowed(res, ['POST']);
     }
 }
