@@ -25,7 +25,6 @@ console.log("admin.js loading");
  * Loads current competition settings and populates the admin interface
  */
 async function loadCurrentSettings() {
-    console.log("loading current settings");
     try {
         const settings = await fetchData('/api/get-settings');
         const dishCountContainer = document.getElementById('dishCountContainer');
@@ -59,39 +58,25 @@ async function loadCurrentSettings() {
 
 /**
  * Sets up input validation for dish count inputs
- * This function ensures that:
- * 1. The input is always a number
- * 2. The number is between 1 and 100 (inclusive)
- * 3. Invalid inputs are automatically corrected
  */
 function setupValidation() {
-    console.log("setup Validation");
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.addEventListener('input', function() {
             let value = parseInt(this.value);
-            // If the input is not a number or less than 1, set it to 1
             if (isNaN(value) || value < 1) {
                 this.value = 1;
-            // If the input is greater than 100, set it to 100
             } else if (value > 100) {
                 this.value = 100;
             }
-            // If the input is a valid number between 1 and 100, it remains unchanged
         });
     });
 }
 
 /**
  * Updates competition settings based on admin input
- * This function:
- * 1. Validates the input for each category
- * 2. Constructs the new settings object
- * 3. Sends the updated settings to the server
- * 4. Provides feedback to the admin user
  */
 async function updateSettings() {
-    console.log("updating setting");
     const dishesPerCategory = {};
     let isValid = true;
 
@@ -101,7 +86,6 @@ async function updateSettings() {
         const min = parseInt(minInput.value);
         const max = parseInt(maxInput.value);
 
-        // Validate input: ensure min <= max and both are within allowed range
         if (isNaN(min) || isNaN(max) || min < 1 || max < 1 || min > 100 || max > 100 || min > max) {
             isValid = false;
             showToast(`Invalid input for ${category}. Min should be less than or equal to Max.`, 'error');
@@ -137,10 +121,8 @@ async function updateSettings() {
 
 /**
  * Clears all votes from the system
- * This function sends a request to the server to reset all vote counts
  */
 async function clearVotes() {
-    console.log("clearing Votes");
     try {
         const response = await fetch('/api/clear-votes', {
             method: 'POST',
@@ -162,16 +144,18 @@ async function clearVotes() {
  * Sets up event listeners for the admin panel
  */
 function setupEventListeners() {
-    console.log("setupevent");
-    const updateSettingsButton = document.querySelector('.admin-section button');
+    const updateSettingsButton = document.querySelector('.admin-section:nth-child(1) button');
     if (updateSettingsButton) {
         updateSettingsButton.addEventListener('click', updateSettings);
+    } else {
+        console.error("Update settings button not found");
     }
 
     const clearVotesButton = document.querySelector('.admin-section:nth-child(2) button');
     if (clearVotesButton) {
-        console.log("clear button clicked");
         clearVotesButton.addEventListener('click', clearVotes);
+    } else {
+        console.error("Clear votes button not found");
     }
 }
 
