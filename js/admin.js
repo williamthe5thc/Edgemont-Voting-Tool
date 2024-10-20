@@ -2,7 +2,8 @@
  * admin.js
  * 
  * This file contains the logic for the admin panel of the voting application.
- * It handles updating competition settings and clearing votes.
+ * It handles loading current settings, updating competition settings, 
+ * clearing votes, and managing the admin interface.
  */
 
 import { CATEGORIES } from './constants.js';
@@ -11,8 +12,12 @@ import { fetchData } from './utils/apiUtils.js';
 
 console.log("admin.js loading");
 
+/**
+ * Loads current competition settings and populates the admin interface
+ */
 async function loadCurrentSettings() {
     try {
+        // Fetch current settings from the API
         const settings = await fetchData('/api/get-settings');
         const dishCountContainer = document.getElementById('dishCountContainer');
         
@@ -22,6 +27,7 @@ async function loadCurrentSettings() {
 
         dishCountContainer.innerHTML = '';
 
+        // Create input fields for min and max dish counts for each category
         CATEGORIES.forEach(category => {
             const minCount = settings.dishesPerCategory?.[category]?.min || 1;
             const maxCount = settings.dishesPerCategory?.[category]?.max || 5;
@@ -42,22 +48,39 @@ async function loadCurrentSettings() {
     }
 }
 
+/**
+ * Sets up input validation for dish count inputs
+ * This function ensures that:
+ * 1. The input is always a number
+ * 2. The number is between 1 and 100 (inclusive)
+ * 3. Invalid inputs are automatically corrected
+ */
 function setupValidation() {
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.addEventListener('input', function() {
             let value = parseInt(this.value);
+            // If the input is not a number or less than 1, set it to 1
             if (isNaN(value) || value < 1) {
                 this.value = 1;
+            // If the input is greater than 100, set it to 100
             } else if (value > 100) {
                 this.value = 100;
             }
+            // If the input is a valid number between 1 and 100, it remains unchanged
         });
     });
 }
 
+/**
+ * Updates competition settings based on admin input
+ * This function:
+ * 1. Validates the input for each category
+ * 2. Constructs the new settings object
+ * 3. Sends the updated settings to the server
+ * 4. Provides feedback to the admin user
+ */
 async function updateSettings() {
-    console.log("updateSettings function called");
     const dishesPerCategory = {};
     let isValid = true;
 
@@ -67,6 +90,7 @@ async function updateSettings() {
         const min = parseInt(minInput.value);
         const max = parseInt(maxInput.value);
 
+        // Validate input: ensure min <= max and both are within allowed range
         if (isNaN(min) || isNaN(max) || min < 1 || max < 1 || min > 100 || max > 100 || min > max) {
             isValid = false;
             showToast(`Invalid input for ${category}. Min should be less than or equal to Max.`, 'error');
@@ -100,8 +124,11 @@ async function updateSettings() {
     }
 }
 
+/**
+ * Clears all votes from the system
+ * This function sends a request to the server to reset all vote counts
+ */
 async function clearVotes() {
-    console.log("clearVotes function called");
     try {
         const response = await fetch('/api/clear-votes', {
             method: 'POST',
@@ -119,36 +146,33 @@ async function clearVotes() {
     }
 }
 
+/**
+ * Sets up event listeners for the admin panel
+ */
 function setupEventListeners() {
-    console.log("Setting up event listeners");
-    const updateSettingsButton = document.querySelector('#updateDishCount');
-    const clearVotesButton = document.querySelector('#clearVotes');
-
+    const updateSettingsButton = document.querySelector('.admin-section button');
     if (updateSettingsButton) {
-        console.log("Update settings button found");
         updateSettingsButton.addEventListener('click', updateSettings);
-    } else {
-        console.error("Update settings button not found");
     }
 
+    const clearVotesButton = document.querySelector('.admin-section:nth-child(2) button');
     if (clearVotesButton) {
-        console.log("Clear votes button found");
         clearVotesButton.addEventListener('click', clearVotes);
-    } else {
-        console.error("Clear votes button not found");
     }
 }
 
+/**
+ * Initializes the admin panel
+ */
 function init() {
-    console.log("Initializing admin panel");
     loadCurrentSettings();
     setupEventListeners();
 }
 
+// Initialize the admin panel when the DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
 }
-
 console.log("admin.js loaded");
