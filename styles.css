@@ -1,19 +1,20 @@
-/* Font imports */
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap');
 
-/* CSS Custom Properties (Variables) */
+/* Define CSS custom properties for easy theming */
 :root {
-  /* Colors - Fall-inspired palette */
-  /* Colors - Fall-inspired palette */
-  --primary-color: #C0392B;    /* Warm orange */
-  --secondary-color: #F7C59F;  /* Light peach */
-  --text-color: #2B2B2B;       /* Dark gray for better readability */
-  --background-color: #EFEFD0; /* Light cream */
-  --input-background: #FFFFFF; /* White */
-  --input-text-color: #2B2B2B; /* Dark gray */
-  --placeholder-color: #999999; /* Light gray */
-  --border-color: #CD7F32;     /* Bronze */
-     
+  /* Colors */
+   --primary-color: #E0144C; /* Adjusted vibrant pink */
+  --secondary-color: #FFD166; /* Yellow (unchanged) */
+  --text-color: #FFFFFF; /* White (unchanged) */
+  --background-color: #2C0735; /* Deep purple (unchanged) */
+  --input-background: #4F1271; /* Lighter purple (unchanged) */
+  --input-text-color: #FFFFFF; /* White (unchanged) */
+  --placeholder-color: #D7C1FF; /* Adjusted light purple */
+  --border-color: #FFD166; /* Yellow (unchanged) */
+  --error-color: #D50000; /* Adjusted red */
+  --success-color: #00A933; /* Adjusted green */
+  
   /* Font sizes */
   --font-size-small: 14px;
   --font-size-medium: 16px;
@@ -26,7 +27,7 @@
   --spacing-large: 30px;
 }
 
-/* Base Styles */
+/* General styles */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--background-color);
@@ -42,32 +43,24 @@ body {
   padding: var(--spacing-medium);
 }
 
-/* Header Styles */
+/* Header styles */
 h1 {
   font-family: 'Lobster', cursive;
   color: var(--primary-color);
   text-align: center;
-  margin: 0 auto var(--spacing-large);
-  padding: var(--spacing-medium);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
-  background-color: var(--secondary-color);
-  border-radius: 10px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 100%;
-  box-sizing: border-box;
+  margin-bottom: var(--spacing-large);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-size: var(--font-size-xlarge);
 }
 
-/* Section Styles (Instructions and Categories) */
-.instructions,
-.category {
-  background-color: var(--secondary-color);
+/* Styles for instructions and category sections */
+.instructions, .category {
+  background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: var(--spacing-medium);
   padding: var(--spacing-medium);
   border-radius: 10px;
   border: 2px solid var(--border-color);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .instructions ul {
@@ -79,13 +72,13 @@ h1 {
 }
 
 .category h2 {
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin-top: 0;
   font-size: var(--font-size-large);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-/* Form Input Styles */
+/* Input styles */
 .vote-input {
   width: calc(100% - 30px);
   padding: 15px;
@@ -101,13 +94,13 @@ h1 {
   color: var(--placeholder-color);
 }
 
-/* Button Styles */
+/* Button styles */
 .btn-primary {
   display: block;
   width: 100%;
   padding: 15px;
   background: var(--primary-color);
-  color: var(--input-background);
+  color: var(--text-color);
   border: none;
   border-radius: 8px;
   font-size: var(--font-size-large);
@@ -119,7 +112,7 @@ h1 {
 }
 
 .btn-primary:hover {
-  background: #FF8C5A; /* Lighter shade of primary color */
+  background: #FF8C8C; /* Lighter shade of primary color */
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
@@ -129,7 +122,71 @@ h1 {
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Toast Notification Styles */
+/* Admin panel styles */
+.admin-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--spacing-medium);
+  padding: var(--spacing-medium);
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.admin-section h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.dish-count-input {
+  margin-bottom: var(--spacing-small);
+}
+
+.dish-count-input label {
+  display: inline-block;
+  width: 100px;
+  margin-right: var(--spacing-small);
+}
+
+.dish-count-input input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--input-text-color);
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--secondary-color);
+  border-top: 5px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Toast notification styles */
 #toastContainer {
   position: fixed;
   top: 20px;
@@ -143,8 +200,8 @@ h1 {
 }
 
 .toast {
-  background-color: var(--secondary-color);
-  color: var(--text-color);
+  background-color: rgba(51, 51, 51, 0.9);
+  color: white;
   padding: 12px 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -157,7 +214,6 @@ h1 {
   width: 300px;
   text-align: center;
   font-size: var(--font-size-medium);
-  border: 2px solid var(--border-color);
 }
 
 .toast.show {
@@ -166,20 +222,22 @@ h1 {
 }
 
 .toast.error {
-  background-color: #FFD1D1;
-  border-color: #FF6B6B;
+  background-color: var(--error-color);
 }
 
 .toast.success {
-  background-color: #D1FFD1;
-  border-color: #4CAF50;
+  background-color: var(--success-color);
 }
 
-/* Responsive Design */
+/* Responsive design */
 @media screen and (max-width: 600px) {
   .container {
     width: 95%;
     padding: var(--spacing-small);
+  }
+
+  h1 {
+    font-size: var(--font-size-large);
   }
 
   .btn-primary {
@@ -188,28 +246,28 @@ h1 {
   }
 }
 
-/* Accessibility Improvements */
-@media (prefers-reduced-motion: reduce) {
-  .btn-primary,
+@media screen and (max-width: 480px) {
+  #toastContainer {
+    top: 10px;
+  }
+  
   .toast {
-    transition: none;
+    padding: 10px 16px;
+    font-size: var(--font-size-small);
+    width: 85%;
   }
 }
 
-/* Print Styles */
-@media print {
-  body {
-    background: none;
-    color: black;
+@media screen and (max-width: 320px) {
+  .vote-input {
+    font-size: var(--font-size-small);
+    padding: 10px;
   }
+}
 
-  .container {
-    width: 100%;
-    max-width: none;
-  }
-
-  .btn-primary,
-  #toastContainer {
-    display: none;
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+  .vote-input {
+    min-height: 44px; /* Ensures touch targets are at least 44px high */
   }
 }
