@@ -42,7 +42,7 @@ async function displayResults() {
             dishes.forEach((dish, index) => {
                 if (dish && typeof dish.score === 'number') {
                     const dishElement = document.createElement('p');
-                    dishElement.textContent = `${index + 1}. ${dish.dish} (Score: ${dish.score.toFixed(2)})`;
+                    dishElement.textContent = `${index + 1}. Dish #${dish.dish} (Score: ${dish.score.toFixed(2)})`;
                     categoryElement.appendChild(dishElement);
                 } else {
                     console.warn(`Invalid dish data for ${category}:`, dish);
