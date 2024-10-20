@@ -79,22 +79,23 @@ export async function loadCategoriesProgressively() {
         console.log("Categories to load:", CATEGORIES);
         // Iterate through each category and create UI elements
         for (let category of CATEGORIES) {
-            console.log(`Loading category: ${category}`);
-            const categoryDiv = document.createElement('div');
-            categoryDiv.classList.add('category');
-            categoryDiv.innerHTML = `
-                <h2>${category}</h2>
-                <p>Enter up to two dish numbers that were your favorite:</p>
-                ${Array(2).fill().map(() => `
-                    <input type="text" 
-                        class="vote-input" 
-                        data-category="${category}" 
-                        placeholder="e.g., 1" 
-                        pattern="[0-9]*" 
-                        inputmode="numeric"
-                        maxlength="2">
-                `).join('')}
-            `;
+        console.log(`Loading category: ${category}`);
+        const categoryDiv = document.createElement('div');
+        categoryDiv.classList.add('category');
+        categoryDiv.innerHTML = `
+            <h2>${category}</h2>
+            <p>Enter up to two dish numbers that were your favorite:</p>
+            ${Array(2).fill().map(() => `
+                <input type="text" 
+                    class="vote-input" 
+                    data-category="${category}" 
+                    placeholder="e.g., 1" 
+                    pattern="[0-9]*" 
+                    inputmode="numeric"
+                    maxlength="2">
+            `).join('')}
+            <div id="toastContainer-${category}" class="toast-container"></div>
+        `;
             
             categoriesContainer.appendChild(categoryDiv);
             // Small delay to allow for progressive loading effect
