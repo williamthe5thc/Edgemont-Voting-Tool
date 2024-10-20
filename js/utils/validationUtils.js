@@ -11,6 +11,8 @@
  */
 
 import { CATEGORIES } from '/js/constants.js';
+import { showToast } from './uiUtils.js';
+
 console.log("validationUtils.js loading");
 
 /**
