@@ -4,16 +4,16 @@
 /* CSS Custom Properties (Variables) */
 :root {
   /* Colors - Fall-inspired palette */
- --primary-color: #D35400;    /* Darker orange for titles */
-  --secondary-color: #FFF3E0;  /* Lighter peach for backgrounds */
-  --text-color: #4A4A4A;       /* Darker gray for better readability */
-  --background-color: #FFF8E1; /* Very light cream for main background */
+  /* Colors - Fall-inspired palette */
+  --primary-color: #FFF3E0;    /* Warm orange */
+  --secondary-color: #F7C59F;  /* Light peach */
+  --text-color: #2B2B2B;       /* Dark gray for better readability */
+  --background-color: #EFEFD0; /* Light cream */
   --input-background: #FFFFFF; /* White */
-  --input-text-color: #4A4A4A; /* Darker gray */
-  --placeholder-color: #7F8C8D; /* Darker placeholder color */
-  --border-color: #B7950B;     /* Darker bronze for borders */
-  --button-text-color: #FFFFFF; /* White text for buttons */
-    
+  --input-text-color: #2B2B2B; /* Dark gray */
+  --placeholder-color: #999999; /* Light gray */
+  --border-color: #CD7F32;     /* Bronze */
+     
   /* Font sizes */
   --font-size-small: 14px;
   --font-size-medium: 16px;
