@@ -33,17 +33,22 @@ export function validateVotes(votes) {
         }
     });
 
-       // Check for duplicate entries within the same category
-    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-    const values = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
-    
-    if (new Set(values).size !== values.length) {
-        console.log(`Duplicate entry detected for ${category}. Showing toast.`);
-        showToast(`Duplicate entries detected for ${category}. Please choose different dishes.`, 'error', category);
-        input.value = '';
-        return;
-    }
-    
+    let isValid = true;
+    let invalidCategories = [];
+
+    Object.entries(votes).forEach(([category, selectedDishes]) => {
+        if (selectedDishes.length > 2) {
+            isValid = false;
+            invalidCategories.push(category);
+            showToast(`Too many selections for ${category}. Please choose up to 2 dishes.`, 'error', category);
+        } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
+            isValid = false;
+            invalidCategories.push(`${category}`);
+            showToast(`Duplicate entries detected for ${category}. Please choose 2 different favorite dishes.`, 'error', category);
+        }
+    });
+
     return { isValid, invalidCategories };
+    
 }
 console.log("validationUtils.js loaded");
