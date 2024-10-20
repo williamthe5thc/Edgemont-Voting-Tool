@@ -157,7 +157,7 @@ async function submitToGoogleSheets(votes) {
     const dataToSend = JSON.stringify([votes]);
     console.log("Data being sent to Google Sheets:", dataToSend);
     
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxbVZoGA4kEdWSxFGQsWodbHhB1z65n8taJfOuhLzsjO5mFRm6kKYoVaOq-ym-KVq12/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbzEjIDaDtYd4tSEdl5y3EA4UpfLYzAhNKqcJFvj21ZvE5SXsoQxq2iwz1RGl0jpJOnS/exec', {
         method: 'POST',
         body: dataToSend,
         headers: {
