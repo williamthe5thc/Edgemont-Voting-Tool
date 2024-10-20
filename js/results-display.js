@@ -13,56 +13,62 @@
  * ensuring a smooth user experience when viewing competition results.
  */
 
-// Import utility functions for data fetching and toast notifications
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
+
 console.log("results-display.js loading");
 
-/**
- * Fetches and displays the voting results.
- */
 async function displayResults() {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const resultsContainer = document.getElementById('results');
+
     try {
-        // Fetch results from the API
-        const results = await fetchData('/api/results');
-        const resultsContainer = document.getElementById('results');
+        loadingSpinner.style.display = 'flex';
         resultsContainer.innerHTML = '';
 
-        // Display a message if no votes have been recorded
+        const results = await fetchData('/api/results');
+
         if (results.message === 'No votes recorded yet') {
-            resultsContainer.textContent = 'No votes have been recorded yet.';
+            resultsContainer.innerHTML = '<p class="message">No votes have been recorded yet.</p>';
             return;
         }
 
-        // Iterate through each category and display results
         for (const [category, dishes] of Object.entries(results)) {
             const categoryElement = document.createElement('div');
+            categoryElement.classList.add('section');
             categoryElement.innerHTML = `<h2>${category}</h2>`;
+
+            const resultsList = document.createElement('ul');
+            resultsList.classList.add('results-list');
 
             dishes.forEach((dish, index) => {
                 if (dish && typeof dish.score === 'number') {
-                    const dishElement = document.createElement('p');
-                    dishElement.textContent = `${index + 1}. Dish #${dish.dish} (Score: ${dish.score.toFixed(2)})`;
-                    categoryElement.appendChild(dishElement);
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${index + 1}. ${dish.dish} (Score: ${dish.score.toFixed(2)})`;
+                    resultsList.appendChild(listItem);
                 } else {
                     console.warn(`Invalid dish data for ${category}:`, dish);
                 }
             });
 
+            categoryElement.appendChild(resultsList);
             resultsContainer.appendChild(categoryElement);
         }
     } catch (error) {
         console.error('Error fetching results:', error);
         showToast('Error fetching results. Please try again later.', 'error');
-        document.getElementById('results').textContent = 'Unable to load results at this time.';
+        resultsContainer.innerHTML = '<p class="message">Unable to load results at this time.</p>';
+    } finally {
+        loadingSpinner.style.display = 'none';
     }
 }
 
-// Initialize results display when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     displayResults().catch(error => {
         console.error('Unhandled error in displayResults:', error);
         showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
 });
+
+console.log("results-display.js loaded");
 console.log("results-display.js loaded");
