@@ -1,20 +1,3 @@
-/**
- * uiUtils.js
- * 
- * This utility file provides functions for common UI operations.
- * It includes:
- * 
- * 1. showToast: Displays toast notifications to the user
- * 2. Other UI-related utility functions as needed
- */
-console.log("uiUtils.js loading");
-
-/**
- * Displays a toast notification
- * @param {string} message - The message to display
- * @param {string} type - The type of toast (e.g., 'info', 'error', 'success')
- * @param {string} category - The category of the toast (e.g., 'general', 'Bread', 'Appetizers')
- */
 export function showToast(message, type = 'info', category = 'general') {
     console.log(`Attempting to show toast: ${type} - ${message} for category: ${category}`);
     
@@ -22,6 +5,7 @@ export function showToast(message, type = 'info', category = 'general') {
     let toastContainer = document.getElementById(toastContainerId);
     
     if (!toastContainer && category === 'general') {
+        console.log('Creating new general toast container');
         toastContainer = document.createElement('div');
         toastContainer.id = toastContainerId;
         toastContainer.style.position = 'fixed';
@@ -30,6 +14,7 @@ export function showToast(message, type = 'info', category = 'general') {
         toastContainer.style.transform = 'translateX(-50%)';
         toastContainer.style.zIndex = '1000';
         document.body.appendChild(toastContainer);
+        console.log('General toast container created and appended to body');
     }
     
     if (!toastContainer) {
@@ -55,20 +40,19 @@ export function showToast(message, type = 'info', category = 'general') {
     });
     
     setTimeout(() => {
+        console.log(`Preparing to remove toast for ${category}`);
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
             toastContainer.removeChild(toast);
             console.log(`Toast removed for ${category}`);
         }, { once: true });
-    }, 5000);
+    }, 10000);
 
     // Limit the number of visible toasts
-    const maxVisibleToasts = 10;
+    const maxVisibleToasts = 3;
     const toasts = toastContainer.getElementsByClassName('toast');
     if (toasts.length > maxVisibleToasts) {
         toastContainer.removeChild(toasts[0]);
         console.log(`Excess toast removed for ${category}`);
     }
 }
-
-console.log("uiUtils.js loaded");
