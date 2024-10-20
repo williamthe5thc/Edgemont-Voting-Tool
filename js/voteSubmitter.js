@@ -9,17 +9,6 @@
  * 3. Saving and loading votes from local storage to persist user progress
  * 4. Submitting final votes to the server (Vercel KV) and Google Sheets
  * 5. Providing user feedback through toast notifications and UI updates
- * 
- * Functions:
- * - setDishesPerCategory: Sets the number of dishes for each category
- * - setupVoting: Initializes vote input fields with event listeners
- * - validateInput: Validates individual vote inputs
- * - saveVotesToLocalStorage: Saves current votes to local storage
- * - loadVotesFromLocalStorage: Retrieves saved votes from local storage
- * - submitVotes: Handles the vote submission process
- * - displayVoteSummary: Generates a summary of votes for confirmation
- * - submitToVercelKV: Submits votes to Vercel KV
- * - submitToGoogleSheets: Submits votes to Google Sheets
  */
 
 import { CATEGORIES } from './constants.js';
@@ -64,7 +53,22 @@ export function validateInput(input) {
 
     if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
-        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error');
+        console.log(`Validation failed for ${category}. Showing toast.`);
+        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error', category);
+        return;
+    }
+
+    // Check for duplicate entries within the same category
+    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+    const categoryVotes = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
+    
+    const { isValid, invalidCategories } = validateVotes({ [category]: categoryVotes });
+    
+    if (!isValid) {
+        console.log(`Validation failed for ${category}. Reason: ${invalidCategories[0]}`);
+        input.value = '';
+    } else {
+        console.log(`Input validated successfully for ${category}.`);
     }
 }
 
@@ -80,6 +84,30 @@ export function saveVotesToLocalStorage() {
             .filter(value => !isNaN(value));
     });
     saveToLocalStorage('currentVotes', votes);
+}
+
+/**
+ * Generates a summary of votes for confirmation
+ * @param {Object} votes - The votes object
+ * @returns {string} A formatted summary of votes
+ */
+function displayVoteSummary(votes) {
+    let summary = 'Your Vote Summary:\n\n';
+    
+    CATEGORIES.forEach(category => {
+        const categoryVotes = votes[category] || [];
+        summary += `${category}:\n`;
+        if (categoryVotes.length === 0) {
+            summary += '  No votes\n';
+        } else {
+            categoryVotes.forEach((dish, index) => {
+                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
+            });
+        }
+        summary += '\n';
+    });
+    
+    return summary;
 }
 
 /**
@@ -144,30 +172,6 @@ export async function submitVotes(e) {
         submitButton.textContent = 'Submit Votes';
         submitButton.disabled = false;
     }
-}
-
-/**
- * Generates a summary of votes for confirmation
- * @param {Object} votes - The votes object
- * @returns {string} A formatted summary of votes
- */
-function displayVoteSummary(votes) {
-    let summary = 'Your Vote Summary:\n\n';
-    
-    CATEGORIES.forEach(category => {
-        const categoryVotes = votes[category] || [];
-        summary += `${category}:\n`;
-        if (categoryVotes.length === 0) {
-            summary += '  No votes\n';
-        } else {
-            categoryVotes.forEach((dish, index) => {
-                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
-            });
-        }
-        summary += '\n';
-    });
-    
-    return summary;
 }
 
 /**
