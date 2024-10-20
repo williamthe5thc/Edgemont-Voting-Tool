@@ -155,20 +155,17 @@ async function submitToVercelKV(votes) {
 
 async function submitToGoogleSheets(votes) {
     console.log("Submitting to Google Sheets");
-    const response = await fetch('https://script.google.com/macros/s/AKfycbw-mf4ET7v5owXHVXlxcQup74TcFaQdnxuZWGwch0xpsDefewipZ2tsUWxRDptW5yU/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbyl2v7EOJoLKOUIcNgKu6gjS8T0fDd_2rofgjMZAIYxZ9noDK6af49UO9Bj4poZszHZ/exec', {
         method: 'POST',
-        body: JSON.stringify(votes),
+        body: JSON.stringify([votes]),  // Wrap votes in an array
         headers: {
             'Content-Type': 'text/plain;charset=utf-8',
         },
     });
-
     const responseData = await response.text();
     console.log("Google Sheets response:", responseData);
-
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
     }
-
     return JSON.parse(responseData);
 }
