@@ -1,4 +1,4 @@
-# Dia de los Ancestros Cooking Competition Voting System
+# Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
 
 ## Overview
 
