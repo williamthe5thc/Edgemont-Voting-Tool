@@ -103,7 +103,7 @@ export async function loadCategoriesProgressively() {
             categoryDiv.classList.add('category');
             categoryDiv.innerHTML = `
                 <h2>${category} <sup>*</sup> <small>(optional)</small>  </h2>
-                <p>Type your favorite dishes (up to two):</p>
+                <p>Type your favorite dishes (up to 2):</p>
                 ${Array(2).fill().map(() => `
                     <input type="text" 
                         class="vote-input" 
