@@ -6,22 +6,7 @@
  * such as the number of dishes allowed per category.
  */
 
-import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-import { CATEGORIES } from '.../js/constants.js';
-import { CATEGORIES } from './js/constants.js';
-import { CATEGORIES } from '/js/constants.js';
-import { CATEGORIES } from 'js/constants.js';
-console.log("get settings imported");
-const CATEGORIES = [
-    'Bread',
-    'Appetizers',
-    'Dessert',
-    'Entrée'
-];
-
-// Default values for dish counts
-const DEFAULT_MIN_DISH_COUNT = 1;
-const DEFAULT_MAX_DISH_COUNT = 50;
+import { getKVData, setKVData, handleApiError, methodNotAllowed, CATEGORIES, DEFAULT_MIN_DISH_COUNT,DEFAULT_MAX_DISH_COUNT } from './utils';
 
 
 /**
