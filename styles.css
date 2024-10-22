@@ -238,3 +238,12 @@ h1 {
     min-height: 44px; /* Ensures touch targets are at least 44px high */
   }
 }
+
+.loading-text {
+    margin-top: 20px;
+    color: var(--text-color);
+    font-family: 'Lobster', cursive;
+    font-size: 24px;
+    text-align: center;
+    animation: pulse 2s ease-in-out infinite;
+}
