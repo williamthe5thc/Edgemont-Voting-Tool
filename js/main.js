@@ -1,29 +1,19 @@
-/**
- * main.js
- * 
- * This is the main entry point for the voting application.
- * It handles the initialization of the app, including setting up the UI,
- * loading competition settings, and setting up event listeners.
- * 
- * Functions:
- * - init: Initializes the application
- * 
- * This file coordinates the following actions:
- * 1. Setting the page title
- * 2. Fetching competition settings
- * 3. Loading voting categories
- * 4. Setting up voting functionality
- * 5. Loading any saved votes
- * 6. Setting up the submit button
- */
-
+// main.js
 import { THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
 import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
+
 console.log("loading main.js");
-export async function initApp() {  // Changed function name to be more explicit
+
+/**
+ * Initializes the application
+ */
+export const init = async () => {
     console.log("Initializing application");
+    // Set the page title to the competition theme
+    document.querySelector('h1').textContent = THEME;
+    
     try {
         console.log("Fetching settings");
         const settings = await getSettings();
@@ -50,10 +40,4 @@ export async function initApp() {  // Changed function name to be more explicit
         console.error("Error in init:", error);
         showToast('Failed to initialize the voting system. Please refresh the page.', 'error');
     }
-}
-
-// Export a default object for compatibility
-export default {
-    initApp
 };
-});
