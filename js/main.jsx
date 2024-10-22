@@ -12,9 +12,9 @@ function init() {
     preloaderRoot.render(
         <React.StrictMode>
             <Preloader onLoadComplete={() => {
-                // Updated to use the correct function name
-                import('./main.js').then(mainModule => {
-                    mainModule.initApp().catch(error => {
+                // Using dynamic import and accessing the named export 'init'
+                import('./main.js').then(({ init }) => {
+                    init().catch(error => {
                         console.error("Error initializing main app:", error);
                     });
                 });
