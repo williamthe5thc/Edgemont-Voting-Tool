@@ -1,5 +1,5 @@
 import React from 'react';
-import { THEME } from '../constants.js';
+import { THEME } from './constants.js';
 
 const App = () => {
     return (
