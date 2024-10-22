@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Preloader from './components/Preloader';
 import { THEME } from './constants';
-import './styles/index.css'; // Import Tailwind CSS
+import '../styles/index.css'; // Import Tailwind CSS
 //test
 function init() {
     // Set the page title
