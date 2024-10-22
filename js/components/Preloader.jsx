@@ -24,9 +24,9 @@ const Preloader = ({ onLoadComplete }) => {
 
   if (!showLoader) return null;
 
-  // Calculate height of black overlay based on progress
-  const overlayHeight = 200 * (100 - progress / 100);
-  const overlayY = 200 - overlayHeight;
+  // Calculate height and position of white overlay based on progress
+  const overlayHeight = 200 * (progress / 100);
+  const overlayY = 200 - overlayHeight; // Start from bottom
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-purple-900 via-purple-800 to-purple-900">
@@ -47,21 +47,21 @@ const Preloader = ({ onLoadComplete }) => {
               </clipPath>
             </defs>
 
-            {/* Base skull shape */}
+            {/* Black base skull shape */}
             <path 
-              fill="#FFFFFF" 
+              fill="black" 
               stroke="#333333" 
               strokeWidth="2" 
               d="M100 40 C65 40, 40 70, 40 110 C40 150, 65 170, 100 170 C135 170, 160 150, 160 110 C160 70, 135 40, 100 40 Z"
             />
 
-            {/* Black overlay that's clipped to the skull shape */}
+            {/* White rising overlay that's clipped to the skull shape */}
             <rect
               x="0"
               y={overlayY}
               width="200"
               height={overlayHeight}
-              fill="black"
+              fill="white"
               className="transition-all duration-300"
               clipPath="url(#skullClip)"
             />
