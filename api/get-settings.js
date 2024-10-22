@@ -1,26 +1,35 @@
 /**
- * get-settings.js
+ * api/get-settings.js
  */
-import { kv } from '@vercel/kv';
-import { handleApiError, methodNotAllowed, CATEGORIES, DEFAULT_MIN_DISH_COUNT, DEFAULT_MAX_DISH_COUNT } from './utils';
+import { 
+    getKVData, 
+    setKVData, 
+    handleApiError, 
+    methodNotAllowed, 
+    setCorsHeaders,
+    CATEGORIES,
+    DEFAULT_MIN_DISH_COUNT,
+    DEFAULT_MAX_DISH_COUNT 
+} from './utils.js';
 
 export default async function handler(req, res) {
+    // Set CORS headers
+    setCorsHeaders(res);
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
+    // Only allow GET requests
     if (req.method !== 'GET') {
         return methodNotAllowed(res, ['GET']);
     }
 
     try {
-        // Log KV connection status
-        console.log('Attempting to connect to KV store');
-        
-        // Check if KV is properly initialized
-        if (!kv) {
-            console.error('KV store not initialized');
-            throw new Error('Database connection failed');
-        }
-
         // Attempt to retrieve settings
-        let settings = await kv.get('settings');
+        let settings = await getKVData('settings');
         console.log('Retrieved settings:', settings);
 
         // If no settings exist, create default settings
@@ -35,9 +44,9 @@ export default async function handler(req, res) {
                 }, {})
             };
 
-            // Try to save default settings
+            // Save default settings
             try {
-                await kv.set('settings', settings);
+                await setKVData('settings', settings);
                 console.log('Default settings saved successfully');
             } catch (saveError) {
                 console.error('Error saving default settings:', saveError);
@@ -48,13 +57,6 @@ export default async function handler(req, res) {
         // Return settings
         res.status(200).json(settings);
     } catch (error) {
-        console.error('Error in get-settings:', error);
-        
-        // Return a more detailed error response
-        res.status(500).json({
-            error: 'Failed to fetch settings',
-            details: error.message,
-            timestamp: new Date().toISOString()
-        });
+        handleApiError(res, error, 'Failed to fetch settings');
     }
 }
