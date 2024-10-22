@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Preloader from './components/Preloader';
-import App from './components/App.jsx';  // Updated import path
+import Preloader from './components/Preloader.jsx';
+import App from './App.jsx';
 import '../styles/index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
