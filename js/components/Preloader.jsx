@@ -25,7 +25,7 @@ const Preloader = ({ onLoadComplete }) => {
   if (!showLoader) return null;
 
   // Calculate height of black overlay based on progress
-  const overlayHeight = 200 * (1 - progress / 100);
+  const overlayHeight = 200 * (100 - progress / 100);
   const overlayY = 200 - overlayHeight;
 
   return (
@@ -40,12 +40,30 @@ const Preloader = ({ onLoadComplete }) => {
             viewBox="0 0 200 200" 
             className="w-full h-full"
           >
+            {/* Define the skull shape as a clip path */}
+            <defs>
+              <clipPath id="skullClip">
+                <path d="M100 40 C65 40, 40 70, 40 110 C40 150, 65 170, 100 170 C135 170, 160 150, 160 110 C160 70, 135 40, 100 40 Z" />
+              </clipPath>
+            </defs>
+
             {/* Base skull shape */}
             <path 
               fill="#FFFFFF" 
               stroke="#333333" 
               strokeWidth="2" 
               d="M100 40 C65 40, 40 70, 40 110 C40 150, 65 170, 100 170 C135 170, 160 150, 160 110 C160 70, 135 40, 100 40 Z"
+            />
+
+            {/* Black overlay that's clipped to the skull shape */}
+            <rect
+              x="0"
+              y={overlayY}
+              width="200"
+              height={overlayHeight}
+              fill="black"
+              className="transition-all duration-300"
+              clipPath="url(#skullClip)"
             />
 
             {/* Flower crown */}
@@ -97,16 +115,6 @@ const Preloader = ({ onLoadComplete }) => {
               stroke="#FF69B4" 
               strokeWidth="2" 
               d="M60 110 Q55 105, 60 100 Q65 105, 60 110 M140 110 Q145 105, 140 100 Q135 105, 140 110"
-            />
-
-            {/* Loading overlay */}
-            <rect
-              x="0"
-              y={overlayY}
-              width="200"
-              height={overlayHeight}
-              fill="black"
-              className="transition-all duration-300"
             />
           </svg>
         </div>
