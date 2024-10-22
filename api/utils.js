@@ -7,6 +7,36 @@
  */
 
 import { kv } from '@vercel/kv';
+/*
+*****************************
+******************************
+* EDIT THE VARIABLES BELOW
+******************************
+******************************
+*/
+
+/** 
+* This is for the API variables to know what the categories are, 
+* and can't be combined with the constants in the js/ folder.
+*/
+const CATEGORIES = [
+    'Bread',
+    'Appetizers',
+    'Dessert',
+    'Entrée'
+];
+// Default values for dish counts
+const DEFAULT_MIN_DISH_COUNT = 1;
+const DEFAULT_MAX_DISH_COUNT = 50;
+
+/*
+*****************************
+******************************
+* EDIT THE VARIABLES ABOVE
+******************************
+******************************
+*/
+
 
 /**
  * Retrieves data from the KV store.
