@@ -7,7 +7,8 @@
  */
 
 import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-// import { CATEGORIES } from '../js/constants.js';
+import { CATEGORIES } from '../js/constants.js';
+console.log("get settings imported");
 const CATEGORIES = [
     'Bread',
     'Appetizers',
