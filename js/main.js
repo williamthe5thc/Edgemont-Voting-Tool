@@ -21,7 +21,7 @@ import { THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
 import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
-
+console.log("loading main.js");
 /**
  * Initializes the application
  * @async
