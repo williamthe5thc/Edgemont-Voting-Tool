@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Preloader = () => {
+const Preloader = ({ onLoadComplete }) => {
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,10 +29,15 @@ const Preloader = () => {
       // Ensure minimum display time of 1.5s
       await new Promise(resolve => setTimeout(resolve, 1500));
       setIsLoading(false);
+      
+      // Call the onLoadComplete callback
+      if (onLoadComplete) {
+        onLoadComplete();
+      }
     };
 
     loadSequence();
-  }, []);
+  }, [onLoadComplete]);
 
   if (!isLoading) return null;
 
