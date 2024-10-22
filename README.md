@@ -1,32 +1,39 @@
 # Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
+# Edgemont Voting Tool
 
 ## Overview
 
-This project is a web-based voting system designed for the Edgemont 1st Ward Día de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories and provides an admin interface for managing the competition settings and viewing results.
+A web-based voting application designed for community events and competitions. Built with modern web technologies and featuring real-time validation, local storage for vote persistence, and an admin interface for competition management.
 
 ## Features
 
-- User-friendly voting interface
-- Multiple categories for voting (e.g., Bread, Appetizers, Dessert, Entrée)
-- Real-time input validation
-- Local storage for saving incomplete votes
-- Admin panel for managing competition settings
-- Results page for viewing competition outcomes
-- Integration with Vercel KV for data storage
-- Integration with Google Sheets for vote recording
+- 🎨 Modern, responsive UI with custom preloader animation
+- 📱 Mobile-friendly design
+- 🔄 Real-time vote validation
+- 💾 Local storage for saving incomplete votes
+- 👑 Admin panel for competition management
+- 📊 Results visualization
+- 🔐 Integration with Vercel KV for secure data storage
 
-## Technology Stack
+## Tech Stack
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Node.js with Vercel Serverless Functions
-- Database: Vercel KV (Key-Value store)
-- Additional Storage: Google Sheets (via Google Apps Script)
+- **Frontend**:
+  - React
+  - TailwindCSS
+  - Vanilla JavaScript
+- **Backend**:
+  - Vercel Serverless Functions
+  - Vercel KV (Redis-compatible storage)
+- **Build Tools**:
+  - Vite
+  - PostCSS
+  - Autoprefixer
 
 ## Project Structure
 
 ```
 /
-├── api/
+├── api/                      # Vercel API routes
 │   ├── clear-votes.js
 │   ├── get-settings.js
 │   ├── results.js
@@ -34,7 +41,9 @@ This project is a web-based voting system designed for the Edgemont 1st Ward Dí
 │   ├── utils.js
 │   └── vote.js
 ├── js/
-│   ├── utils/
+│   ├── components/          # React components
+│   │   └── Preloader.jsx
+│   ├── utils/              # Utility functions
 │   │   ├── apiUtils.js
 │   │   ├── storageUtils.js
 │   │   ├── uiUtils.js
@@ -43,93 +52,141 @@ This project is a web-based voting system designed for the Edgemont 1st Ward Dí
 │   ├── categoryLoader.js
 │   ├── constants.js
 │   ├── main.js
+│   ├── main.jsx
 │   ├── results-display.js
 │   └── voteSubmitter.js
+├── styles/
+│   ├── index.css           # TailwindCSS imports
+│   └── styles.css          # Custom styles
 ├── admin.html
 ├── index.html
 ├── results.html
-├── styles.css
-└── package.json
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+└── vite.config.js
 ```
 
-## Setup and Installation
+## Setup
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/your-username/dia-de-los-ancestros-voting.git
-   cd dia-de-los-ancestros-voting
-   ```
+```bash
+git clone https://github.com/your-username/edgemont-voting-tool.git
+cd edgemont-voting-tool
+```
 
 2. Install dependencies:
-   ```
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. Set up Vercel KV:
-   - Create a Vercel account if you don't have one
-   - Set up a new KV store in your Vercel dashboard
-   - Add your KV connection string to your Vercel project's environment variables
+3. Create a `.env` file with your Vercel KV credentials:
+```env
+KV_URL=your_kv_url
+KV_REST_API_URL=your_kv_rest_api_url
+KV_REST_API_TOKEN=your_kv_rest_api_token
+KV_REST_API_READ_ONLY_TOKEN=your_kv_read_only_token
+```
 
-4. Set up Google Apps Script:
-   - Create a new Google Apps Script project
-   - Copy the contents of the `google-apps-script.js` file into your script
-   - Deploy the script as a web app
-   - Update the `submitToGoogleSheets` function in `voteSubmitter.js` with your script's URL
-
-5. Deploy to Vercel:
-   ```
-   vercel
-   ```
-
-## Usage
-
-### For Voters
-
-1. Navigate to the main page of the deployed application.
-2. Enter your votes for each category (up to two dishes per category).
-3. Submit your votes.
-
-### For Admins
-
-1. Navigate to the `/admin.html` page of the deployed application.
-2. Update the number of dishes per category as needed.
-3. Use the "Clear Votes" function to reset all votes (use with caution).
-
-### Viewing Results
-
-1. Navigate to the `/results.html` page to view the current standings.
+4. Start the development server:
+```bash
+npm run dev
+```
 
 ## Development
 
-To run the project locally:
+- Run development server: `npm run dev`
+- Build for production: `npm run build`
+- Preview production build: `npm run preview`
 
-1. Start the development server:
-   ```
-   npm run dev
-   ```
+### Key Files
 
-2. Open `http://localhost:3000` in your browser.
+- `js/constants.js`: Configure categories and competition theme
+- `api/utils.js`: Set default values and API configurations
+- `styles/styles.css`: Customize theme colors and styles
 
-## Key Components
+## Deployment
 
-- `api/`: Contains serverless functions for backend operations
-- `js/`: Client-side JavaScript files
-- `admin.html`: Admin panel interface
-- `index.html`: Main voting interface
-- `results.html`: Results display page
-- `styles.css`: Global styles for the application
+This project is configured for deployment on Vercel:
+
+1. Push your code to GitHub
+2. Create a new project on Vercel
+3. Connect your repository
+4. Configure environment variables
+5. Deploy!
+
+```bash
+npm run deploy
+```
+
+## Customization
+
+### Adding Categories
+
+Edit `js/constants.js`:
+```javascript
+export const CATEGORIES = [
+    'Your',
+    'Custom',
+    'Categories',
+    'Here'
+];
+```
+
+### Changing Theme
+
+Edit the theme in `js/constants.js`:
+```javascript
+export const THEME = "Your Event Name";
+```
+
+### Modifying Styles
+
+Update color schemes and styles in `styles/styles.css`:
+```css
+:root {
+  --primary-color: #your-color;
+  --secondary-color: #your-color;
+  /* ... other variables */
+}
+```
+
+## Features Breakdown
+
+### Admin Panel
+- Update number of dishes per category
+- Clear all votes
+- View real-time updates
+
+### Voting Interface
+- Select up to 2 favorites per category
+- Real-time validation
+- Auto-save progress
+- Mobile-friendly inputs
+
+### Results Page
+- View top-rated dishes by category
+- Score calculations:
+  - First choice: 2 points
+  - Second choice: 1 point
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/AmazingFeature`
+3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
+4. Push to the branch: `git push origin feature/AmazingFeature`
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgements
+## Acknowledgments
 
-- Vercel for hosting and KV store
+- [Vercel](https://vercel.com) for hosting and KV store
+- [TailwindCSS](https://tailwindcss.com) for styling utilities
+- [Vite](https://vitejs.dev) for the build system
 - Google Sheets for additional data storage
 - All contributors (Claude and myself) and participants who helped test it and give feedback of the Día de los Ancestros Cooking Competition
 - My wife for tolerating me and helping me out while I made this
