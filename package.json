@@ -4,13 +4,19 @@
   "description": "A web-based voting system for the Dia de los Ancestros Cooking Competition with Vercel KV integration",
   "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "deploy": "vercel deploy --prod"
   },
   "dependencies": {
-    "@vercel/kv": "^0.2.0"
+    "@vercel/kv": "^0.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.10",
     "vercel": "^28.0.0"
   },
   "engines": {
