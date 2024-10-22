@@ -1,50 +1,60 @@
 /**
  * get-settings.js
- * 
- * This file handles the server-side logic for retrieving competition settings.
- * It's essential for initializing the application with the correct parameters,
- * such as the number of dishes allowed per category.
  */
+import { kv } from '@vercel/kv';
+import { handleApiError, methodNotAllowed, CATEGORIES, DEFAULT_MIN_DISH_COUNT, DEFAULT_MAX_DISH_COUNT } from './utils';
 
-import { getKVData, setKVData, handleApiError, methodNotAllowed, CATEGORIES, DEFAULT_MIN_DISH_COUNT,DEFAULT_MAX_DISH_COUNT } from './utils';
-
-
-/**
- * API handler for retrieving competition settings
- * @param {Object} req - The request object
- * @param {Object} res - The response object
- */
 export default async function handler(req, res) {
-    // Only allow GET requests for fetching settings
-    if (req.method === 'GET') {
-        try {
-            // Attempt to retrieve settings from KV store
-            let settings = await getKVData('settings');
-            
-            // If settings don't exist, create default settings
-            // This ensures the application always has a valid configuration
-            if (!settings || !settings.dishesPerCategory) {
-                settings = {
-                    dishesPerCategory: CATEGORIES.reduce((acc, category) => {
-                        acc[category] = {
-                            min: DEFAULT_MIN_DISH_COUNT,
-                            max: DEFAULT_MAX_DISH_COUNT
-                        };
-                        return acc;
-                    }, {})
-                };
-                // Save default settings to KV store for future use
-                await setKVData('settings', settings);
-            }
-            
-            // Return settings as JSON response
-            res.status(200).json(settings);
-        } catch (error) {
-            // Handle any errors that occur during the process
-            handleApiError(res, error, 'Failed to fetch settings');
+    if (req.method !== 'GET') {
+        return methodNotAllowed(res, ['GET']);
+    }
+
+    try {
+        // Log KV connection status
+        console.log('Attempting to connect to KV store');
+        
+        // Check if KV is properly initialized
+        if (!kv) {
+            console.error('KV store not initialized');
+            throw new Error('Database connection failed');
         }
-    } else {
-        // If the request method is not GET, return a method not allowed error
-        methodNotAllowed(res, ['GET']);
+
+        // Attempt to retrieve settings
+        let settings = await kv.get('settings');
+        console.log('Retrieved settings:', settings);
+
+        // If no settings exist, create default settings
+        if (!settings || !settings.dishesPerCategory) {
+            settings = {
+                dishesPerCategory: CATEGORIES.reduce((acc, category) => {
+                    acc[category] = {
+                        min: DEFAULT_MIN_DISH_COUNT,
+                        max: DEFAULT_MAX_DISH_COUNT
+                    };
+                    return acc;
+                }, {})
+            };
+
+            // Try to save default settings
+            try {
+                await kv.set('settings', settings);
+                console.log('Default settings saved successfully');
+            } catch (saveError) {
+                console.error('Error saving default settings:', saveError);
+                // Continue even if save fails - we can still return the default settings
+            }
+        }
+
+        // Return settings
+        res.status(200).json(settings);
+    } catch (error) {
+        console.error('Error in get-settings:', error);
+        
+        // Return a more detailed error response
+        res.status(500).json({
+            error: 'Failed to fetch settings',
+            details: error.message,
+            timestamp: new Date().toISOString()
+        });
     }
 }
