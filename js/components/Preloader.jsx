@@ -33,11 +33,7 @@ const Preloader = () => {
         </p>
         
         <div className="relative w-96 h-96 mx-auto mb-8">
-          <svg 
-            viewBox="0 0 420.16 589.88" 
-            className="w-full h-full"
-          >
-<?xml version="1.0" encoding="UTF-8"?>
+
 <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420.16 589.88">
   <defs>
     <style>
