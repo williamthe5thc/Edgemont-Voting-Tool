@@ -20,9 +20,45 @@
         </div>
 
         <div id="loading-spinner" class="loading-spinner" style="display: none;">
-            <div class="spinner"></div>
-        </div>
-
+    <div class="spinner">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Skull base -->
+  <path d="M100 30 C40 30 30 90 30 120 C30 150 60 180 100 180 C140 180 170 150 170 120 C170 90 160 30 100 30" fill="#FFFFFF" />
+  
+  <!-- Eyes -->
+  <path d="M70 90 C70 80 80 80 85 90 C90 80 100 80 100 90 C100 100 85 105 85 90 C85 105 70 100 70 90" fill="#FFD166" class="animate-eye">
+    <animate attributeName="d" dur="2s" repeatCount="indefinite"
+      values="
+        M70 90 C70 80 80 80 85 90 C90 80 100 80 100 90 C100 100 85 105 85 90 C85 105 70 100 70 90;
+        M70 95 C70 85 80 85 85 95 C90 85 100 85 100 95 C100 105 85 110 85 95 C85 110 70 105 70 95;
+        M70 90 C70 80 80 80 85 90 C90 80 100 80 100 90 C100 100 85 105 85 90 C85 105 70 100 70 90"
+    />
+  </path>
+  
+  <path d="M100 90 C100 80 110 80 115 90 C120 80 130 80 130 90 C130 100 115 105 115 90 C115 105 100 100 100 90" fill="#FFD166" class="animate-eye">
+    <animate attributeName="d" dur="2s" repeatCount="indefinite"
+      values="
+        M100 90 C100 80 110 80 115 90 C120 80 130 80 130 90 C130 100 115 105 115 90 C115 105 100 100 100 90;
+        M100 95 C100 85 110 85 115 95 C120 85 130 85 130 95 C130 105 115 110 115 95 C115 110 100 105 100 95;
+        M100 90 C100 80 110 80 115 90 C120 80 130 80 130 90 C130 100 115 105 115 90 C115 105 100 100 100 90"
+    />
+  </path>
+  
+  <!-- Nose -->
+  <path d="M95 110 L105 110 L100 120 Z" fill="#FFD166" />
+  
+  <!-- Decorative patterns -->
+  <circle cx="70" cy="70" r="10" fill="#E0144C" />
+  <circle cx="130" cy="70" r="10" fill="#E0144C" />
+  <circle cx="100" cy="140" r="8" fill="#E0144C" />
+  <path d="M85 140 Q100 160 115 140" fill="none" stroke="#FFD166" stroke-width="3" />
+  
+  <!-- Floral patterns -->
+  <path d="M40 100 C35 95 35 85 40 80 C45 75 55 75 60 80" fill="none" stroke="#E0144C" stroke-width="3" />
+  <path d="M160 100 C165 95 165 85 160 80 C155 75 145 75 140 80" fill="none" stroke="#E0144C" stroke-width="3" />
+</svg>    </div>
+    <div class="loading-text">Loading Categories...</div>
+</div>
         <div id="categories"></div>
 
         <button id="submitVotes" class="btn-primary">Submit Your Votes</button>
