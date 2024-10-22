@@ -1,50 +1,21 @@
 /**
- * utils.js
- * 
- * This file contains utility functions used throughout the application.
- * It provides abstracted methods for interacting with the KV store,
- * handling API errors, and managing HTTP method restrictions.
+ * api/utils.js
  */
-
 import { kv } from '@vercel/kv';
-/*
-*****************************
-******************************
-* EDIT THE VARIABLES BELOW
-******************************
-******************************
-*/
 
-/** 
-* This is for the API variables to know what the categories are, 
-* and can't be combined with the constants in the js/ folder.
-*/
-const CATEGORIES = [
+// Define categories and default values
+export const CATEGORIES = [
     'Bread',
     'Appetizers',
     'Dessert',
-    'Entrée'
+    'Entrées & Soups'
 ];
-// Default values for dish counts
-const DEFAULT_MIN_DISH_COUNT = 1;
-const DEFAULT_MAX_DISH_COUNT = 50;
 
-/*
-*****************************
-******************************
-* EDIT THE VARIABLES ABOVE
-******************************
-******************************
-*/
-
+export const DEFAULT_MIN_DISH_COUNT = 1;
+export const DEFAULT_MAX_DISH_COUNT = 50;
 
 /**
- * Retrieves data from the KV store.
- * This function wraps the KV get operation with error handling.
- * 
- * @param {string} key - The key to retrieve from the KV store.
- * @returns {Promise<any>} The value associated with the key.
- * @throws {Error} If there's an issue fetching from the KV store.
+ * Retrieves data from the KV store
  */
 export async function getKVData(key) {
     try {
@@ -56,12 +27,7 @@ export async function getKVData(key) {
 }
 
 /**
- * Sets data in the KV store.
- * This function wraps the KV set operation with error handling.
- * 
- * @param {string} key - The key to set in the KV store.
- * @param {any} value - The value to store.
- * @throws {Error} If there's an issue setting data in the KV store.
+ * Sets data in the KV store
  */
 export async function setKVData(key, value) {
     try {
@@ -73,26 +39,34 @@ export async function setKVData(key, value) {
 }
 
 /**
- * Handles API errors by logging and sending an appropriate response.
- * This function provides a consistent way to handle errors across API routes.
- * 
- * @param {Response} res - The response object.
- * @param {Error} error - The error that occurred.
- * @param {string} customMessage - A custom error message to include in the response.
+ * Handles API errors
  */
 export function handleApiError(res, error, customMessage) {
     console.error(customMessage, error);
-    res.status(500).json({ error: customMessage, details: error.message });
+    res.status(500).json({ 
+        error: customMessage, 
+        details: error.message,
+        timestamp: new Date().toISOString()
+    });
 }
 
 /**
- * Sends a 405 Method Not Allowed response.
- * This function is used to restrict API routes to specific HTTP methods.
- * 
- * @param {Response} res - The response object.
- * @param {string[]} allowedMethods - An array of allowed HTTP methods.
+ * Handles method not allowed responses
  */
 export function methodNotAllowed(res, allowedMethods) {
     res.setHeader('Allow', allowedMethods);
     res.status(405).end(`Method ${res.req.method} Not Allowed`);
+}
+
+/**
+ * Sets CORS headers
+ */
+export function setCorsHeaders(res) {
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
 }
