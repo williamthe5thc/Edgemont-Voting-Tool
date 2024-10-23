@@ -4,6 +4,11 @@ import Preloader from './components/Preloader.jsx';
 import App from './App.jsx';
 import '../styles/index.css';
 
+import './utils/apiUtils.js';
+import './utils/storageUtils.js';
+import './utils/uiUtils.js';
+import './utils/validationUtils.js';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function initializeApp() {
