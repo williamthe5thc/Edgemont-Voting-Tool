@@ -43,6 +43,13 @@ const Preloader = ({ onLoadComplete }) => {
             className="w-full h-full"
             aria-label="Sugar Skull Loading Animation"
           >
+              <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
             {/* Main skull outline */}
             <path 
               fill="#FFFFFF"
