@@ -45,16 +45,22 @@ const App = () => {
                 <p className="mb-4">Enter the number of your favorite {category} dish (You can pick up to 2):</p>
                 <div className="space-y-4">
                   {[1, 2].map((num) => (
-                    <input
-                      key={`${category}-${num}`}
-                      type="text"
-                      className="vote-input w-full bg-[#4F1271] text-white border-2 border-[#FFD166] rounded-lg p-4 placeholder-[#D7C1FF]"
-                      placeholder="e.g., 1"
-                      pattern="[0-9]*"
-                      inputMode="numeric"
-                      maxLength={2}
-                      data-category={category}
-                    />
+                    // In your App.jsx where you have the input elements:
+<input
+  type="text"
+  className="vote-input w-full bg-[#4F1271] text-white border-2 border-[#FFD166] rounded-lg p-4 placeholder-[#D7C1FF]"
+  placeholder="e.g., 1"
+  pattern="[0-9]*"
+  inputMode="numeric"
+  maxLength={2}
+  data-category={category}
+  onChange={(e) => {
+    const validValue = validateInput(e.target.value, category, existingVotes);
+    if (validValue !== undefined) {
+      handleVoteChange(validValue);
+    }
+  }}
+/>
                   ))}
                 </div>
               </div>
