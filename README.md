@@ -1,186 +1,176 @@
 # Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
-# Edgemont Voting Tool
 
-## Overview
+A React-based voting application featuring a unique Dia de Los Ancestros themed loading screen and real-time vote tracking. Built for the Edgemont 1st Ward cooking competition.
 
-A web-based voting application designed for community events and competitions. Built with modern web technologies and featuring real-time validation, local storage for vote persistence, and an admin interface for competition management.
+![Preview of the voting tool with sugar skull loading animation]
 
-## Features
+## Features 🌟
 
-- 🎨 Modern, responsive UI with custom preloader animation
-- 📱 Mobile-friendly design
-- 🔄 Real-time vote validation
-- 💾 Local storage for saving incomplete votes
-- 👑 Admin panel for competition management
-- 📊 Results visualization
-- 🔐 Integration with Vercel KV for secure data storage
+- 💀 Custom animated sugar skull preloader
+- ⚡️ Real-time input validation
+- 🎯 Category-specific voting limits
+- 💾 Local storage for vote persistence
+- 🔔 Toast notifications for user feedback
+- 📱 Mobile-first, responsive design
+- 🔄 Automatic progress tracking
+- 🎨 Themed UI with Tailwind CSS
 
-## Tech Stack
+## Tech Stack 🛠
 
-- **Frontend**:
-  - React
-  - TailwindCSS
-  - Vanilla JavaScript
-- **Backend**:
-  - Vercel Serverless Functions
-  - Vercel KV (Redis-compatible storage)
-- **Build Tools**:
-  - Vite
-  - PostCSS
-  - Autoprefixer
+- **Frontend Framework:** React 18
+- **Build Tool:** Vite
+- **Styling:** 
+  - Tailwind CSS
+  - Custom CSS animations
+- **State Management:** React Hooks
+- **Data Persistence:** 
+  - Vercel KV
+  - Local Storage
+- **Deployment:** Vercel
 
-## Project Structure
+## Quick Start 🚀
+
+```bash
+# Clone the repository
+git clone [your-repo-url]
+
+# Navigate to project directory
+cd dia-de-los-ancestros-voting
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+## Environment Setup 🔧
+
+Create a `.env` file in your root directory:
+
+```env
+# Vercel KV Configuration
+KV_URL=your_kv_url
+KV_REST_API_URL=your_kv_rest_api_url
+KV_REST_API_TOKEN=your_kv_token
+KV_REST_API_READ_ONLY_TOKEN=your_read_only_token
+```
+
+## Project Structure 📁
 
 ```
 /
-├── api/                      # Vercel API routes
+├── js/                    # JavaScript source files
+│   ├── App.jsx           # Main application component
+│   ├── constants.js      # Application constants
+│   ├── main.jsx         # Application entry point
+│   └── utils/           # Utility functions
+│       ├── apiUtils.js
+│       ├── storageUtils.js
+│       ├── uiUtils.js
+│       └── validationUtils.js
+├── api/                  # API endpoints
 │   ├── clear-votes.js
 │   ├── get-settings.js
 │   ├── results.js
 │   ├── update-settings.js
 │   ├── utils.js
 │   └── vote.js
-├── js/
-│   ├── components/          # React components
-│   │   └── Preloader.jsx
-│   ├── utils/              # Utility functions
-│   │   ├── apiUtils.js
-│   │   ├── storageUtils.js
-│   │   ├── uiUtils.js
-│   │   └── validationUtils.js
-│   ├── admin.js
-│   ├── categoryLoader.js
-│   ├── constants.js
-│   ├── main.js
-│   ├── main.jsx
-│   ├── results-display.js
-│   └── voteSubmitter.js
-├── styles/
-│   ├── index.css           # TailwindCSS imports
-│   └── styles.css          # Custom styles
-├── admin.html
-├── index.html
-├── results.html
-├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-└── vite.config.js
+├── styles/              # Styling files
+│   ├── index.css       # Tailwind imports
+│   └── styles.css      # Custom styles
+└── public/             # Static assets
 ```
 
-## Setup
+## Key Components 🔑
 
-1. Clone the repository:
+### Preloader
+- Custom sugar skull animation
+- Loading progress indicator
+- Smooth transitions
+
+### Voting Interface
+- Category-based voting system
+- Real-time input validation
+- Maximum 2 selections per category
+- Persistent draft saves
+
+### Toast Notifications
+- Real-time feedback
+- Error reporting
+- Success confirmations
+
+## API Endpoints 🔌
+
+```javascript
+GET  /api/get-settings    // Fetch application settings
+POST /api/update-settings // Update application settings
+POST /api/vote           // Submit votes
+GET  /api/results        // Get voting results
+POST /api/clear-votes    // Reset all votes
+```
+
+## Development Commands 💻
+
 ```bash
-git clone https://github.com/your-username/edgemont-voting-tool.git
-cd edgemont-voting-tool
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create a `.env` file with your Vercel KV credentials:
-```env
-KV_URL=your_kv_url
-KV_REST_API_URL=your_kv_rest_api_url
-KV_REST_API_TOKEN=your_kv_rest_api_token
-KV_REST_API_READ_ONLY_TOKEN=your_kv_read_only_token
-```
-
-4. Start the development server:
-```bash
+# Start development server
 npm run dev
-```
 
-## Development
+# Build for production
+npm run build
 
-- Run development server: `npm run dev`
-- Build for production: `npm run build`
-- Preview production build: `npm run preview`
+# Preview production build
+npm run preview
 
-### Key Files
-
-- `js/constants.js`: Configure categories and competition theme
-- `api/utils.js`: Set default values and API configurations
-- `styles/styles.css`: Customize theme colors and styles
-
-## Deployment
-
-This project is configured for deployment on Vercel:
-
-1. Push your code to GitHub
-2. Create a new project on Vercel
-3. Connect your repository
-4. Configure environment variables
-5. Deploy!
-
-```bash
+# Deploy to Vercel
 npm run deploy
 ```
 
-## Customization
+## Deployment 🚢
 
-### Adding Categories
+The application is optimized for Vercel deployment:
 
-Edit `js/constants.js`:
-```javascript
-export const CATEGORIES = [
-    'Your',
-    'Custom',
-    'Categories',
-    'Here'
-];
-```
+1. Push your changes to GitHub
+2. Connect to Vercel
+3. Configure environment variables
+4. Deploy!
 
-### Changing Theme
+## Browser Support 🌐
 
-Edit the theme in `js/constants.js`:
-```javascript
-export const THEME = "Your Event Name";
-```
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS 13+, Android 7+)
 
-### Modifying Styles
-
-Update color schemes and styles in `styles/styles.css`:
-```css
-:root {
-  --primary-color: #your-color;
-  --secondary-color: #your-color;
-  /* ... other variables */
-}
-```
-
-## Features Breakdown
-
-### Admin Panel
-- Update number of dishes per category
-- Clear all votes
-- View real-time updates
-
-### Voting Interface
-- Select up to 2 favorites per category
-- Real-time validation
-- Auto-save progress
-- Mobile-friendly inputs
-
-### Results Page
-- View top-rated dishes by category
-- Score calculations:
-  - First choice: 2 points
-  - Second choice: 1 point
-
-## Contributing
+## Contributing 🤝
 
 1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/AmazingFeature`
-3. Commit your changes: `git commit -m 'Add some AmazingFeature'`
-4. Push to the branch: `git push origin feature/AmazingFeature`
-5. Open a Pull Request
+2. Create a feature branch: `git checkout -b feature/YourFeature`
+3. Commit changes: `git commit -m 'Add YourFeature'`
+4. Push to branch: `git push origin feature/YourFeature`
+5. Submit a pull request
 
-## License
+## Troubleshooting 🔍
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+**Common Issues:**
+
+1. **Toast notifications not showing:**
+   - Check toast container mounting
+   - Verify event handling
+
+2. **Validation not working:**
+   - Check console for errors
+   - Verify input handlers
+
+3. **Loading screen stuck:**
+   - Clear browser cache
+   - Check network requests
+
+## License 📄
+
+MIT License
+
 
 ## Acknowledgments
 
@@ -188,6 +178,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [TailwindCSS](https://tailwindcss.com) for styling utilities
 - [Vite](https://vitejs.dev) for the build system
 - Google Sheets for additional data storage
+- - Sugar skull design inspired by Dia de Los Ancestros traditions
 - All contributors (Claude and myself) and participants who helped test it and give feedback of the Día de los Ancestros Cooking Competition
 - My wife for tolerating me and helping me out while I made this
 ```
