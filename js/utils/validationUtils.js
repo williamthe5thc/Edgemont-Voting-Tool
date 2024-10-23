@@ -1,14 +1,16 @@
 // validationUtils.js
-import { showToast } from './uiUtils.js';
-import { DEFAULT_MIN_DISH_COUNT, DEFAULT_MAX_DISH_COUNT } from '../constants.js';
-
 console.log("validationUtils.js loading");
+
+import { showToast } from './uiUtils.js';
+
+// Remove the constants import and use these default values
+const DEFAULT_MIN = 1;
+const DEFAULT_MAX = 50;
 
 export function validateInput(value, category, existingVotes = [], settings = {}) {
     // Remove non-numeric characters
     const cleanedValue = value.replace(/\D/g, '');
     
-    // If empty, that's okay
     if (!cleanedValue) {
         return '';
     }
@@ -17,8 +19,8 @@ export function validateInput(value, category, existingVotes = [], settings = {}
     
     // Get min/max from settings or use defaults
     const categorySettings = settings?.dishesPerCategory?.[category] || {};
-    const minDish = categorySettings.min || DEFAULT_MIN_DISH_COUNT;
-    const maxDish = categorySettings.max || DEFAULT_MAX_DISH_COUNT;
+    const minDish = categorySettings.min || DEFAULT_MIN;
+    const maxDish = categorySettings.max || DEFAULT_MAX;
 
     // Check range
     if (numValue < minDish || numValue > maxDish) {
@@ -49,7 +51,7 @@ export function validateVotes(votes, settings = {}) {
 
     Object.entries(votes).forEach(([category, selectedDishes]) => {
         const validDishes = selectedDishes.filter(dish => dish);
-        const maxSelections = 2; // Maximum allowed selections per category
+        const maxSelections = 2;
 
         if (validDishes.length > maxSelections) {
             isValid = false;
@@ -75,8 +77,8 @@ export function validateVotes(votes, settings = {}) {
 
         // Validate each dish number against min/max
         const categorySettings = settings?.dishesPerCategory?.[category] || {};
-        const minDish = categorySettings.min || DEFAULT_MIN_DISH_COUNT;
-        const maxDish = categorySettings.max || DEFAULT_MAX_DISH_COUNT;
+        const minDish = categorySettings.min || DEFAULT_MIN;
+        const maxDish = categorySettings.max || DEFAULT_MAX;
 
         validDishes.forEach(dish => {
             const dishNum = parseInt(dish, 10);
