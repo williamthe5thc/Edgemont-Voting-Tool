@@ -24,6 +24,10 @@ export const CATEGORIES = [
     'Entrées & Soups'
 ];
 
+export const DEFAULT_MIN_DISH_COUNT = 1;
+export const DEFAULT_MAX_DISH_COUNT = 50;
+
+
 /**
  * THEME
  * 
