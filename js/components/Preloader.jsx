@@ -108,9 +108,9 @@ const Preloader = ({ onLoadComplete }) => {
 </svg>
         </div>
         
-        <p className="text-white font-medium">{progress}%</p>
+        
 <p className="text-white mb-8 text-lg px-4">
-          {progress}% Loading the Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool...
+          Loading {progress}% of the categories the Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool...
         </p>
 
         <div className="bg-purple-900/50 border border-yellow-400 rounded-lg p-6 mb-6">
