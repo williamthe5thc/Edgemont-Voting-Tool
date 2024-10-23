@@ -32,7 +32,10 @@ const Preloader = ({ onLoadComplete }) => {
 
   return (
    <div className="flex flex-col items-center justify-center min-h-screen bg-[#2C0735] px-4">
-      <div className="w-full max-w-md mx-auto text-center">
+       // Add this near the top of your return statement in Preloader.jsx
+  <div id="toastContainer"></div>
+ 
+     <div className="w-full max-w-md mx-auto text-center">
         
         <div className="relative w-full aspect-square max-w-[300px] mx-auto mb-8">
   <svg 
