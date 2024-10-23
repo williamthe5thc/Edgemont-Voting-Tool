@@ -1,47 +1,49 @@
-
 // uiUtils.js
 console.log("uiUtils.js loading");
 
 export function showToast(message, type = 'info', category = 'general') {
-    console.log(`Showing toast: ${message}, type: ${type}`);
+    console.log(`Showing toast: ${message}, type: ${type}, category: ${category}`);
     
     // Ensure we're in a browser environment
     if (typeof window === 'undefined') return;
 
-    // Get or create toast container
-    const containerId = category === 'general' ? 'toastContainer' : `toastContainer-${category}`;
-    let container = document.getElementById(containerId);
-    
-    if (!container) {
-        container = document.createElement('div');
-        container.id = containerId;
-        container.style.position = 'fixed';
-        container.style.top = '20px';
-        container.style.left = '50%';
-        container.style.transform = 'translateX(-50%)';
-        container.style.zIndex = '1000';
-        container.style.display = 'flex';
-        container.style.flexDirection = 'column';
-        container.style.alignItems = 'center';
-        container.style.width = '100%';
-        container.style.maxWidth = '400px';
-        document.body.appendChild(container);
+    // Get the appropriate container based on category
+    let container;
+    if (category === 'general') {
+        container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+    } else {
+        // Find the category section and its toast container
+        const categorySection = Array.from(document.getElementsByClassName('category'))
+            .find(section => section.querySelector(`[data-category="${category}"]`));
+            
+        if (categorySection) {
+            container = categorySection.querySelector('.toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'toast-container';
+                // Insert after the last input in the category
+                const lastInput = categorySection.querySelector('.vote-input:last-of-type');
+                if (lastInput) {
+                    lastInput.parentNode.insertBefore(container, lastInput.nextSibling);
+                } else {
+                    categorySection.appendChild(container);
+                }
+            }
+        } else {
+            console.warn(`Category section not found for: ${category}`);
+            return;
+        }
     }
 
     // Create toast element
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.style.backgroundColor = type === 'error' ? 'rgba(220, 53, 69, 0.9)' : 
-                                 type === 'success' ? 'rgba(40, 167, 69, 0.9)' :
-                                 'rgba(0, 0, 0, 0.7)';
-    toast.style.color = 'white';
-    toast.style.padding = '12px 24px';
-    toast.style.borderRadius = '4px';
-    toast.style.marginTop = '10px';
-    toast.style.opacity = '0';
-    toast.style.transition = 'all 0.3s ease-in-out';
-    toast.style.width = '90%';
-    toast.style.textAlign = 'center';
     toast.textContent = message;
 
     // Add to container
@@ -49,18 +51,18 @@ export function showToast(message, type = 'info', category = 'general') {
 
     // Trigger animation
     requestAnimationFrame(() => {
-        toast.style.opacity = '1';
+        toast.classList.add('show');
     });
 
     // Remove after delay
     setTimeout(() => {
-        toast.style.opacity = '0';
+        toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
             if (container.contains(toast)) {
                 container.removeChild(toast);
             }
-            // Remove container if empty
-            if (container.children.length === 0 && container.parentElement) {
+            // Only remove container if it's empty and not a category-specific container
+            if (container.children.length === 0 && category === 'general' && container.parentElement) {
                 container.parentElement.removeChild(container);
             }
         }, { once: true });
