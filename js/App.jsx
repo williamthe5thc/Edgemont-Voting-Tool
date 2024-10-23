@@ -4,17 +4,40 @@ import { validateInput } from './utils/validationUtils';
 import { showToast } from './utils/uiUtils';
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const [votes, setVotes] = useState({});
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    // Fetch settings when component mounts
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/get-settings');
+        const data = await response.json();
+        setSettings(data);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        // Use defaults if settings can't be loaded
+        setSettings({
+          dishesPerCategory: CATEGORIES.reduce((acc, category) => {
+            acc[category] = {
+              min: DEFAULT_MIN_DISH_COUNT,
+              max: DEFAULT_MAX_DISH_COUNT
+            };
+            return acc;
+          }, {})
+        });
+      }
+    };
+
+    loadSettings();
+  }, []);
 
   const handleVoteChange = (category, index, value) => {
-    // Get existing votes for this category
     const categoryVotes = votes[category] || ['', ''];
     const otherVotes = categoryVotes.filter((_, i) => i !== index);
 
-    const validValue = validateInput(value, category, otherVotes);
+    const validValue = validateInput(value, category, otherVotes, settings);
     
-    // Update votes state
     setVotes(prev => ({
       ...prev,
       [category]: Object.assign([], categoryVotes, { [index]: validValue })
