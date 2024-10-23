@@ -33,9 +33,6 @@ const Preloader = ({ onLoadComplete }) => {
   return (
    <div className="flex flex-col items-center justify-center min-h-screen bg-[#2C0735] px-4">
       <div className="w-full max-w-md mx-auto text-center">
-        <p className="text-white mb-8 text-lg px-4">
-          Loading the Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool...
-        </p>
         
         <div className="relative w-full aspect-square max-w-[300px] mx-auto mb-8">
   <svg 
@@ -106,7 +103,10 @@ const Preloader = ({ onLoadComplete }) => {
           </g>
 </svg>
         </div>
-
+<p className="text-white mb-8 text-lg px-4">
+          Loading the Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool...
+        </p>
+        
         <p className="text-white font-medium">{progress}%</p>
 
         <div className="bg-purple-900/50 border border-yellow-400 rounded-lg p-6 mb-6">
