@@ -1,43 +1,54 @@
-/**
- * validationUtils.js
- * 
- * This utility file provides functions for validating user votes.
- * It ensures that votes meet the required criteria before submission,
- * improving data integrity and user experience.
- */
-
-import { CATEGORIES } from '/js/constants.js';
-import { showToast } from './uiUtils.js';
-
+// validationUtils.js
 console.log("validationUtils.js loading");
 
-/**
- * Validates the votes object
- * @param {Object} votes - The votes object to validate
- * @returns {Object} An object containing isValid flag and invalidCategories array
- */
+import { showToast } from './uiUtils.js';
+
+export function validateInput(value, category, existingVotes = []) {
+    // Remove non-numeric characters
+    const cleanedValue = value.replace(/\D/g, '');
+    
+    // If empty, that's okay
+    if (!cleanedValue) {
+        return '';
+    }
+
+    const numValue = parseInt(cleanedValue, 10);
+
+    // Check range (1-99)
+    if (numValue < 1 || numValue > 99) {
+        showToast(`Please enter a number between 1 and 99 for ${category}`, 'error');
+        return '';
+    }
+
+    // Check for duplicates
+    if (existingVotes.includes(cleanedValue)) {
+        showToast(`You've already selected dish #${cleanedValue} for ${category}`, 'error');
+        return '';
+    }
+
+    return cleanedValue;
+}
+
 export function validateVotes(votes) {
     let isValid = true;
     let invalidCategories = [];
 
     Object.entries(votes).forEach(([category, selectedDishes]) => {
-        if (selectedDishes.length > 2) {
+        // Filter out empty strings
+        const validDishes = selectedDishes.filter(dish => dish);
+        
+        if (validDishes.length > 2) {
             isValid = false;
             invalidCategories.push(category);
-            showToast(`Too many selections for ${category}. Please choose up to 2 dishes.`, 'error', category);
-        } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
-            isValid = false;
-            invalidCategories.push(category);
-            showToast(`Please choose 2 unique favorite dishes.`, 'error', category);
+            showToast(`Too many selections for ${category}. Please choose up to 2 unique dishes.`, 'error');
         }
-    });
-
-    // Check for missing categories
-    CATEGORIES.forEach(category => {
-        if (!votes[category] || votes[category].length === 0) {
-            console.log(`No votes for category: ${category}`);
-            // Optionally, you can add a toast notification for categories with no votes
-            // showToast(`No votes entered for ${category}.`, 'info', category);
+        
+        // Check for duplicates
+        const uniqueDishes = new Set(validDishes);
+        if (uniqueDishes.size !== validDishes.length) {
+            isValid = false;
+            invalidCategories.push(category);
+            showToast(`Please choose unique dishes for ${category}.`, 'error');
         }
     });
 
