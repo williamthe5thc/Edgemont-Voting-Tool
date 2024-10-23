@@ -1,6 +1,6 @@
 // validationUtils.js
 import { showToast } from './uiUtils.js';
-import { DEFAULT_MIN_DISH_COUNT, DEFAULT_MAX_DISH_COUNT } from './constants.js';
+import { DEFAULT_MIN_DISH_COUNT, DEFAULT_MAX_DISH_COUNT } from '../constants.js';
 
 console.log("validationUtils.js loading");
 
