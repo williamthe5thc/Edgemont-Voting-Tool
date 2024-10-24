@@ -1,184 +1,136 @@
 # Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
 
-A React-based voting application featuring a unique Dia de Los Ancestros themed loading screen and real-time vote tracking. Built for the Edgemont 1st Ward cooking competition.
+## Overview
 
-![Preview of the voting tool with sugar skull loading animation]
+This project is a web-based voting system designed for the Edgemont 1st Ward Día de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories and provides an admin interface for managing the competition settings and viewing results.
 
-## Features 🌟
+## Features
 
-- 💀 Custom animated sugar skull preloader
-- ⚡️ Real-time input validation
-- 🎯 Category-specific voting limits
-- 💾 Local storage for vote persistence
-- 🔔 Toast notifications for user feedback
-- 📱 Mobile-first, responsive design
-- 🔄 Automatic progress tracking
-- 🎨 Themed UI with Tailwind CSS
+- User-friendly voting interface
+- Multiple categories for voting (e.g., Bread, Appetizers, Dessert, Entrée)
+- Real-time input validation
+- Local storage for saving incomplete votes
+- Admin panel for managing competition settings
+- Results page for viewing competition outcomes
+- Integration with Vercel KV for data storage
+- Integration with Google Sheets for vote recording
 
-## Tech Stack 🛠
+## Technology Stack
 
-- **Frontend Framework:** React 18
-- **Build Tool:** Vite
-- **Styling:** 
-  - Tailwind CSS
-  - Custom CSS animations
-- **State Management:** React Hooks
-- **Data Persistence:** 
-  - Vercel KV
-  - Local Storage
-- **Deployment:** Vercel
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js with Vercel Serverless Functions
+- Database: Vercel KV (Key-Value store)
+- Additional Storage: Google Sheets (via Google Apps Script)
 
-## Quick Start 🚀
-
-```bash
-# Clone the repository
-git clone [your-repo-url]
-
-# Navigate to project directory
-cd dia-de-los-ancestros-voting
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-## Environment Setup 🔧
-
-Create a `.env` file in your root directory:
-
-```env
-# Vercel KV Configuration
-KV_URL=your_kv_url
-KV_REST_API_URL=your_kv_rest_api_url
-KV_REST_API_TOKEN=your_kv_token
-KV_REST_API_READ_ONLY_TOKEN=your_read_only_token
-```
-
-## Project Structure 📁
+## Project Structure
 
 ```
 /
-├── js/                    # JavaScript source files
-│   ├── App.jsx           # Main application component
-│   ├── constants.js      # Application constants
-│   ├── main.jsx         # Application entry point
-│   └── utils/           # Utility functions
-│       ├── apiUtils.js
-│       ├── storageUtils.js
-│       ├── uiUtils.js
-│       └── validationUtils.js
-├── api/                  # API endpoints
+├── api/
 │   ├── clear-votes.js
 │   ├── get-settings.js
 │   ├── results.js
 │   ├── update-settings.js
 │   ├── utils.js
 │   └── vote.js
-├── styles/              # Styling files
-│   ├── index.css       # Tailwind imports
-│   └── styles.css      # Custom styles
-└── public/             # Static assets
+├── js/
+│   ├── utils/
+│   │   ├── apiUtils.js
+│   │   ├── storageUtils.js
+│   │   ├── uiUtils.js
+│   │   └── validationUtils.js
+│   ├── admin.js
+│   ├── categoryLoader.js
+│   ├── constants.js
+│   ├── main.js
+│   ├── results-display.js
+│   └── voteSubmitter.js
+├── admin.html
+├── index.html
+├── results.html
+├── styles.css
+└── package.json
 ```
 
-## Key Components 🔑
+## Setup and Installation
 
-### Preloader
-- Custom sugar skull animation
-- Loading progress indicator
-- Smooth transitions
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/dia-de-los-ancestros-voting.git
+   cd dia-de-los-ancestros-voting
+   ```
 
-### Voting Interface
-- Category-based voting system
-- Real-time input validation
-- Maximum 2 selections per category
-- Persistent draft saves
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-### Toast Notifications
-- Real-time feedback
-- Error reporting
-- Success confirmations
+3. Set up Vercel KV:
+   - Create a Vercel account if you don't have one
+   - Set up a new KV store in your Vercel dashboard
+   - Add your KV connection string to your Vercel project's environment variables
 
-## API Endpoints 🔌
+4. Set up Google Apps Script:
+   - Create a new Google Apps Script project
+   - Copy the contents of the `google-apps-script.js` file into your script
+   - Deploy the script as a web app
+   - Update the `submitToGoogleSheets` function in `voteSubmitter.js` with your script's URL
 
-```javascript
-GET  /api/get-settings    // Fetch application settings
-POST /api/update-settings // Update application settings
-POST /api/vote           // Submit votes
-GET  /api/results        // Get voting results
-POST /api/clear-votes    // Reset all votes
-```
+5. Deploy to Vercel:
+   ```
+   vercel
+   ```
 
-## Development Commands 💻
+## Usage
 
-```bash
-# Start development server
-npm run dev
+### For Voters
 
-# Build for production
-npm run build
+1. Navigate to the main page of the deployed application.
+2. Enter your votes for each category (up to two dishes per category).
+3. Submit your votes.
 
-# Preview production build
-npm run preview
+### For Admins
 
-# Deploy to Vercel
-npm run deploy
-```
+1. Navigate to the `/admin.html` page of the deployed application.
+2. Update the number of dishes per category as needed.
+3. Use the "Clear Votes" function to reset all votes (use with caution).
 
-## Deployment 🚢
+### Viewing Results
 
-The application is optimized for Vercel deployment:
+1. Navigate to the `/results.html` page to view the current standings.
 
-1. Push your changes to GitHub
-2. Connect to Vercel
-3. Configure environment variables
-4. Deploy!
+## Development
 
-## Browser Support 🌐
+To run the project locally:
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS 13+, Android 7+)
+1. Start the development server:
+   ```
+   npm run dev
+   ```
 
-## Contributing 🤝
+2. Open `http://localhost:3000` in your browser.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/YourFeature`
-3. Commit changes: `git commit -m 'Add YourFeature'`
-4. Push to branch: `git push origin feature/YourFeature`
-5. Submit a pull request
+## Key Components
 
-## Troubleshooting 🔍
+- `api/`: Contains serverless functions for backend operations
+- `js/`: Client-side JavaScript files
+- `admin.html`: Admin panel interface
+- `index.html`: Main voting interface
+- `results.html`: Results display page
+- `styles.css`: Global styles for the application
 
-**Common Issues:**
+## Contributing
 
-1. **Toast notifications not showing:**
-   - Check toast container mounting
-   - Verify event handling
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-2. **Validation not working:**
-   - Check console for errors
-   - Verify input handlers
+## License
 
-3. **Loading screen stuck:**
-   - Clear browser cache
-   - Check network requests
+This project is licensed under the MIT License.
 
-## License 📄
+## Acknowledgements
 
-MIT License
-
-
-## Acknowledgments
-
-- [Vercel](https://vercel.com) for hosting and KV store
-- [TailwindCSS](https://tailwindcss.com) for styling utilities
-- [Vite](https://vitejs.dev) for the build system
+- Vercel for hosting and KV store
 - Google Sheets for additional data storage
-- - Sugar skull design inspired by Dia de Los Ancestros traditions
 - All contributors (Claude and myself) and participants who helped test it and give feedback of the Día de los Ancestros Cooking Competition
 - My wife for tolerating me and helping me out while I made this
 ```
