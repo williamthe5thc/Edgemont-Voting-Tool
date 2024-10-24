@@ -229,92 +229,19 @@ h1 {
     text-align: center;
     animation: pulse 2s ease-in-out infinite;
 }
-/* styles.css */
-
-.preloader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #2C0735;
-    padding: 1rem;
-}
-
-.skull-container {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto 2rem auto;
-    aspect-ratio: 1;
-}
-
-.skull-fill {
-    opacity: 1;
-}
-
-.mask-rect {
-    transition: height 0.1s linear;
-}
-
-.decorative-elements {
-    pointer-events: none;
-}
-
-.progress-text {
-    color: white;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    padding: 0 1rem;
-}
-
-.instructions {
-    background-color: rgba(139, 92, 246, 0.1);
-    border: 2px solid #FFD166;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    max-width: 32rem;
-    margin-left: auto;
-    margin-right: auto;
-}
+/* Preloader styles */
 .preloader-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #2C0735;
+    background-color: var(--background-color);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
-}
-
-.skull-container {
-    width: 300px;
-    height: 300px;
-    margin-bottom: 2rem;
-}
-
-.skull-container svg {
-    width: 100%;
-    height: 100%;
-}
-/* Add these to your styles.css */
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: #2C0735;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .skull-container {
@@ -328,205 +255,44 @@ h1 {
     height: 100%;
 }
 
-.skull-reveal {
-    opacity: 1;
-}
-
-.mask-rect {
-    transition: y 0.3s ease-out;
-}
-
 .progress-text {
-    color: white;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
+    color: var(--text-color);
+    font-family: 'Lobster', cursive;
+    font-size: var(--font-size-medium);
     text-align: center;
+    margin: 20px 0;
     padding: 0 1rem;
+    max-width: 80%;
 }
 
-.instructions {
-    background-color: rgba(139, 92, 246, 0.1);
-    border: 2px solid #FFD166;
+.preloader-instructions {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--border-color);
     border-radius: 0.5rem;
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem auto;
     max-width: 32rem;
-    color: white;
+    color: var(--text-color);
 }
 
-.instructions h2 {
-    color: white;
+.preloader-instructions h2 {
+    color: var(--secondary-color);
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
-.instructions ul {
+.preloader-instructions ul {
     list-style-type: disc;
     padding-left: 1.5rem;
 }
 
-.instructions li {
+.preloader-instructions li {
     margin-bottom: 0.5rem;
 }
-/* Add these styles to your CSS file */
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
 
-.skull-container {
-    width: 200px;
-    height: 200px;
-    margin-bottom: 20px;
-}
-
-.skull-container svg {
-    width: 100%;
-    height: 100%;
-}
-
-.progress-text {
-    font-size: 16px;
-    color: #333;
-    text-align: center;
-    margin: 20px 0;
-    max-width: 80%;
-}
-
-.instructions {
-    margin-top: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    max-width: 80%;
-}
-
-.instructions h2 {
-    margin-bottom: 10px;
-    color: #2C0735;
-}
-
-.instructions ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-.instructions li {
-    margin: 8px 0;
-    color: #333;
-}
-/* Add these styles to your CSS file */
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #2C0735;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.skull-container {
-    width: 300px;
-    height: 300px;
-    margin-bottom: 20px;
-}
-
-.skull-container svg {
-    width: 100%;
-    height: 100%;
-}
-
-.progress-text {
-    font-size: 16px;
-    color: white;
-    text-align: center;
-    margin: 20px 0;
-    max-width: 80%;
-}
-
-.instructions {
-    margin-top: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    max-width: 80%;
-}
-
-.instructions h2 {
-    margin-bottom: 10px;
-    color: #2C0735;
-}
-
-.instructions ul {
-    list-style-type: disc;
-    padding-left: 20px;
-}
-
-.instructions li {
-    margin: 8px 0;
-    color: #333;
-}
-
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;  /* or whatever background color you want */
-}
-
-.skull-container {
-    width: 200px;  /* adjust size as needed */
-    margin-bottom: 20px;
-}
-
-.progress-text {
-    margin: 20px 0;
-}
-.preloader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;  /* or any color you prefer */
-    z-index: 9999;  /* ensure it stays on top */
-}
-
-.skull-container {
-    width: 200px;  /* adjust size as needed */
-    margin-bottom: 20px;
-}
-
-.progress-text {
-    margin: 20px 0;
-    text-align: center;
-}
-
-.instructions {
-    text-align: center;
-    margin-top: 20px;
+/* Animation for the filling effect */
+.filling-animation {
+    fill: white;
+    transition: transform 0.3s linear;
+    transform-origin: bottom;
 }
