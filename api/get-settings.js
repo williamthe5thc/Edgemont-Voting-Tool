@@ -1,13 +1,9 @@
-/**
- * get-settings.js
- * 
- * This file handles the server-side logic for retrieving competition settings.
- * It's essential for initializing the application with the correct parameters,
- * such as the number of dishes allowed per category.
- */
+// api/get-settings.js
 
-import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
-// import { CATEGORIES } from '../js/constants.js';
+import { kv } from '@vercel/kv';
+import { handleAPIError } from '../utils/errorUtils.js';
+import { processSettings } from '../utils/settingsUtils.js';
+
 const CATEGORIES = [
     'Bread',
     'Appetizers',
@@ -15,47 +11,64 @@ const CATEGORIES = [
     'Entrée'
 ];
 
-// Default values for dish counts
-const DEFAULT_MIN_DISH_COUNT = 1;
-const DEFAULT_MAX_DISH_COUNT = 50;
-
-
-/**
- * API handler for retrieving competition settings
- * @param {Object} req - The request object
- * @param {Object} res - The response object
- */
 export default async function handler(req, res) {
-    // Only allow GET requests for fetching settings
-    if (req.method === 'GET') {
-        try {
-            // Attempt to retrieve settings from KV store
-            let settings = await getKVData('settings');
-            
-            // If settings don't exist, create default settings
-            // This ensures the application always has a valid configuration
-            if (!settings || !settings.dishesPerCategory) {
-                settings = {
-                    dishesPerCategory: CATEGORIES.reduce((acc, category) => {
-                        acc[category] = {
-                            min: DEFAULT_MIN_DISH_COUNT,
-                            max: DEFAULT_MAX_DISH_COUNT
-                        };
-                        return acc;
-                    }, {})
-                };
-                // Save default settings to KV store for future use
-                await setKVData('settings', settings);
-            }
-            
-            // Return settings as JSON response
-            res.status(200).json(settings);
-        } catch (error) {
-            // Handle any errors that occur during the process
-            handleApiError(res, error, 'Failed to fetch settings');
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        let settings = await kv.get('settings');
+        
+        // If no settings exist, create default settings
+        if (!settings || !settings.dishesPerCategory) {
+            settings = processSettings(null);
+            await kv.set('settings', settings);
         }
-    } else {
-        // If the request method is not GET, return a method not allowed error
-        methodNotAllowed(res, ['GET']);
+        
+        res.status(200).json(settings);
+    } catch (error) {
+        handleAPIError(res, error, 'Failed to fetch settings');
+    }
+}
+
+// api/update-settings.js
+
+import { kv } from '@vercel/kv';
+import { handleAPIError } from '../utils/errorUtils.js';
+import { validateSettings } from '../utils/validationUtils.js';
+
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const { dishesPerCategory } = req.body;
+
+        // Validate the incoming settings
+        const validation = validateSettings(dishesPerCategory);
+        if (!validation.isValid) {
+            return res.status(400).json({
+                error: 'Invalid settings',
+                details: validation.errors
+            });
+        }
+
+        // Get current settings and update
+        let settings = await kv.get('settings') || {};
+        settings.dishesPerCategory = {
+            ...settings.dishesPerCategory,
+            ...dishesPerCategory
+        };
+
+        // Save updated settings
+        await kv.set('settings', settings);
+        
+        res.status(200).json({ 
+            message: 'Settings updated successfully',
+            settings: settings
+        });
+    } catch (error) {
+        handleAPIError(res, error, 'Failed to update settings');
     }
 }
