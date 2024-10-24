@@ -1,22 +1,15 @@
-/**
- * voteSubmitter.js
- * 
- * This file is responsible for managing the vote submission process in the cooking competition application.
- * It handles various aspects of the voting system, including:
- * 
- * 1. Setting up and managing vote input fields
- * 2. Validating user inputs in real-time
- * 3. Saving and loading votes from local storage to persist user progress
- * 4. Submitting final votes to the server (Vercel KV) and Google Sheets
- * 5. Providing user feedback through toast notifications and UI updates
- */
+// voteSubmitter.js
 
 import { CATEGORIES } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
+import { APP_CONFIG, UI_MESSAGES } from './utils/configUtils.js';
+import { makeAPIRequest, API_ENDPOINTS } from './utils/apiUtils.js';
+import { validateVotes, validateSingleVote } from './utils/validationUtils.js';
 import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
-import { validateVotes } from './utils/validationUtils.js';
+import { formatVoteData } from './utils/transformUtils.js';
+import { toggleFormDisabled } from './utils/formUtils.js';
+import { debounce } from './utils/eventUtils.js';
 
-// Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
 
 /**
@@ -28,198 +21,121 @@ export function setDishesPerCategory(dishes) {
 }
 
 /**
- * Sets up event listeners for vote input fields
+ * Sets up event listeners for vote inputs
  */
 export function setupVoting() {
-    document.querySelectorAll('.vote-input').forEach(input => {
-        input.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            validateInput(this);
-            saveVotesToLocalStorage();
+    const inputs = document.querySelectorAll('.vote-input');
+    inputs.forEach(input => {
+        const debouncedValidation = debounce((e) => {
+            validateAndSaveInput(e.target);
+        }, APP_CONFIG.INPUT_DEBOUNCE_DELAY);
+
+        input.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            debouncedValidation(e);
         });
     });
 }
 
 /**
- * Validates individual vote inputs
+ * Validates and saves a single input
  * @param {HTMLInputElement} input - The input element to validate
  */
-export function validateInput(input) {
-    const value = parseInt(input.value);
+function validateAndSaveInput(input) {
     const category = input.dataset.category;
-    const max = DISHES_PER_CATEGORY[category]?.max || 99;
+    const value = input.value;
+    
+    if (value === '') return;
 
-    if (input.value === '') return;
+    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+    const existingVotes = Array.from(categoryInputs)
+        .filter(inp => inp !== input && inp.value !== '')
+        .map(inp => parseInt(inp.value));
 
-    if (isNaN(value) || value < 1 || value > max) {
+    const validation = validateSingleVote(value, category, DISHES_PER_CATEGORY, existingVotes);
+    
+    if (!validation.isValid) {
         input.value = '';
-        console.log(`Validation failed for ${category}. Showing toast.`);
-        showToast(`Error: You selected an invalid dish. Please enter a number between 1 and ${max}`, 'error', category);
+        showToast(validation.error, 'error', category);
         return;
     }
 
-    // Check for duplicate entries within the same category
-    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-    const categoryVotes = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
-    
-    const { isValid, invalidCategories } = validateVotes({ [category]: categoryVotes });
-    
-    if (!isValid) {
-        console.log(`Validation failed for ${category}. Reason: ${invalidCategories[0]}`);
-        input.value = '';
-    } else {
-        console.log(`Input validated successfully for ${category}.`);
-    }
+    saveVotesToLocalStorage();
 }
 
 /**
  * Saves current votes to local storage
  */
 export function saveVotesToLocalStorage() {
-    const votes = {};
-    CATEGORIES.forEach(category => {
+    const votes = CATEGORIES.reduce((acc, category) => {
         const inputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-        votes[category] = Array.from(inputs)
+        acc[category] = Array.from(inputs)
             .map(input => parseInt(input.value))
             .filter(value => !isNaN(value));
-    });
-    saveToLocalStorage('currentVotes', votes);
-}
+        return acc;
+    }, {});
 
-/**
- * Generates a summary of votes for confirmation
- * @param {Object} votes - The votes object
- * @returns {string} A formatted summary of votes
- */
-function displayVoteSummary(votes) {
-    let summary = 'Your Vote Summary:\n\n';
-    
-    CATEGORIES.forEach(category => {
-        const categoryVotes = votes[category] || [];
-        summary += `${category}:\n`;
-        if (categoryVotes.length === 0) {
-            summary += '  No votes\n';
-        } else {
-            categoryVotes.forEach((dish, index) => {
-                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
-            });
-        }
-        summary += '\n';
-    });
-    
-    return summary;
+    saveToLocalStorage(APP_CONFIG.LOCAL_STORAGE_KEYS.CURRENT_VOTES, votes);
 }
 
 /**
  * Loads saved votes from local storage
  */
 export function loadVotesFromLocalStorage() {
-    const votes = getFromLocalStorage('currentVotes');
-    if (votes) {
-        Object.entries(votes).forEach(([category, selections]) => {
-            const inputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-            selections.forEach((value, index) => {
-                if (inputs[index]) inputs[index].value = value;
-            });
+    const votes = getFromLocalStorage(APP_CONFIG.LOCAL_STORAGE_KEYS.CURRENT_VOTES);
+    if (!votes) return;
+
+    Object.entries(votes).forEach(([category, selections]) => {
+        const inputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+        selections.forEach((value, index) => {
+            if (inputs[index]) inputs[index].value = value;
         });
-    }
+    });
 }
 
 /**
- * Handles the vote submission process
- * @param {Event} e - The submit event
+ * Handles vote submission
+ * @param {Event} e - Submit event
  */
 export async function submitVotes(e) {
     e.preventDefault();
-    console.log("Submit votes function called");
     
-    saveVotesToLocalStorage();
-    const votes = getFromLocalStorage('currentVotes');
-    console.log("Votes to submit:", votes);
+    const submitButton = document.getElementById('submitVotes');
+    const votes = getFromLocalStorage(APP_CONFIG.LOCAL_STORAGE_KEYS.CURRENT_VOTES);
+    const validation = validateVotes(votes, { dishesPerCategory: DISHES_PER_CATEGORY });
     
-    const { isValid, invalidCategories } = validateVotes(votes);
-    if (!isValid) {
-        showToast(`Please enter valid and unique dish numbers for each category. Issues in: ${invalidCategories.join(', ')}`, 'error');
+    if (!validation.isValid) {
+        showToast(validation.errors[0], 'error');
         return;
     }
 
-    const summary = displayVoteSummary(votes);
-    const confirmSubmit = confirm(`${summary}\n\nDo you want to submit these votes?\nClick OK to submit or Cancel to go back and edit`);
-    if (!confirmSubmit) return;
-
-    const submitButton = document.getElementById('submitVotes');
-    submitButton.textContent = 'Voting...';
-    submitButton.disabled = true;
-    
     try {
-        console.log("Submitting votes to Vercel KV and Google Sheets");
-        const [vercelResponse, googleSheetsResponse] = await Promise.all([
-            submitToVercelKV(votes),
-            submitToGoogleSheets(votes)
-        ]);
-        console.log("Votes submitted successfully");
-        console.log("Vercel KV response:", vercelResponse);
-        console.log("Google Sheets response:", googleSheetsResponse);
+        toggleFormDisabled(submitButton.form, true);
+        submitButton.textContent = UI_MESSAGES.SUBMITTING_VOTES;
 
-        showToast('Thank you for voting!', 'success');
-        localStorage.removeItem('currentVotes');
+        const formattedVotes = formatVoteData(votes);
+        await makeAPIRequest(API_ENDPOINTS.VOTE, {
+            method: 'POST',
+            body: JSON.stringify(formattedVotes)
+        });
+
+        showToast(UI_MESSAGES.VOTES_SUBMITTED, 'success');
+        localStorage.removeItem(APP_CONFIG.LOCAL_STORAGE_KEYS.CURRENT_VOTES);
+        disableVotingInputs();
         
-        document.querySelectorAll('.vote-input').forEach(input => input.disabled = true);
-        submitButton.textContent = 'Votes Submitted';
     } catch (error) {
-        console.error('Error:', error);
-        showToast('Failed to submit vote. Please try again.', 'error');
-        submitButton.textContent = 'Submit Votes';
-        submitButton.disabled = false;
+        showToast(UI_MESSAGES.ERROR_SUBMITTING_VOTES, 'error');
+    } finally {
+        toggleFormDisabled(submitButton.form, false);
+        submitButton.textContent = UI_MESSAGES.SUBMIT_VOTES;
     }
 }
 
 /**
- * Submits votes to Vercel KV
- * @param {Object} votes - The votes object
- * @returns {Promise<Object>} The response from Vercel KV
+ * Disables all voting inputs after successful submission
  */
-async function submitToVercelKV(votes) {
-    console.log("Submitting to Vercel KV");
-    const response = await fetch('/api/vote', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(votes),
+function disableVotingInputs() {
+    document.querySelectorAll('.vote-input').forEach(input => {
+        input.disabled = true;
     });
-
-    const responseData = await response.text();
-    console.log("Vercel KV response:", responseData);
-
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
-    }
-
-    return JSON.parse(responseData);
-}
-
-/**
- * Submits votes to Google Sheets
- * @param {Object} votes - The votes object
- * @returns {Promise<Object>} The response from Google Sheets
- */
-async function submitToGoogleSheets(votes) {
-    console.log("Submitting to Google Sheets");
-    const dataToSend = JSON.stringify([votes]);
-    console.log("Data being sent to Google Sheets:", dataToSend);
-    
-    const response = await fetch('https://script.google.com/macros/s/AKfycbzEjIDaDtYd4tSEdl5y3EA4UpfLYzAhNKqcJFvj21ZvE5SXsoQxq2iwz1RGl0jpJOnS/exec', {
-        method: 'POST',
-        body: dataToSend,
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-        },
-    });
-    const responseData = await response.text();
-    console.log("Google Sheets response:", responseData);
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
-    }
-    return JSON.parse(responseData);
 }
