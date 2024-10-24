@@ -1,97 +1,44 @@
-// validationUtils.js
-console.log("validationUtils.js loading");
+/**
+ * validationUtils.js
+ * 
+ * This utility file provides functions for validating user votes.
+ * It ensures that votes meet the required criteria before submission,
+ * improving data integrity and user experience.
+ */
 
+import { CATEGORIES } from '/js/constants.js';
 import { showToast } from './uiUtils.js';
 
-// Remove the constants import and use these default values
-const DEFAULT_MIN = 1;
-const DEFAULT_MAX = 50;
+console.log("validationUtils.js loading");
 
-export function validateInput(value, category, existingVotes = [], settings = {}) {
-    // Remove non-numeric characters
-    const cleanedValue = value.replace(/\D/g, '');
-    
-    if (!cleanedValue) {
-        return '';
-    }
-
-    const numValue = parseInt(cleanedValue, 10);
-    
-    // Get min/max from settings or use defaults
-    const categorySettings = settings?.dishesPerCategory?.[category] || {};
-    const minDish = categorySettings.min || DEFAULT_MIN;
-    const maxDish = categorySettings.max || DEFAULT_MAX;
-
-    // Check range
-    if (numValue < minDish || numValue > maxDish) {
-        showToast(
-            `Please enter a dish number between ${minDish} and ${maxDish} for the ${category} category`, 
-            'error',
-            category
-        );
-        return '';
-    }
-
-    // Check for duplicates
-    if (existingVotes.includes(cleanedValue)) {
-        showToast(
-            `You've already selected dish #${cleanedValue} for ${category} please select 2 unique dishes.`, 
-            'error',
-            category
-        );
-        return '';
-    }
-
-    return cleanedValue;
-}
-
-export function validateVotes(votes, settings = {}) {
+/**
+ * Validates the votes object
+ * @param {Object} votes - The votes object to validate
+ * @returns {Object} An object containing isValid flag and invalidCategories array
+ */
+export function validateVotes(votes) {
     let isValid = true;
     let invalidCategories = [];
 
     Object.entries(votes).forEach(([category, selectedDishes]) => {
-        const validDishes = selectedDishes.filter(dish => dish);
-        const maxSelections = 2;
-
-        if (validDishes.length > maxSelections) {
+        if (selectedDishes.length > 2) {
             isValid = false;
             invalidCategories.push(category);
-            showToast(
-                `Too many selections for ${category}. Please choose up to ${maxSelections} dishes.`,
-                'error',
-                category
-            );
-        }
-
-        // Check for duplicates
-        const uniqueDishes = new Set(validDishes);
-        if (uniqueDishes.size !== validDishes.length) {
+            showToast(`Too many selections for ${category}. Please choose up to 2 dishes.`, 'error', category);
+        } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
             isValid = false;
             invalidCategories.push(category);
-            showToast(
-                `Please choose unique dishes for ${category}.`,
-                'error',
-                category
-            );
+            showToast(`Duplicate entries detected for ${category}. Please choose 2 unique favorite dishes.`, 'error', category);
         }
+    });
 
-        // Validate each dish number against min/max
-        const categorySettings = settings?.dishesPerCategory?.[category] || {};
-        const minDish = categorySettings.min || DEFAULT_MIN;
-        const maxDish = categorySettings.max || DEFAULT_MAX;
-
-        validDishes.forEach(dish => {
-            const dishNum = parseInt(dish, 10);
-            if (dishNum < minDish || dishNum > maxDish) {
-                isValid = false;
-                invalidCategories.push(category);
-                showToast(
-                    `Dish #${dish} is outside the valid range (${minDish}-${maxDish}) for ${category}`,
-                    'error',
-                    category
-                );
-            }
-        });
+    // Check for missing categories
+    CATEGORIES.forEach(category => {
+        if (!votes[category] || votes[category].length === 0) {
+            console.log(`No votes for category: ${category}`);
+            // Optionally, you can add a toast notification for categories with no votes
+            // showToast(`No votes entered for ${category}.`, 'info', category);
+        }
     });
 
     return { isValid, invalidCategories };
