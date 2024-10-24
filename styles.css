@@ -1,0 +1,240 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap');
+
+/* Define CSS custom properties for easy theming */
+:root {
+  /* Colors */
+  --primary-color: #E0144C; /* Adjusted vibrant pink */
+  --secondary-color: #FFD166; /* Yellow */
+  --text-color: #FFFFFF; /* White */
+  --background-color: #2C0735; /* Deep purple */
+  --input-background: #4F1271; /* Lighter purple */
+  --input-text-color: #FFFFFF; /* White */
+  --placeholder-color: #D7C1FF; /* Adjusted light purple */
+  --border-color: #FFD166; /* Yellow */
+  --error-color: #D50000; /* Adjusted red */
+  --success-color: #00A933; /* Adjusted green */
+  
+  /* Font sizes */
+  --font-size-small: 16px;
+  --font-size-medium: 18px;
+  --font-size-large: 24px;
+  --font-size-xlarge: 36px;
+  
+  /* Spacing */
+  --spacing-small: 10px;
+  --spacing-medium: 20px;
+  --spacing-large: 30px;
+}
+
+/* General styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-size: var(--font-size-medium);
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-medium);
+}
+
+/* Header styles */
+h1 {
+  font-family: 'Lobster', cursive;
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: var(--spacing-large);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-size: var(--font-size-xlarge);
+  line-height: 1.2;
+}
+
+/* Styles for instructions and category sections */
+.instructions, .category {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--spacing-medium);
+  padding: var(--spacing-medium);
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.instructions ul {
+  padding-left: var(--spacing-medium);
+}
+
+.instructions li {
+  margin-bottom: var(--spacing-small);
+}
+
+.category h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Input styles */
+.vote-input {
+  width: calc(100% - 30px);
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: var(--font-size-medium);
+  background-color: var(--input-background);
+  color: var(--input-text-color);
+}
+
+.vote-input::placeholder {
+  color: var(--placeholder-color);
+}
+
+/* Button styles */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 8px;
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: var(--spacing-medium);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background: #FF1659; /* Lighter shade of primary color */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Admin panel styles */
+.admin-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: var(--spacing-medium);
+  padding: var(--spacing-medium);
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.admin-section h2 {
+  color: var(--secondary-color);
+  margin-top: 0;
+  font-size: var(--font-size-large);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.dish-count-input {
+  margin-bottom: var(--spacing-small);
+}
+
+.dish-count-input label {
+  display: inline-block;
+  width: 100px;
+  margin-right: var(--spacing-small);
+}
+
+.dish-count-input input {
+  width: 60px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--input-text-color);
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--secondary-color);
+  border-top: 5px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#toastContainer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.toast {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(-20px);
+    max-width: 300px;
+    width: 100%;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background-color: rgba(40, 167, 69, 0.9);
+}
+
+.toast.error {
+    background-color: rgba(220, 53, 69, 0.9);
+}
+/* Responsive adjustments for toast */
+@media screen and (max-width: 480px) {
+  .toast {
+    padding: 10px 16px;
+    font-size: var(--font-size-small);
+  }
+}
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+  .vote-input {
+    min-height: 44px; /* Ensures touch targets are at least 44px high */
+  }
+}
