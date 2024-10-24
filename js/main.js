@@ -1,9 +1,24 @@
 // main.js
+import { Preloader } from './preloader.js';  // Add this import
+import { THEME } from './constants.js';
+import { showToast } from './utils/uiUtils.js';
+import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
+import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
+
+console.log("loading main.js");
+
+// Initialize application after DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     const preloader = new Preloader();
     try {
         // Start the preloader and get its promise
         const preloaderPromise = preloader.start();
+        
+        // Set page title
+        const titleElement = document.querySelector('h1');
+        if (titleElement) {
+            titleElement.textContent = THEME;
+        }
         
         // Fetch settings first
         console.log("Fetching settings");
