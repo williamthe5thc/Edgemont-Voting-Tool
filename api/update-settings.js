@@ -1,47 +1,41 @@
-/**
- * update-settings.js
- * 
- * This file handles the server-side logic for updating competition settings.
- * It allows administrators to change the number of dishes allowed per category.
- */
+// api/update-settings.js
 
-import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
+import { kv } from '@vercel/kv';
+import { handleAPIError } from '../utils/errorUtils.js';
+import { validateSettings } from '../utils/validationUtils.js';
 
-/**
- * API handler for updating competition settings
- * @param {Object} req - The request object
- * @param {Object} res - The response object
- */
 export default async function handler(req, res) {
-    // Only allow POST requests for updating settings
-    if (req.method === 'POST') {
-        try {
-            const { dishesPerCategory } = req.body;
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
 
-            // Validate the incoming data
-            if (!dishesPerCategory || typeof dishesPerCategory !== 'object') {
-                throw new Error('Invalid settings data');
-            }
+    try {
+        const { dishesPerCategory } = req.body;
 
-            // Fetch current settings
-            let settings = await getKVData('settings') || {};
-
-            // Update settings with new values
-            settings.dishesPerCategory = {
-                ...settings.dishesPerCategory,
-                ...dishesPerCategory
-            };
-
-            // Save updated settings to KV store
-            await setKVData('settings', settings);
-
-            res.status(200).json({ message: 'Settings updated successfully' });
-        } catch (error) {
-            // Handle any errors that occur during the process
-            handleApiError(res, error, 'Failed to update settings');
+        // Validate the incoming settings
+        const validation = validateSettings(dishesPerCategory);
+        if (!validation.isValid) {
+            return res.status(400).json({
+                error: 'Invalid settings',
+                details: validation.errors
+            });
         }
-    } else {
-        // If the request method is not POST, return a method not allowed error
-        methodNotAllowed(res, ['POST']);
+
+        // Get current settings and update
+        let settings = await kv.get('settings') || {};
+        settings.dishesPerCategory = {
+            ...settings.dishesPerCategory,
+            ...dishesPerCategory
+        };
+
+        // Save updated settings
+        await kv.set('settings', settings);
+        
+        res.status(200).json({ 
+            message: 'Settings updated successfully',
+            settings: settings
+        });
+    } catch (error) {
+        handleAPIError(res, error, 'Failed to update settings');
     }
 }
