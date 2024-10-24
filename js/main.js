@@ -1,11 +1,17 @@
 // main.js
+
 import { THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
 import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
+import { init } from './categoryLoader.js';
+
 
 console.log("loading main.js");
-
+document.addEventListener('preloaderComplete', () => {
+  // Initialize the main application
+  init();
+});
 /**
  * Initializes the application
  */
