@@ -161,23 +161,24 @@ h1 {
 }
 
 /* styles.css */
+/* Add to your styles.css */
+
 .toast-container {
     width: 100%;
+    margin-top: 8px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 8px;
-    padding: 8px 16px;
 }
 
 .toast {
-    width: 100%;
     padding: 12px 16px;
     border-radius: 4px;
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     text-align: center;
-    font-size: var(--font-size-small);
+    color: white;
 }
 
 .toast.show {
@@ -187,27 +188,17 @@ h1 {
 
 .toast.error {
     background-color: rgba(220, 53, 69, 0.9);
-    color: white;
 }
 
 .toast.success {
     background-color: rgba(40, 167, 69, 0.9);
-    color: white;
 }
 
 .toast.info {
     background-color: rgba(0, 0, 0, 0.7);
-    color: white;
 }
 
-/* Category-specific styling */
-.category .toast-container {
-    margin-top: 8px;
-    position: relative;
-    z-index: 1;
-}
-
-/* General toast container styling */
+/* For general toasts at the top of the page */
 #toastContainer {
     position: fixed;
     top: 20px;
@@ -217,12 +208,10 @@ h1 {
     width: 90%;
     max-width: 400px;
 }
-/* Responsive adjustments for toast */
-@media screen and (max-width: 480px) {
-  .toast {
-    padding: 10px 16px;
-    font-size: var(--font-size-small);
-  }
+
+/* For category-specific toasts */
+.category .toast-container {
+    padding: 0 16px;
 }
 
 /* Touch device optimization */
