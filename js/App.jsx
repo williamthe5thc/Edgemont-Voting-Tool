@@ -65,26 +65,12 @@ const App = () => {
         {/* Voting Forms */}
         <div className="space-y-6">
           {CATEGORIES.map((category) => (
-            <div key={category} className="bg-white/10 rounded-lg border-2 border-[#FFD166] p-6">
-              <h2 className="text-xl text-[#FFD166] font-bold mb-4">{category}</h2>
-              <p className="mb-4">Enter the number of your favorite {category} dish (You can pick up to 2):</p>
-              <div className="space-y-4">
-                {[0, 1].map((index) => (
-                  <input
-                    key={`${category}-${index}`}
-                    type="text"
-                    value={(votes[category] || ['', ''])[index]}
-                    onChange={(e) => handleVoteChange(category, index, e.target.value)}
-                    className="vote-input w-full bg-[#4F1271] text-white border-2 border-[#FFD166] rounded-lg p-4 placeholder-[#D7C1FF]"
-                    placeholder="e.g., 1"
-                    pattern="[0-9]*"
-                    inputMode="numeric"
-                    maxLength={2}
-                    data-category={category}
-                  />
-                ))}
-              </div>
-            </div>
+            <Category
+              key={category}
+              category={category}
+              votes={votes}
+              handleVoteChange={handleVoteChange}
+            />
           ))}
         </div>
 
@@ -98,5 +84,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;
