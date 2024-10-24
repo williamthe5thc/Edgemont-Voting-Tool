@@ -28,7 +28,7 @@ export function validateVotes(votes) {
         } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
             isValid = false;
             invalidCategories.push(category);
-            showToast(`You already selected${selectedDishes} in the ${category} category. Please choose 2 unique favorite dishes.`, 'error', category);
+            showToast(`You already selected dish #${selectedDishes[0]} in the ${category} category. Please choose 2 unique favorite dishes.`, 'error', category);
         }
     });
 
