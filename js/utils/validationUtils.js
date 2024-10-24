@@ -1,47 +1,101 @@
-/**
- * validationUtils.js
- * 
- * This utility file provides functions for validating user votes.
- * It ensures that votes meet the required criteria before submission,
- * improving data integrity and user experience.
- */
+// validationUtils.js
 
-import { CATEGORIES } from '/js/constants.js';
-import { showToast } from './uiUtils.js';
-
-console.log("validationUtils.js loading");
+import { CATEGORIES } from '../constants.js';
 
 /**
- * Validates the votes object
- * @param {Object} votes - The votes object to validate
- * @returns {Object} An object containing isValid flag and invalidCategories array
+ * Validates a single vote input
+ * @param {string|number} value - Input value
+ * @param {string} category - Category name
+ * @param {Object} settings - Category settings
+ * @param {Array} existingVotes - Other votes in the same category
+ * @returns {Object} Validation result
  */
-export function validateVotes(votes) {
-    let isValid = true;
-    let invalidCategories = [];
+export function validateSingleVote(value, category, settings, existingVotes = []) {
+    const result = {
+        isValid: false,
+        error: null
+    };
 
-    Object.entries(votes).forEach(([category, selectedDishes]) => {
-        if (selectedDishes.length > 2) {
-            isValid = false;
-            invalidCategories.push(category);
-            showToast(`Too many selections for ${category}. Please choose up to 2 dishes.`, 'error', category);
-        } else if (selectedDishes.length === 2 && selectedDishes[0] === selectedDishes[1]) {
-            isValid = false;
-            invalidCategories.push(category);
-            showToast(`You already selected dish #${selectedDishes[0]} in the ${category} category. Please choose 2 unique favorite dishes.`, 'error', category);
-        }
-    });
+    const maxDishes = settings[category]?.max;
+    if (!maxDishes) {
+        result.error = `Invalid category: ${category}`;
+        return result;
+    }
 
-    // Check for missing categories
-    CATEGORIES.forEach(category => {
-        if (!votes[category] || votes[category].length === 0) {
-            console.log(`No votes for category: ${category}`);
-            // Optionally, you can add a toast notification for categories with no votes
-            // showToast(`No votes entered for ${category}.`, 'info', category);
-        }
-    });
+    const numValue = parseInt(value);
+    if (isNaN(numValue) || numValue < 1 || numValue > maxDishes) {
+        result.error = `Please enter a number between 1 and ${maxDishes} for ${category}`;
+        return result;
+    }
 
-    return { isValid, invalidCategories };
+    if (existingVotes.includes(numValue)) {
+        result.error = `You cannot vote for the same dish twice in ${category}`;
+        return result;
+    }
+
+    result.isValid = true;
+    return result;
 }
 
-console.log("validationUtils.js loaded");
+/**
+ * Validates complete votes object
+ * @param {Object} votes - Votes to validate
+ * @param {Object} settings - Competition settings
+ * @returns {Object} Validation result
+ */
+export function validateVotes(votes, settings) {
+    const result = {
+        isValid: true,
+        errors: [],
+        invalidCategories: []
+    };
+
+    if (!votes || typeof votes !== 'object') {
+        result.isValid = false;
+        result.errors.push('Invalid votes structure');
+        return result;
+    }
+
+    CATEGORIES.forEach(category => {
+        const categoryVotes = votes[category] || [];
+        const maxDishes = settings?.dishesPerCategory?.[category]?.max;
+
+        // Validate vote count
+        if (categoryVotes.length > 2) {
+            result.isValid = false;
+            result.errors.push(`Too many selections for ${category}`);
+            result.invalidCategories.push(category);
+            return;
+        }
+
+        // Validate vote values
+        const uniqueVotes = new Set(categoryVotes);
+        if (uniqueVotes.size !== categoryVotes.length) {
+            result.isValid = false;
+            result.errors.push(`Duplicate selections in ${category}`);
+            result.invalidCategories.push(category);
+            return;
+        }
+
+        // Validate vote range
+        categoryVotes.forEach(vote => {
+            if (!maxDishes || vote < 1 || vote > maxDishes) {
+                result.isValid = false;
+                result.errors.push(`Invalid dish number in ${category}: ${vote}`);
+                result.invalidCategories.push(category);
+            }
+        });
+    });
+
+    return result;
+}
+
+/**
+ * Formats validation errors for display
+ * @param {Array} errors - Error messages
+ * @returns {string} Formatted error message
+ */
+export function formatValidationErrors(errors) {
+    if (!errors || errors.length === 0) return '';
+    return errors[0]; // Return first error for simplicity
+}
