@@ -229,3 +229,52 @@ h1 {
     text-align: center;
     animation: pulse 2s ease-in-out infinite;
 }
+/* styles.css */
+
+.preloader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #2C0735;
+    padding: 1rem;
+}
+
+.skull-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 2rem auto;
+    aspect-ratio: 1;
+}
+
+.skull-fill {
+    opacity: 1;
+}
+
+.mask-rect {
+    transition: height 0.1s linear;
+}
+
+.decorative-elements {
+    pointer-events: none;
+}
+
+.progress-text {
+    color: white;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.instructions {
+    background-color: rgba(139, 92, 246, 0.1);
+    border: 2px solid #FFD166;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 32rem;
+    margin-left: auto;
+    margin-right: auto;
+}
