@@ -1,225 +1,137 @@
-/**
- * voteSubmitter.js
- * 
- * This file is responsible for managing the vote submission process in the cooking competition application.
- * It handles various aspects of the voting system, including:
- * 
- * 1. Setting up and managing vote input fields
- * 2. Validating user inputs in real-time
- * 3. Saving and loading votes from local storage to persist user progress
- * 4. Submitting final votes to the server (Vercel KV) and Google Sheets
- * 5. Providing user feedback through toast notifications and UI updates
- */
+# Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool
 
-import { CATEGORIES } from './constants.js';
-import { showToast } from './utils/uiUtils.js';
-import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
-import { validateVotes } from './utils/validationUtils.js';
+## Overview
 
-// Object to store the number of dishes per category
-let DISHES_PER_CATEGORY = {};
+This project is a web-based voting system designed for the Edgemont 1st Ward Día de los Ancestros Cooking Competition. It allows participants to vote for their favorite dishes across multiple categories and provides an admin interface for managing the competition settings and viewing results.
 
-/**
- * Sets the number of dishes for each category
- * @param {Object} dishes - Object containing dish counts for each category
- */
-export function setDishesPerCategory(dishes) {
-    DISHES_PER_CATEGORY = dishes;
-}
+## Features
 
-/**
- * Sets up event listeners for vote input fields
- */
-export function setupVoting() {
-    document.querySelectorAll('.vote-input').forEach(input => {
-        input.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            validateInput(this);
-            saveVotesToLocalStorage();
-        });
-    });
-}
+- User-friendly voting interface
+- Multiple categories for voting (e.g., Bread, Appetizers, Dessert, Entrée)
+- Real-time input validation
+- Local storage for saving incomplete votes
+- Admin panel for managing competition settings
+- Results page for viewing competition outcomes
+- Integration with Vercel KV for data storage
+- Integration with Google Sheets for vote recording
 
-/**
- * Validates individual vote inputs
- * @param {HTMLInputElement} input - The input element to validate
- */
-export function validateInput(input) {
-    const value = parseInt(input.value);
-    const category = input.dataset.category;
-    const max = DISHES_PER_CATEGORY[category]?.max || 99;
+## Technology Stack
 
-    if (input.value === '') return;
+- Frontend: HTML, CSS, JavaScript
+- Backend: Node.js with Vercel Serverless Functions
+- Database: Vercel KV (Key-Value store)
+- Additional Storage: Google Sheets (via Google Apps Script)
 
-    if (isNaN(value) || value < 1 || value > max) {
-        input.value = '';
-        console.log(`Validation failed for ${category}. Showing toast.`);
-        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error', category);
-        return;
-    }
+## Project Structure
 
-    // Check for duplicate entries within the same category
-    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-    const categoryVotes = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
-    
-    const { isValid, invalidCategories } = validateVotes({ [category]: categoryVotes });
-    
-    if (!isValid) {
-        console.log(`Validation failed for ${category}. Reason: ${invalidCategories[0]}`);
-        input.value = '';
-    } else {
-        console.log(`Input validated successfully for ${category}.`);
-    }
-}
+```
+/
+├── api/
+│   ├── clear-votes.js
+│   ├── get-settings.js
+│   ├── results.js
+│   ├── update-settings.js
+│   ├── utils.js
+│   └── vote.js
+├── js/
+│   ├── utils/
+│   │   ├── apiUtils.js
+│   │   ├── storageUtils.js
+│   │   ├── uiUtils.js
+│   │   └── validationUtils.js
+│   ├── admin.js
+│   ├── categoryLoader.js
+│   ├── constants.js
+│   ├── main.js
+│   ├── results-display.js
+│   └── voteSubmitter.js
+├── admin.html
+├── index.html
+├── results.html
+├── styles.css
+└── package.json
+```
 
-/**
- * Saves current votes to local storage
- */
-export function saveVotesToLocalStorage() {
-    const votes = {};
-    CATEGORIES.forEach(category => {
-        const inputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-        votes[category] = Array.from(inputs)
-            .map(input => parseInt(input.value))
-            .filter(value => !isNaN(value));
-    });
-    saveToLocalStorage('currentVotes', votes);
-}
+## Setup and Installation
 
-/**
- * Generates a summary of votes for confirmation
- * @param {Object} votes - The votes object
- * @returns {string} A formatted summary of votes
- */
-function displayVoteSummary(votes) {
-    let summary = 'Your Vote Summary:\n\n';
-    
-    CATEGORIES.forEach(category => {
-        const categoryVotes = votes[category] || [];
-        summary += `${category}:\n`;
-        if (categoryVotes.length === 0) {
-            summary += '  No votes\n';
-        } else {
-            categoryVotes.forEach((dish, index) => {
-                summary += `  ${index + 1}${index === 0 ? 'st' : 'nd'} choice: Dish #${dish}\n`;
-            });
-        }
-        summary += '\n';
-    });
-    
-    return summary;
-}
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/dia-de-los-ancestros-voting.git
+   cd dia-de-los-ancestros-voting
+   ```
 
-/**
- * Loads saved votes from local storage
- */
-export function loadVotesFromLocalStorage() {
-    const votes = getFromLocalStorage('currentVotes');
-    if (votes) {
-        Object.entries(votes).forEach(([category, selections]) => {
-            const inputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
-            selections.forEach((value, index) => {
-                if (inputs[index]) inputs[index].value = value;
-            });
-        });
-    }
-}
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-/**
- * Handles the vote submission process
- * @param {Event} e - The submit event
- */
-export async function submitVotes(e) {
-    e.preventDefault();
-    console.log("Submit votes function called");
-    
-    saveVotesToLocalStorage();
-    const votes = getFromLocalStorage('currentVotes');
-    console.log("Votes to submit:", votes);
-    
-    const { isValid, invalidCategories } = validateVotes(votes);
-    if (!isValid) {
-        showToast(`Please enter valid and unique dish numbers for each category. Issues in: ${invalidCategories.join(', ')}`, 'error');
-        return;
-    }
+3. Set up Vercel KV:
+   - Create a Vercel account if you don't have one
+   - Set up a new KV store in your Vercel dashboard
+   - Add your KV connection string to your Vercel project's environment variables
 
-    const summary = displayVoteSummary(votes);
-    const confirmSubmit = confirm(`${summary}\n\nDo you want to submit these votes?\nClick OK to submit or Cancel to go back and edit`);
-    if (!confirmSubmit) return;
+4. Set up Google Apps Script:
+   - Create a new Google Apps Script project
+   - Copy the contents of the `google-apps-script.js` file into your script
+   - Deploy the script as a web app
+   - Update the `submitToGoogleSheets` function in `voteSubmitter.js` with your script's URL
 
-    const submitButton = document.getElementById('submitVotes');
-    submitButton.textContent = 'Voting...';
-    submitButton.disabled = true;
-    
-    try {
-        console.log("Submitting votes to Vercel KV and Google Sheets");
-        const [vercelResponse, googleSheetsResponse] = await Promise.all([
-            submitToVercelKV(votes),
-            submitToGoogleSheets(votes)
-        ]);
-        console.log("Votes submitted successfully");
-        console.log("Vercel KV response:", vercelResponse);
-        console.log("Google Sheets response:", googleSheetsResponse);
+5. Deploy to Vercel:
+   ```
+   vercel
+   ```
 
-        showToast('Thank you for voting!', 'success');
-        localStorage.removeItem('currentVotes');
-        
-        document.querySelectorAll('.vote-input').forEach(input => input.disabled = true);
-        submitButton.textContent = 'Votes Submitted';
-    } catch (error) {
-        console.error('Error:', error);
-        showToast('Failed to submit vote. Please try again.', 'error');
-        submitButton.textContent = 'Submit Votes';
-        submitButton.disabled = false;
-    }
-}
+## Usage
 
-/**
- * Submits votes to Vercel KV
- * @param {Object} votes - The votes object
- * @returns {Promise<Object>} The response from Vercel KV
- */
-async function submitToVercelKV(votes) {
-    console.log("Submitting to Vercel KV");
-    const response = await fetch('/api/vote', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(votes),
-    });
+### For Voters
 
-    const responseData = await response.text();
-    console.log("Vercel KV response:", responseData);
+1. Navigate to the main page of the deployed application.
+2. Enter your votes for each category (up to two dishes per category).
+3. Submit your votes.
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
-    }
+### For Admins
 
-    return JSON.parse(responseData);
-}
+1. Navigate to the `/admin.html` page of the deployed application.
+2. Update the number of dishes per category as needed.
+3. Use the "Clear Votes" function to reset all votes (use with caution).
 
-/**
- * Submits votes to Google Sheets
- * @param {Object} votes - The votes object
- * @returns {Promise<Object>} The response from Google Sheets
- */
-async function submitToGoogleSheets(votes) {
-    console.log("Submitting to Google Sheets");
-    const dataToSend = JSON.stringify([votes]);
-    console.log("Data being sent to Google Sheets:", dataToSend);
-    
-    const response = await fetch('https://script.google.com/macros/s/AKfycbzEjIDaDtYd4tSEdl5y3EA4UpfLYzAhNKqcJFvj21ZvE5SXsoQxq2iwz1RGl0jpJOnS/exec', {
-        method: 'POST',
-        body: dataToSend,
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-        },
-    });
-    const responseData = await response.text();
-    console.log("Google Sheets response:", responseData);
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
-    }
-    return JSON.parse(responseData);
-}
+### Viewing Results
+
+1. Navigate to the `/results.html` page to view the current standings.
+
+## Development
+
+To run the project locally:
+
+1. Start the development server:
+   ```
+   npm run dev
+   ```
+
+2. Open `http://localhost:3000` in your browser.
+
+## Key Components
+
+- `api/`: Contains serverless functions for backend operations
+- `js/`: Client-side JavaScript files
+- `admin.html`: Admin panel interface
+- `index.html`: Main voting interface
+- `results.html`: Results display page
+- `styles.css`: Global styles for the application
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgements
+
+- Vercel for hosting and KV store
+- Google Sheets for additional data storage
+- All contributors (Claude and myself) and participants who helped test it and give feedback of the Día de los Ancestros Cooking Competition
+- My wife for tolerating me and helping me out while I made this
+```
+Ok truthfully I (Williamthe5thc) had that Readme was generated by Claude, it does appear to be good, but take it with a grain of salt.
