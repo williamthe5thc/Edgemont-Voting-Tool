@@ -25,7 +25,7 @@ export function validateInput(value, category, existingVotes = [], settings = {}
     // Check range
     if (numValue < minDish || numValue > maxDish) {
         showToast(
-            `Please enter a dish number between ${minDish} and ${maxDish} for ${category}`, 
+            `Please enter a dish number between ${minDish} and ${maxDish} for the ${category} category`, 
             'error',
             category
         );
@@ -35,7 +35,7 @@ export function validateInput(value, category, existingVotes = [], settings = {}
     // Check for duplicates
     if (existingVotes.includes(cleanedValue)) {
         showToast(
-            `You've already selected dish #${cleanedValue} for ${category}`, 
+            `You've already selected dish #${cleanedValue} for ${category} please select 2 unique dishes.`, 
             'error',
             category
         );
