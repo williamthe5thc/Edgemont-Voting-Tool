@@ -54,7 +54,7 @@ export function validateInput(input) {
     if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
         console.log(`Validation failed for ${category}. Showing toast.`);
-        showToast(`Please enter a number between 1 and ${max} for ${category}`, 'error', category);
+        showToast(`Error: You selected an invalid dish. Please enter a number between 1 and ${max}`, 'error', category);
         return;
     }
 
