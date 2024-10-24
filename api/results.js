@@ -1,72 +1,61 @@
 /**
- * results.js
+ * get-settings.js
  * 
- * This file handles the server-side logic for retrieving and calculating voting results.
- * It includes functionality to:
- * 1. Fetch votes from the KV store
- * 2. Calculate the results based on the votes
- * 3. Return the top 3 dishes for each category
+ * This file handles the server-side logic for retrieving competition settings.
+ * It's essential for initializing the application with the correct parameters,
+ * such as the number of dishes allowed per category.
  */
 
-import { getKVData, handleApiError, methodNotAllowed } from './utils';
+import { getKVData, setKVData, handleApiError, methodNotAllowed } from './utils';
+// import { CATEGORIES } from '../js/constants.js';
+const CATEGORIES = [
+    'Bread',
+    'Appetizers',
+    'Dessert',
+    'Entrée'
+];
+
+// Default values for dish counts
+const DEFAULT_MIN_DISH_COUNT = 1;
+const DEFAULT_MAX_DISH_COUNT = 50;
+
 
 /**
- * API handler for retrieving voting results
+ * API handler for retrieving competition settings
  * @param {Object} req - The request object
  * @param {Object} res - The response object
  */
 export default async function handler(req, res) {
-    // Only allow GET requests for fetching results
+    // Only allow GET requests for fetching settings
     if (req.method === 'GET') {
         try {
-            // Retrieve votes from KV store
-            const votes = await getKVData('votes');
-            console.log('Retrieved votes:', JSON.stringify(votes));
+            // Attempt to retrieve settings from KV store
+            let settings = await getKVData('settings');
             
-            // If no votes are found, return a message
-            if (!votes) {
-                console.log('No votes found in KV store');
-                res.status(200).json({ message: 'No votes recorded yet' });
-                return;
+            // If settings don't exist, create default settings
+            // This ensures the application always has a valid configuration
+            if (!settings || !settings.dishesPerCategory) {
+                settings = {
+                    dishesPerCategory: CATEGORIES.reduce((acc, category) => {
+                        acc[category] = {
+                            min: DEFAULT_MIN_DISH_COUNT,
+                            max: DEFAULT_MAX_DISH_COUNT
+                        };
+                        return acc;
+                    }, {})
+                };
+                // Save default settings to KV store for future use
+                await setKVData('settings', settings);
             }
             
-            // Calculate and return results
-            const results = calculateResults(votes);
-            console.log('Calculated results:', JSON.stringify(results));
-            res.status(200).json(results);
+            // Return settings as JSON response
+            res.status(200).json(settings);
         } catch (error) {
             // Handle any errors that occur during the process
-            handleApiError(res, error, 'Failed to fetch results');
+            handleApiError(res, error, 'Failed to fetch settings');
         }
     } else {
         // If the request method is not GET, return a method not allowed error
         methodNotAllowed(res, ['GET']);
     }
-}
-
-/**
- * Calculates the results based on the votes
- * @param {Object} votes - The votes object
- * @returns {Object} The calculated results
- * 
- * Scoring system:
- * - First choice vote: 2 points
- * - Second choice vote: 1 point
- */
-function calculateResults(votes) {
-    const results = {};
-    Object.entries(votes).forEach(([category, dishes]) => {
-        const categoryResults = Object.entries(dishes).map(([dish, ranks]) => ({
-            dish,
-            // Calculate score: (first choice votes * 2) + (second choice votes * 1)
-            score: (ranks[1] || 0) * 2 + (ranks[2] || 0)
-        }));
-        
-        // Sort dishes by score in descending order
-        categoryResults.sort((a, b) => b.score - a.score);
-        
-        // Take top 3 dishes, or all if less than 3
-        results[category] = categoryResults.slice(0, 3);
-    });
-    return results;
 }
