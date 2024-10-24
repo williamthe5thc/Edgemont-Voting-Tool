@@ -16,28 +16,14 @@ export class Preloader {
         
         skullContainer.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 459.99 512">
-                <defs>
-                <style>
-      .cls-1 {
-        fill: #f04f63;
-      }
-
-      .cls-2 {
-        fill: #fff;
-      }
-
-      .cls-3 {
-        fill: #423837;
-      }
-
-      .cls-4 {
-        fill: #faa631;
-      }
-
-      .cls-5 {
-        fill: #5ebec1;
-      }
-    </style>
+                 <defs>
+                    <style>
+                        .cls-1 { fill: #f04f63; }
+                        .cls-2 { fill: #fff; }
+                        .cls-3 { fill: #423837; }
+                        .cls-4 { fill: #faa631; }
+                        .cls-5 { fill: #5ebec1; }
+                    </style>
                     <mask id="filling-mask">
                         <rect x="0" y="0" width="460" height="512" fill="white"/>
                         <rect class="mask-rect" x="0" y="512" width="460" height="512" fill="black"/>
@@ -89,7 +75,7 @@ export class Preloader {
             </svg>
         `;
 
-        this.progressText = document.createElement('p');
+       this.progressText = document.createElement('p');
         this.progressText.className = 'progress-text';
         
         const instructions = document.createElement('div');
