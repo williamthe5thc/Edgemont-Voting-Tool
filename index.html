@@ -3,34 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Día de Los Ancestros Voting Tool</title>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="/styles/index.css">
-    <link rel="stylesheet" href="/styles/styles.css">
+    <title>Dia de los Ancestros Cooking Competition</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Preloader container -->
-    <div id="preloader"></div>
-
-    <!-- Main content container -->
     <div class="container">
         <h1></h1>
-        
-        <!-- Loading spinner -->
+
+        <div class="section instructions">
+            <h2>Voting Instructions</h2>
+            <ul>
+                <li>For each category, select up to 2 of your favorite dishes.</li>
+                <li>Enter the number associated with the dish in each category you want to vote for.</li>
+                <li>You can select either one, two or no dishes per category.</li>
+            </ul>
+        </div>
+
         <div id="loading-spinner" class="loading-spinner" style="display: none;">
             <div class="spinner"></div>
         </div>
-        
-        <!-- Categories will be loaded here -->
+
         <div id="categories"></div>
-        
-        <!-- Submit button -->
-        <button id="submitVotes" class="btn-primary">Submit Votes</button>
+
+        <button id="submitVotes" class="btn-primary">Submit Your Votes</button>
     </div>
-    <!-- Toast container for notifications -->
+
     <div id="toastContainer"></div>
-    <!-- Scripts -->
-    <script type="module" src="/js/main.js"></script>
+
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
