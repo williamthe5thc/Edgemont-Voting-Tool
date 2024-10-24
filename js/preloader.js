@@ -15,22 +15,19 @@ export class Preloader {
         const skullContainer = document.createElement('div');
         skullContainer.className = 'skull-container';
         
-        // Using the simplified SVG with proper masking
+        // Using a different masking approach with two layers
         skullContainer.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 459.99 512">
-                <defs>
-                    <clipPath id="reveal-mask">
-                        <rect x="0" y="0" width="460" height="0" />
-                    </clipPath>
-                </defs>
-                
-                <!-- Base skull path -->
-                <path class="cls-3" d="M225.09.04c54.91-1.09,121.49,22.44,164,56.88,73.36,59.44,83.61,150.41,58.73,237.5-1.66,5.82-11.63,28.13-11.82,31.03-.23,3.53,8.83,20.93,9.6,28.07,4.78,44.11-41.45,56.68-75.72,62.42l-1.85,1.85c-1.52,25.56-3.15,55.49-26.23,71.29-44.66,30.57-172.12,29.55-218.67,2.95-28.22-16.13-29.25-44.73-31.4-74.24l-1.85-1.85c-35.61-5.46-82.33-19.86-74.98-65.38.94-5.81,8.97-22.33,8.86-25.12-.06-1.71-5.05-10.64-5.91-13.3C-9.09,229.07-11.43,140.28,52.59,73.54,93.76,30.62,165.72,1.22,225.09.04Z"/>
-                
-                <!-- Clipped decorative elements -->
-                <g clip-path="url(#reveal-mask)">
-                    ${skullContainer.innerHTML}
+                <!-- Dark background skull -->
+                <path class="skull-base" fill="#2C0735" d="M225.09.04c54.91-1.09,121.49,22.44,164,56.88,73.36,59.44,83.61,150.41,58.73,237.5-1.66,5.82-11.63,28.13-11.82,31.03-.23,3.53,8.83,20.93,9.6,28.07,4.78,44.11-41.45,56.68-75.72,62.42l-1.85,1.85c-1.52,25.56-3.15,55.49-26.23,71.29-44.66,30.57-172.12,29.55-218.67,2.95-28.22-16.13-29.25-44.73-31.4-74.24l-1.85-1.85c-35.61-5.46-82.33-19.86-74.98-65.38.94-5.81,8.97-22.33,8.86-25.12-.06-1.71-5.05-10.64-5.91-13.3C-9.09,229.07-11.43,140.28,52.59,73.54,93.76,30.62,165.72,1.22,225.09.04Z"/>
+
+                <!-- Foreground colored skull that will be revealed -->
+                <g class="skull-reveal">
+                    ${this.getColoredSkullSVG()}
                 </g>
+
+                <!-- Mask rectangle that will slide up -->
+                <rect class="mask-rect" x="0" y="512" width="460" height="512" fill="#2C0735"/>
             </svg>
         `;
 
@@ -55,18 +52,26 @@ export class Preloader {
         return this.container;
     }
 
+    getColoredSkullSVG() {
+        // Return your full colored skull SVG here (the one you provided)
+        return `
+            <!-- Your full colored skull SVG content -->
+            [Your SVG content from the previous paste]
+        `;
+    }
+
     updateProgress() {
         if (this.progress < 100) {
             this.progress += 1;
             this.progressText.textContent = 
                 `Loading ${this.progress}% of the categories for the Edgemont 1st Ward Dia de Los Ancestros Cooking Competition Voting Tool...`;
             
-            // Update clip-path height based on progress
-            const maskRect = document.querySelector('#reveal-mask rect');
+            // Update mask position based on progress
+            const maskRect = this.container.querySelector('.mask-rect');
             if (maskRect) {
-                const totalHeight = 512; // SVG viewBox height
-                const maskHeight = totalHeight * (this.progress / 100);
-                maskRect.setAttribute('height', maskHeight);
+                const totalHeight = 512;
+                const newY = totalHeight - (totalHeight * (this.progress / 100));
+                maskRect.setAttribute('y', newY);
             }
         } else {
             clearInterval(this.loadingInterval);
