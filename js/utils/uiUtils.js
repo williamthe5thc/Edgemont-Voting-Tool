@@ -1,72 +1,75 @@
 // uiUtils.js
-console.log("uiUtils.js loading");
-
 export function showToast(message, type = 'info', category = 'general') {
-    console.log(`Showing toast: ${message}, type: ${type}, category: ${category}`);
+    console.log(`Attempting to show toast: ${type} - ${message} for category: ${category}`);
     
-    // Ensure we're in a browser environment
-    if (typeof window === 'undefined') return;
-
-    // Get the appropriate container based on category
-    let container;
-    if (category === 'general') {
-        container = document.getElementById('toastContainer');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'toastContainer';
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-        }
-    } else {
-        // Find the category section and its toast container
-        const categorySection = Array.from(document.getElementsByClassName('category'))
-            .find(section => section.querySelector(`[data-category="${category}"]`));
-            
-        if (categorySection) {
-            container = categorySection.querySelector('.toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.className = 'toast-container';
-                // Insert after the last input in the category
-                const lastInput = categorySection.querySelector('.vote-input:last-of-type');
-                if (lastInput) {
-                    lastInput.parentNode.insertBefore(container, lastInput.nextSibling);
-                } else {
-                    categorySection.appendChild(container);
-                }
+    // Find the category container first
+    const categoryContainer = category !== 'general' 
+        ? document.querySelector(`[data-category="${category}"]`)?.closest('.category')
+        : null;
+        
+    // Get or create toast container
+    const toastContainerId = category === 'general' ? 'toastContainer' : `toastContainer-${category}`;
+    let toastContainer = document.getElementById(toastContainerId);
+    
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = toastContainerId;
+        toastContainer.className = 'toast-container';
+        
+        if (category === 'general') {
+            // General toasts go at the top of the page
+            toastContainer.style.position = 'fixed';
+            toastContainer.style.top = '20px';
+            toastContainer.style.left = '50%';
+            toastContainer.style.transform = 'translateX(-50%)';
+            toastContainer.style.zIndex = '1000';
+            document.body.appendChild(toastContainer);
+        } else if (categoryContainer) {
+            // Category-specific toasts go under the inputs
+            const inputs = categoryContainer.querySelectorAll('.vote-input');
+            const lastInput = inputs[inputs.length - 1];
+            if (lastInput) {
+                lastInput.parentNode.insertBefore(toastContainer, lastInput.nextSibling);
+            } else {
+                categoryContainer.appendChild(toastContainer);
             }
         } else {
-            console.warn(`Category section not found for: ${category}`);
+            console.error(`Category container not found for: ${category}`);
             return;
         }
     }
-
-    // Create toast element
+    
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
     toast.textContent = message;
-
-    // Add to container
-    container.appendChild(toast);
-
-    // Trigger animation
+    toast.className = `toast ${type}`;
+    
+    // Insert the new toast at the beginning
+    toastContainer.insertBefore(toast, toastContainer.firstChild);
+    
+    // Force a reflow
+    toast.offsetHeight;
+    
     requestAnimationFrame(() => {
         toast.classList.add('show');
     });
-
-    // Remove after delay
+    
     setTimeout(() => {
         toast.classList.remove('show');
         toast.addEventListener('transitionend', () => {
-            if (container.contains(toast)) {
-                container.removeChild(toast);
+            if (toastContainer.contains(toast)) {
+                toastContainer.removeChild(toast);
             }
-            // Only remove container if it's empty and not a category-specific container
-            if (container.children.length === 0 && category === 'general' && container.parentElement) {
-                container.parentElement.removeChild(container);
+            // Remove container if empty and category-specific
+            if (category !== 'general' && toastContainer.children.length === 0) {
+                toastContainer.remove();
             }
         }, { once: true });
     }, 5000);
+    
+    // Limit visible toasts
+    const maxVisibleToasts = 3;
+    const toasts = toastContainer.getElementsByClassName('toast');
+    if (toasts.length > maxVisibleToasts) {
+        toastContainer.removeChild(toasts[toasts.length - 1]);
+    }
 }
-
-console.log("uiUtils.js loaded");
