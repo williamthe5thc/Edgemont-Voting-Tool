@@ -1,11 +1,11 @@
 /**
- * js/constants.js
+ * api/constants.js
  * 
  * This file defines constant values used throughout the application.
  * Centralizing these constants ensures consistency across the application
  * and makes it easier to update competition details in the future.
  */
-console.log("js/constants.js loading");
+console.log("api/constants.js loading");
 
 /**
  * CATEGORIES
