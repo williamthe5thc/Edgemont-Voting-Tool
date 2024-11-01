@@ -1,13 +1,7 @@
 // api/results.js
 import { kv } from '@vercel/kv';
 
-// Define categories directly in the API to avoid import issues
-const CATEGORIES = [
-    'Bread',
-    'Appetizers',
-    'Dessert',
-    'Entrée & Soups'
-];
+import CATEGORIES from './constants.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
