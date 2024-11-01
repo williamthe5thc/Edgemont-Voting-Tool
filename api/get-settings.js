@@ -1,51 +1,28 @@
 // api/get-settings.js
-
 import { kv } from '@vercel/kv';
-import { handleAPIError } from '../utils/errorUtils.js';
 
+// Define categories directly in the API to avoid import issues
 const CATEGORIES = [
     'Bread',
     'Appetizers',
     'Dessert',
-    'Entrée'
+    'Entrée & Soups'
 ];
 
 /**
- * Processes and validates settings, creating default if needed
- * @param {Object|null} settings - The settings object from KV store
- * @returns {Object} Processed settings with defaults if needed
+ * Creates default settings object
+ * @returns {Object} Default settings
  */
-function processSettings(settings) {
-    // Default settings structure
-    const defaultSettings = {
+function getDefaultSettings() {
+    return {
         dishesPerCategory: CATEGORIES.reduce((acc, category) => {
-            acc[category] = { min: 1, max: 50 };
+            acc[category] = {
+                min: 1,
+                max: 50
+            };
             return acc;
         }, {})
     };
-
-    if (!settings) {
-        return defaultSettings;
-    }
-
-    // Ensure all categories exist in settings
-    const processedSettings = {
-        dishesPerCategory: { ...defaultSettings.dishesPerCategory }
-    };
-
-    // Merge existing settings with defaults
-    if (settings.dishesPerCategory) {
-        CATEGORIES.forEach(category => {
-            if (settings.dishesPerCategory[category]) {
-                processedSettings.dishesPerCategory[category] = {
-                    min: settings.dishesPerCategory[category].min || defaultSettings.dishesPerCategory[category].min,
-                    max: settings.dishesPerCategory[category].max || defaultSettings.dishesPerCategory[category].max
-                };
-            }
-        });
-    }
-
-    return processedSettings;
 }
 
 export default async function handler(req, res) {
@@ -54,29 +31,61 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Attempt to get settings from KV store
+        console.log('Attempting to fetch settings from KV store');
         let settings = await kv.get('settings');
-        console.log('Retrieved settings from KV:', settings);
+        console.log('Raw settings from KV:', settings);
 
-        // Process settings and ensure defaults
-        settings = processSettings(settings);
-        console.log('Processed settings:', settings);
-
-        // If no settings exist, save the defaults
-        if (!settings.dishesPerCategory) {
-            settings = processSettings(null);
+        // If no settings exist, create and save default settings
+        if (!settings || !settings.dishesPerCategory) {
+            console.log('No settings found, creating defaults');
+            settings = getDefaultSettings();
+            
             try {
                 await kv.set('settings', settings);
-                console.log('Saved default settings to KV');
+                console.log('Default settings saved to KV store');
             } catch (saveError) {
-                console.error('Error saving default settings:', saveError);
-                // Continue even if save fails - we can still return the default settings
+                console.error('Failed to save default settings:', saveError);
+                // Continue with default settings even if save fails
             }
         }
 
-        return res.status(200).json(settings);
+        // Ensure all categories exist in settings
+        const processedSettings = {
+            dishesPerCategory: { ...getDefaultSettings().dishesPerCategory }
+        };
+
+        // Merge existing settings with defaults
+        if (settings.dishesPerCategory) {
+            CATEGORIES.forEach(category => {
+                if (settings.dishesPerCategory[category]) {
+                    processedSettings.dishesPerCategory[category] = {
+                        min: settings.dishesPerCategory[category].min || 1,
+                        max: settings.dishesPerCategory[category].max || 50
+                    };
+                }
+            });
+        }
+
+        console.log('Returning processed settings:', processedSettings);
+        return res.status(200).json(processedSettings);
+
     } catch (error) {
         console.error('Error in get-settings:', error);
-        return handleAPIError(res, error, 'Failed to fetch settings');
+        
+        // Check for KV connection errors
+        if (error.code === 'ECONNREFUSED' || error.message.includes('connection')) {
+            return res.status(503).json({
+                error: 'Database connection error',
+                message: 'Unable to connect to the database. Using default settings.',
+                settings: getDefaultSettings()
+            });
+        }
+
+        // For other errors, return default settings with 200 status
+        // This ensures the application can continue functioning
+        return res.status(200).json({
+            warning: 'Error fetching settings. Using default values.',
+            ...getDefaultSettings()
+        });
     }
 }
