@@ -1,10 +1,7 @@
 // results-display.js
 
 import { showToast } from './utils/uiUtils.js';
-import { makeAPIRequest, API_ENDPOINTS } from './utils/apiUtils.js';
-import { UI_MESSAGES } from './utils/configUtils.js';
-import { createElement, toggleVisibility } from './utils/domUtils.js';
-import { aggregateVotes, calculateStatistics } from './utils/transformUtils.js';
+import { fetchData } from './utils/apiUtils.js';
 
 /**
  * Creates a result section for a category
@@ -13,19 +10,23 @@ import { aggregateVotes, calculateStatistics } from './utils/transformUtils.js';
  * @returns {HTMLElement} Category result element
  */
 function createCategoryResult(category, dishes) {
-    const categoryElement = createElement('div', { className: 'category-result' }, [
-        createElement('h2', {}, [category])
-    ]);
+    const categoryElement = document.createElement('div');
+    categoryElement.className = 'category-result';
+    
+    const categoryTitle = document.createElement('h2');
+    categoryTitle.textContent = category;
+    categoryElement.appendChild(categoryTitle);
 
-    dishes.forEach((dish, index) => {
-        if (dish && typeof dish.score === 'number') {
-            categoryElement.appendChild(
-                createElement('p', { className: 'dish-result' }, [
-                    `${index + 1}. ${dish.dish} (Score: ${dish.score.toFixed(2)})`
-                ])
-            );
-        }
-    });
+    if (Array.isArray(dishes)) {
+        dishes.forEach((dish, index) => {
+            if (dish && typeof dish.dishNumber === 'number') {
+                const dishElement = document.createElement('p');
+                dishElement.className = 'dish-result';
+                dishElement.textContent = `Dish #${dish.dishNumber}: ${dish.votes} votes`;
+                categoryElement.appendChild(dishElement);
+            }
+        });
+    }
 
     return categoryElement;
 }
@@ -36,15 +37,26 @@ function createCategoryResult(category, dishes) {
  * @returns {HTMLElement} Statistics element
  */
 function createStatisticsSummary(stats) {
-    return createElement('div', { className: 'voting-statistics' }, [
-        createElement('h3', {}, ['Voting Statistics']),
-        createElement('p', {}, [`Total Votes: ${stats.totalVotes}`]),
-        ...Object.entries(stats.categoryStats).map(([category, catStats]) =>
-            createElement('p', {}, [
-                `${category}: ${catStats.total} votes from ${catStats.uniqueVoters} unique voters`
-            ])
-        )
-    ]);
+    const statsElement = document.createElement('div');
+    statsElement.className = 'voting-statistics';
+    
+    const statsTitle = document.createElement('h3');
+    statsTitle.textContent = 'Voting Statistics';
+    statsElement.appendChild(statsTitle);
+
+    const totalVotes = document.createElement('p');
+    totalVotes.textContent = `Total Votes: ${stats.totalVotes || 0}`;
+    statsElement.appendChild(totalVotes);
+
+    if (stats.categoryStats) {
+        Object.entries(stats.categoryStats).forEach(([category, catStats]) => {
+            const categoryStats = document.createElement('p');
+            categoryStats.textContent = `${category}: ${catStats.total || 0} votes`;
+            statsElement.appendChild(categoryStats);
+        });
+    }
+
+    return statsElement;
 }
 
 /**
@@ -54,50 +66,61 @@ async function displayResults() {
     const loadingSpinner = document.getElementById('loading-spinner');
     const resultsContainer = document.getElementById('results');
 
+    if (!resultsContainer) {
+        console.error('Results container not found');
+        return;
+    }
+
     try {
-        toggleVisibility(loadingSpinner, true);
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'flex';
+        }
         resultsContainer.innerHTML = '';
 
-        const results = await makeAPIRequest(API_ENDPOINTS.RESULTS);
+        // Fetch results using fetchData from apiUtils
+        const results = await fetchData('/api/results');
+        console.log('Fetched results:', results);
 
         if (results.message === 'No votes recorded yet') {
-            resultsContainer.appendChild(
-                createElement('p', { className: 'no-results' }, 
-                    [UI_MESSAGES.NO_VOTES_RECORDED]
-                )
-            );
+            const noResults = document.createElement('p');
+            noResults.className = 'no-results';
+            noResults.textContent = 'No votes have been recorded yet.';
+            resultsContainer.appendChild(noResults);
             return;
         }
 
-        // Process and display results
-        const aggregatedResults = aggregateVotes(results);
-        const statistics = calculateStatistics(results);
+        // Add statistics if available
+        if (results.statistics) {
+            resultsContainer.appendChild(createStatisticsSummary(results.statistics));
+        }
 
-        // Create and append statistics summary
-        resultsContainer.appendChild(createStatisticsSummary(statistics));
-
-        // Create and append category results
-        Object.entries(aggregatedResults).forEach(([category, dishes]) => {
-            resultsContainer.appendChild(createCategoryResult(category, dishes));
-        });
+        // Add results by category
+        if (results.results) {
+            Object.entries(results.results).forEach(([category, dishes]) => {
+                resultsContainer.appendChild(createCategoryResult(category, dishes));
+            });
+        }
 
     } catch (error) {
         console.error('Error fetching results:', error);
-        showToast(UI_MESSAGES.ERROR_LOADING_RESULTS, 'error');
-        resultsContainer.appendChild(
-            createElement('p', { className: 'error-message' }, 
-                [UI_MESSAGES.RESULTS_LOAD_ERROR]
-            )
-        );
+        showToast('Failed to load results. Please try again later.', 'error');
+        
+        const errorMessage = document.createElement('p');
+        errorMessage.className = 'error-message';
+        errorMessage.textContent = 'Unable to load results. Please try again later.';
+        resultsContainer.appendChild(errorMessage);
     } finally {
-        toggleVisibility(loadingSpinner, false);
+        if (loadingSpinner) {
+            loadingSpinner.style.display = 'none';
+        }
     }
 }
 
 // Initialize results display when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing results display');
     displayResults().catch(error => {
         console.error('Unhandled error in displayResults:', error);
-        showToast(UI_MESSAGES.UNEXPECTED_ERROR, 'error');
+        showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
 });
