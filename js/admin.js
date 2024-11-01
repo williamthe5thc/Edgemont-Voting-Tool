@@ -36,7 +36,6 @@ async function loadCurrentSettings() {
                     <input type="number" id="${category}-min" name="${category}-min" value="${minCount}" min="1" max="100">
                     <input type="number" id="${category}-max" name="${category}-max" value="${maxCount}" min="1" max="100">
                 </div>
-            `;
             dishCountContainer.innerHTML += inputHtml;
         });
 
@@ -87,6 +86,12 @@ async function updateSettings() {
 
     if (!isValid) return;
 
+    const updateButton = document.getElementById('updateDishCount');
+    if (updateButton) {
+        updateButton.disabled = true;
+        updateButton.textContent = 'Updating...';
+    }
+
     try {
         const response = await fetch('/api/update-settings', {
             method: 'POST',
@@ -105,6 +110,11 @@ async function updateSettings() {
     } catch (error) {
         console.error('Error:', error);
         showToast(`Failed to update settings: ${error.message}`, 'error');
+    } finally {
+        if (updateButton) {
+            updateButton.disabled = false;
+            updateButton.textContent = 'Update Dish Count';
+        }
     }
 }
 
@@ -112,8 +122,25 @@ async function updateSettings() {
  * Clears all votes from the system
  */
 async function clearVotes() {
+    // First confirmation dialog
     if (!confirm('Are you sure you want to clear all votes? This action cannot be undone.')) {
         return;
+    }
+    
+    // Second confirmation dialog with type-to-confirm
+    const confirmationPhrase = 'CLEAR ALL VOTES';
+    const userInput = prompt(`To confirm, please type "${confirmationPhrase}" exactly:`);
+    
+    if (userInput !== confirmationPhrase) {
+        showToast('Vote clearing cancelled. The confirmation phrase did not match.', 'info');
+        return;
+    }
+
+    // Disable the clear button to prevent double-clicks
+    const clearButton = document.getElementById('clearVotes');
+    if (clearButton) {
+        clearButton.disabled = true;
+        clearButton.textContent = 'Clearing...';
     }
 
     try {
@@ -129,10 +156,16 @@ async function clearVotes() {
         }
 
         const result = await response.json();
-        showToast('Votes cleared successfully', 'success');
+        showToast('All votes have been cleared successfully', 'success');
     } catch (error) {
         console.error('Error:', error);
         showToast(`Failed to clear votes: ${error.message}`, 'error');
+    } finally {
+        // Re-enable the clear button
+        if (clearButton) {
+            clearButton.disabled = false;
+            clearButton.textContent = 'Clear All Votes';
+        }
     }
 }
 
@@ -140,16 +173,14 @@ async function clearVotes() {
  * Sets up event listeners for the admin panel
  */
 function setupEventListeners() {
-    // Update Settings button
-    const updateSettingsBtn = document.querySelector('.admin-section button[data-action="update"]');
-    if (updateSettingsBtn) {
-        updateSettingsBtn.addEventListener('click', updateSettings);
+    const updateButton = document.getElementById('updateDishCount');
+    if (updateButton) {
+        updateButton.addEventListener('click', updateSettings);
     }
 
-    // Clear Votes button
-    const clearVotesBtn = document.querySelector('.admin-section button[data-action="clear"]');
-    if (clearVotesBtn) {
-        clearVotesBtn.addEventListener('click', clearVotes);
+    const clearButton = document.getElementById('clearVotes');
+    if (clearButton) {
+        clearButton.addEventListener('click', clearVotes);
     }
 }
 
@@ -159,6 +190,7 @@ function setupEventListeners() {
 function init() {
     loadCurrentSettings();
     setupEventListeners();
+    console.log("Admin panel initialized");
 }
 
 // Initialize the admin panel when the DOM is ready

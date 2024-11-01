@@ -21,7 +21,7 @@ export const CATEGORIES = [
     'Bread',
     'Appetizers',
     'Dessert',
-    'Entrée'
+    'Entrée & Soups'
 ];
 
 /**
