@@ -5,102 +5,76 @@ import { CATEGORIES } from './constants.js';
 
 console.log("results-display.js loading");
 
-function createCategoryResult(category, dishes) {
-    const categoryElement = document.createElement('div');
-    categoryElement.className = 'category-results section';
+function createCategorySection(category, dishes) {
+    const section = document.createElement('div');
+    section.className = 'section';
     
-    const categoryTitle = document.createElement('h2');
-    categoryTitle.textContent = category;
-    categoryElement.appendChild(categoryTitle);
+    const title = document.createElement('h2');
+    title.textContent = category;
+    section.appendChild(title);
 
-    const resultsList = document.createElement('div');
-    resultsList.className = 'results-list';
-
-    // Create result entries
-    dishes.forEach(dish => {
-        const rankElement = document.createElement('div');
-        rankElement.className = `result-entry rank-${dish.rank}`;
-
-        let rankText;
-        switch (dish.rank) {
-            case 1:
-                rankText = '🥇 First Place';
-                break;
-            case 2:
-                rankText = '🥈 Second Place';
-                break;
-            case 3:
-                rankText = '🥉 Third Place';
-                break;
-            default:
-                rankText = `#${dish.rank}`;
-        }
-
-        rankElement.innerHTML = `
-            <div class="rank-info">
-                <span class="rank-text">${rankText}</span>
-                <span class="dish-number">Dish #${dish.dishNumber}</span>
-            </div>
-            <div class="vote-count">${dish.votes} vote${dish.votes !== 1 ? 's' : ''}</div>
-        `;
-
-        resultsList.appendChild(rankElement);
-    });
-
-    // If no results, show a message
-    if (!dishes.length) {
-        const noResults = document.createElement('p');
-        noResults.className = 'no-results';
-        noResults.textContent = 'No votes recorded for this category yet';
-        resultsList.appendChild(noResults);
+    if (!dishes || dishes.length === 0) {
+        const noVotes = document.createElement('p');
+        noVotes.textContent = 'No votes recorded for this category';
+        section.appendChild(noVotes);
+        return section;
     }
 
-    categoryElement.appendChild(resultsList);
-    return categoryElement;
+    dishes.forEach(dish => {
+        const resultRow = document.createElement('div');
+        resultRow.className = 'result-row';
+        
+        let rankSymbol;
+        switch (dish.rank) {
+            case 1: rankSymbol = '🥇'; break;
+            case 2: rankSymbol = '🥈'; break;
+            case 3: rankSymbol = '🥉'; break;
+            default: rankSymbol = `#${dish.rank}`;
+        }
+
+        resultRow.innerHTML = `
+            <strong>${rankSymbol} Place:</strong> 
+            Dish #${dish.dishNumber} 
+            (${dish.votes} vote${dish.votes !== 1 ? 's' : ''})
+        `;
+        section.appendChild(resultRow);
+    });
+
+    return section;
 }
 
 async function displayResults() {
     const resultsContainer = document.getElementById('results');
     
     try {
-        // Show loading state
-        resultsContainer.innerHTML = '<div class="loading">Loading results...</div>';
+        resultsContainer.innerHTML = '<p>Loading results...</p>';
         
-        // Fetch results from the API
         const results = await fetchData('/api/results');
         console.log('Fetched results:', results);
         
         resultsContainer.innerHTML = '';
 
-        // Handle no votes case
         if (results.message === 'No votes recorded yet') {
-            resultsContainer.innerHTML = '<div class="no-votes">No votes have been recorded yet.</div>';
+            resultsContainer.innerHTML = '<p>No votes have been recorded yet.</p>';
             return;
         }
 
-        // Create header section
-        const header = document.createElement('div');
-        header.className = 'results-header';
-        header.innerHTML = `
-            <h1>Competition Results</h1>
-            <p class="subtitle">Top 3 Dishes in Each Category</p>
-        `;
-        resultsContainer.appendChild(header);
+        const title = document.createElement('h1');
+        title.textContent = 'Competition Results';
+        resultsContainer.appendChild(title);
 
-        // Display results for each category
         CATEGORIES.forEach(category => {
             const categoryResults = results.categories[category] || [];
-            resultsContainer.appendChild(createCategoryResult(category, categoryResults));
+            resultsContainer.appendChild(createCategorySection(category, categoryResults));
         });
 
     } catch (error) {
         console.error('Error fetching results:', error);
         showToast('Error fetching results. Please try again later.', 'error');
-        resultsContainer.innerHTML = '<div class="error">Unable to load results at this time.</div>';
+        resultsContainer.innerHTML = '<p>Unable to load results at this time.</p>';
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing results display');
     displayResults().catch(error => {
