@@ -9,6 +9,7 @@ import { kv } from '@vercel/kv';
 //    'Entrée & Soups'
 //];
 import CATEGORIES from './constants.js';
+console.log("loading get-settings.js")
 
 /**
  * Creates default settings object
