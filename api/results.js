@@ -1,5 +1,6 @@
 // api/results.js
 import { kv } from '@vercel/kv';
+import { CATEGORIES } from '../constants.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -15,22 +16,42 @@ export default async function handler(req, res) {
             return res.status(200).json({ message: 'No votes recorded yet' });
         }
 
-        // Transform votes into array format with scores
+        // Transform votes into category rankings
         const results = {};
-        Object.entries(votes).forEach(([category, categoryVotes]) => {
-            results[category] = [];
-            Object.entries(categoryVotes).forEach(([dishNumber, count]) => {
-                results[category].push({
-                    dish: `Dish #${dishNumber}`,
-                    score: count
+        
+        CATEGORIES.forEach(category => {
+            if (!votes[category]) {
+                results[category] = [];
+                return;
+            }
+
+            // Calculate scores for each dish
+            const dishScores = [];
+            Object.entries(votes[category]).forEach(([dishNumber, voteCount]) => {
+                // For each dish, calculate total points
+                // First place votes worth 2 points, second place worth 1 point
+                dishScores.push({
+                    dishNumber: parseInt(dishNumber),
+                    totalVotes: voteCount,
+                    score: voteCount
                 });
             });
-            // Sort by score in descending order
-            results[category].sort((a, b) => b.score - a.score);
+
+            // Sort by score (descending) and get top 3
+            results[category] = dishScores
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map((dish, index) => ({
+                    rank: index + 1,
+                    dishNumber: dish.dishNumber,
+                    votes: dish.totalVotes
+                }));
         });
 
         console.log('Processed results:', results);
-        return res.status(200).json(results);
+        return res.status(200).json({
+            categories: results
+        });
 
     } catch (error) {
         console.error('Error in results endpoint:', error);

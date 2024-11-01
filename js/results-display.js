@@ -1,32 +1,70 @@
-/**
- * results-display.js
- * 
- * This file handles the display of voting results for the cooking competition.
- * It includes the following main functionalities:
- * 
- * 1. Fetching voting results from the API
- * 2. Dynamically generating and displaying result content
- * 3. Handling cases where no votes have been recorded
- * 4. Error handling and displaying appropriate messages to users
- * 
- * Functions:
- * - displayResults: Main function to fetch and display voting results
- * 
- * The script uses utility functions for API calls and UI updates,
- * ensuring a smooth user experience when viewing competition results.
- */
 // results-display.js
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
+import { CATEGORIES } from './constants.js';
 
 console.log("results-display.js loading");
+
+function createCategoryResult(category, dishes) {
+    const categoryElement = document.createElement('div');
+    categoryElement.className = 'category-results section';
+    
+    const categoryTitle = document.createElement('h2');
+    categoryTitle.textContent = category;
+    categoryElement.appendChild(categoryTitle);
+
+    const resultsList = document.createElement('div');
+    resultsList.className = 'results-list';
+
+    // Create result entries
+    dishes.forEach(dish => {
+        const rankElement = document.createElement('div');
+        rankElement.className = `result-entry rank-${dish.rank}`;
+
+        let rankText;
+        switch (dish.rank) {
+            case 1:
+                rankText = '🥇 First Place';
+                break;
+            case 2:
+                rankText = '🥈 Second Place';
+                break;
+            case 3:
+                rankText = '🥉 Third Place';
+                break;
+            default:
+                rankText = `#${dish.rank}`;
+        }
+
+        rankElement.innerHTML = `
+            <div class="rank-info">
+                <span class="rank-text">${rankText}</span>
+                <span class="dish-number">Dish #${dish.dishNumber}</span>
+            </div>
+            <div class="vote-count">${dish.votes} vote${dish.votes !== 1 ? 's' : ''}</div>
+        `;
+
+        resultsList.appendChild(rankElement);
+    });
+
+    // If no results, show a message
+    if (!dishes.length) {
+        const noResults = document.createElement('p');
+        noResults.className = 'no-results';
+        noResults.textContent = 'No votes recorded for this category yet';
+        resultsList.appendChild(noResults);
+    }
+
+    categoryElement.appendChild(resultsList);
+    return categoryElement;
+}
 
 async function displayResults() {
     const resultsContainer = document.getElementById('results');
     
     try {
         // Show loading state
-        resultsContainer.innerHTML = '<p>Loading results...</p>';
+        resultsContainer.innerHTML = '<div class="loading">Loading results...</div>';
         
         // Fetch results from the API
         const results = await fetchData('/api/results');
@@ -36,47 +74,29 @@ async function displayResults() {
 
         // Handle no votes case
         if (results.message === 'No votes recorded yet') {
-            resultsContainer.innerHTML = '<p class="no-votes">No votes have been recorded yet.</p>';
+            resultsContainer.innerHTML = '<div class="no-votes">No votes have been recorded yet.</div>';
             return;
         }
 
+        // Create header section
+        const header = document.createElement('div');
+        header.className = 'results-header';
+        header.innerHTML = `
+            <h1>Competition Results</h1>
+            <p class="subtitle">Top 3 Dishes in Each Category</p>
+        `;
+        resultsContainer.appendChild(header);
+
         // Display results for each category
-        Object.entries(results).forEach(([category, dishes]) => {
-            if (!Array.isArray(dishes)) {
-                console.warn(`Invalid data for category ${category}:`, dishes);
-                return;
-            }
-
-            const categoryElement = document.createElement('div');
-            categoryElement.className = 'category-results';
-            
-            const categoryTitle = document.createElement('h2');
-            categoryTitle.textContent = category;
-            categoryElement.appendChild(categoryTitle);
-
-            // Create a list for the dishes
-            const dishesList = document.createElement('div');
-            dishesList.className = 'dishes-list';
-
-            dishes.forEach((dish, index) => {
-                const dishElement = document.createElement('div');
-                dishElement.className = 'dish-result';
-                dishElement.innerHTML = `
-                    <span class="dish-rank">#${index + 1}</span>
-                    <span class="dish-name">${dish.dish}</span>
-                    <span class="dish-score">${dish.score} vote${dish.score !== 1 ? 's' : ''}</span>
-                `;
-                dishesList.appendChild(dishElement);
-            });
-
-            categoryElement.appendChild(dishesList);
-            resultsContainer.appendChild(categoryElement);
+        CATEGORIES.forEach(category => {
+            const categoryResults = results.categories[category] || [];
+            resultsContainer.appendChild(createCategoryResult(category, categoryResults));
         });
 
     } catch (error) {
         console.error('Error fetching results:', error);
         showToast('Error fetching results. Please try again later.', 'error');
-        resultsContainer.innerHTML = '<p class="error">Unable to load results at this time.</p>';
+        resultsContainer.innerHTML = '<div class="error">Unable to load results at this time.</div>';
     }
 }
 
