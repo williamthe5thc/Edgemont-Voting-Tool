@@ -1,126 +1,88 @@
-// results-display.js
+/**
+ * results-display.js
+ * 
+ * This file handles the display of voting results for the cooking competition.
+ * It includes the following main functionalities:
+ * 
+ * 1. Fetching voting results from the API
+ * 2. Dynamically generating and displaying result content
+ * 3. Handling cases where no votes have been recorded
+ * 4. Error handling and displaying appropriate messages to users
+ * 
+ * Functions:
+ * - displayResults: Main function to fetch and display voting results
+ * 
+ * The script uses utility functions for API calls and UI updates,
+ * ensuring a smooth user experience when viewing competition results.
+ */
 
+// Import utility functions for data fetching and toast notifications
 import { showToast } from './utils/uiUtils.js';
 import { fetchData } from './utils/apiUtils.js';
 
-/**
- * Creates a result section for a category
- * @param {string} category - Category name
- * @param {Array} dishes - Dish results
- * @returns {HTMLElement} Category result element
- */
-function createCategoryResult(category, dishes) {
-    const categoryElement = document.createElement('div');
-    categoryElement.className = 'category-result';
-    
-    const categoryTitle = document.createElement('h2');
-    categoryTitle.textContent = category;
-    categoryElement.appendChild(categoryTitle);
-
-    if (Array.isArray(dishes)) {
-        dishes.forEach((dish, index) => {
-            if (dish && typeof dish.dishNumber === 'number') {
-                const dishElement = document.createElement('p');
-                dishElement.className = 'dish-result';
-                dishElement.textContent = `Dish #${dish.dishNumber}: ${dish.votes} votes`;
-                categoryElement.appendChild(dishElement);
-            }
-        });
-    }
-
-    return categoryElement;
-}
+console.log("results-display.js loading");
 
 /**
- * Creates statistics summary section
- * @param {Object} stats - Voting statistics
- * @returns {HTMLElement} Statistics element
- */
-function createStatisticsSummary(stats) {
-    const statsElement = document.createElement('div');
-    statsElement.className = 'voting-statistics';
-    
-    const statsTitle = document.createElement('h3');
-    statsTitle.textContent = 'Voting Statistics';
-    statsElement.appendChild(statsTitle);
-
-    const totalVotes = document.createElement('p');
-    totalVotes.textContent = `Total Votes: ${stats.totalVotes || 0}`;
-    statsElement.appendChild(totalVotes);
-
-    if (stats.categoryStats) {
-        Object.entries(stats.categoryStats).forEach(([category, catStats]) => {
-            const categoryStats = document.createElement('p');
-            categoryStats.textContent = `${category}: ${catStats.total || 0} votes`;
-            statsElement.appendChild(categoryStats);
-        });
-    }
-
-    return statsElement;
-}
-
-/**
- * Displays the voting results
+ * Fetches and displays the voting results.
+ * @async
+ * @function displayResults
+ * @returns {Promise<void>}
+ * 
+ * This function:
+ * 1. Fetches results from the API
+ * 2. Clears any existing content in the results container
+ * 3. Handles the case where no votes have been recorded
+ * 4. Iterates through each category and displays the top dishes
+ * 5. Handles any errors that occur during the process
  */
 async function displayResults() {
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const resultsContainer = document.getElementById('results');
-
-    if (!resultsContainer) {
-        console.error('Results container not found');
-        return;
-    }
-
     try {
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'flex';
-        }
+        // Fetch results from the API
+        const results = await fetchData('/api/results');
+        const resultsContainer = document.getElementById('results');
         resultsContainer.innerHTML = '';
 
-        // Fetch results using fetchData from apiUtils
-        const results = await fetchData('/api/results');
-        console.log('Fetched results:', results);
-
+        // Display a message if no votes have been recorded
         if (results.message === 'No votes recorded yet') {
-            const noResults = document.createElement('p');
-            noResults.className = 'no-results';
-            noResults.textContent = 'No votes have been recorded yet.';
-            resultsContainer.appendChild(noResults);
+            resultsContainer.textContent = 'No votes have been recorded yet.';
             return;
         }
 
-        // Add statistics if available
-        if (results.statistics) {
-            resultsContainer.appendChild(createStatisticsSummary(results.statistics));
-        }
+        // Iterate through each category and display results
+        for (const [category, dishes] of Object.entries(results)) {
+            const categoryElement = document.createElement('div');
+            categoryElement.innerHTML = `<h2>${category}</h2>`;
 
-        // Add results by category
-        if (results.results) {
-            Object.entries(results.results).forEach(([category, dishes]) => {
-                resultsContainer.appendChild(createCategoryResult(category, dishes));
+            dishes.forEach((dish, index) => {
+                if (dish && typeof dish.score === 'number') {
+                    const dishElement = document.createElement('p');
+                    dishElement.textContent = `${index + 1}. ${dish.dish} (Score: ${dish.score.toFixed(2)})`;
+                    categoryElement.appendChild(dishElement);
+                } else {
+                    console.warn(`Invalid dish data for ${category}:`, dish);
+                }
             });
-        }
 
+            resultsContainer.appendChild(categoryElement);
+        }
     } catch (error) {
         console.error('Error fetching results:', error);
-        showToast('Failed to load results. Please try again later.', 'error');
-        
-        const errorMessage = document.createElement('p');
-        errorMessage.className = 'error-message';
-        errorMessage.textContent = 'Unable to load results. Please try again later.';
-        resultsContainer.appendChild(errorMessage);
-    } finally {
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'none';
-        }
+        showToast('Error fetching results. Please try again later.', 'error');
+        document.getElementById('results').textContent = 'Unable to load results at this time.';
     }
 }
 
-// Initialize results display when DOM is loaded
+/**
+ * Event listener for DOMContentLoaded
+ * 
+ * This ensures that the displayResults function is called only after
+ * the DOM is fully loaded and ready to be manipulated.
+ */
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Initializing results display');
     displayResults().catch(error => {
         console.error('Unhandled error in displayResults:', error);
         showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
 });
+
+console.log("results-display.js loaded");
