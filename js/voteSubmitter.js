@@ -41,78 +41,35 @@ export function setupVoting() {
 }
 
 /**
- * Validates individual vote inputs in real-time
+ * Validates individual vote inputs
  * @param {HTMLInputElement} input - The input element to validate
  */
 export function validateInput(input) {
     const value = parseInt(input.value);
-    const currentCategory = input.dataset.category;
-    const max = DISHES_PER_CATEGORY[currentCategory]?.max || 99;
+    const category = input.dataset.category;
+    const max = DISHES_PER_CATEGORY[category]?.max || 99;
 
     if (input.value === '') return;
 
     if (isNaN(value) || value < 1 || value > max) {
         input.value = '';
-        showToast(`Error: Please enter a number between 1 and ${max}`, 'error', currentCategory);
+        console.log(`Validation failed for ${category}. Showing toast.`);
+        showToast(`Error: You selected an invalid dish. Please enter a number between 1 and ${max}`, 'error', category);
         return;
     }
 
-    // Check for duplicates across ALL categories
-    const allInputs = document.querySelectorAll('.vote-input');
-    for (let otherInput of allInputs) {
-        if (otherInput !== input && otherInput.value === input.value) {
-            const otherCategory = otherInput.dataset.category;
-            input.value = '';
-            showToast(
-                `Dish #${value} was already selected in the ${otherCategory} category. ` +
-                `Please select a different dish number.`,
-                'error',
-                currentCategory
-            );
-            return;
-        }
-    }
-
-    // Check for duplicates within the same category
-    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${currentCategory}"]`);
-    const categoryValues = Array.from(categoryInputs)
-        .filter(inp => inp !== input) // Exclude current input
-        .map(inp => inp.value)
-        .filter(val => val !== '');
-
-    if (categoryValues.includes(input.value)) {
+    // Check for duplicate entries within the same category
+    const categoryInputs = document.querySelectorAll(`.vote-input[data-category="${category}"]`);
+    const categoryVotes = Array.from(categoryInputs).map(inp => inp.value).filter(val => val !== '');
+    
+    const { isValid, invalidCategories } = validateVotes({ [category]: categoryVotes });
+    
+    if (!isValid) {
+        console.log(`Validation failed for ${category}. Reason: ${invalidCategories[0]}`);
         input.value = '';
-        showToast(
-            `You've already selected dish #${value} in the ${currentCategory} category. ` +
-            `Please select a different dish number.`,
-            'error',
-            currentCategory
-        );
-        return;
+    } else {
+        console.log(`Input validated successfully for ${category}.`);
     }
-
-    saveVotesToLocalStorage();
-}
-
-/**
- * Sets up event listeners for vote input fields
- */
-export function setupVoting() {
-    document.querySelectorAll('.vote-input').forEach(input => {
-        // Validate on input change
-        input.addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
-            validateInput(this);
-        });
-
-        // Also validate on paste
-        input.addEventListener('paste', function(e) {
-            setTimeout(() => {
-                this.value = this.value.replace(/[^0-9]/g, '');
-                validateInput(this);
-            }, 0);
-        });
-    });
 }
 
 /**
