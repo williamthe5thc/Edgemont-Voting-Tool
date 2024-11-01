@@ -2,7 +2,12 @@
 import { kv } from '@vercel/kv';
 
 // Define categories directly in the API to avoid import issues
-import CATEGORIES from ./constants.js 
+const CATEGORIES = [
+    'Bread',
+    'Appetizers',
+    'Dessert',
+    'Entrée & Soups'
+];
 
 /**
  * Creates default settings object
