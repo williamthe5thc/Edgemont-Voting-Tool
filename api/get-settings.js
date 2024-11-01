@@ -8,7 +8,6 @@ const CATEGORIES = [
     'Dessert',
     'Entrée & Soups'
 ];
-import CATEGORIES from './constants.js';
 console.log("loading get-settings.js")
 
 /**
