@@ -36,6 +36,7 @@ async function loadCurrentSettings() {
                     <input type="number" id="${category}-min" name="${category}-min" value="${minCount}" min="1" max="100">
                     <input type="number" id="${category}-max" name="${category}-max" value="${maxCount}" min="1" max="100">
                 </div>
+            `;
             dishCountContainer.innerHTML += inputHtml;
         });
 
