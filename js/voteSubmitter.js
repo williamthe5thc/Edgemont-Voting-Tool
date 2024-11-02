@@ -15,6 +15,8 @@ import { CATEGORIES } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { saveToLocalStorage, getFromLocalStorage } from './utils/storageUtils.js';
 import { validateVotes } from './utils/validationUtils.js';
+import { generateDeviceFingerprint } from './utils/deviceUtils.js';
+
 
 // Object to store the number of dishes per category
 let DISHES_PER_CATEGORY = {};
@@ -208,9 +210,11 @@ async function submitToGoogleSheets(votes) {
     console.log("Starting Google Sheets submission");
     
     try {
+        // Generate device fingerprint
         const deviceFingerprint = await generateDeviceFingerprint();
+        console.log("Generated device fingerprint:", deviceFingerprint);
         
-        // Create payload
+        // Prepare data object
         const payload = {
             votes: votes,
             metadata: {
@@ -221,16 +225,13 @@ async function submitToGoogleSheets(votes) {
             }
         };
         
-        console.log("Payload being sent:", payload);
+        console.log("Preparing to send payload:", payload);
 
         // Create URL-encoded form data
         const formData = new URLSearchParams();
         formData.append('data', JSON.stringify(payload));
 
-        const GOOGLE_SCRIPT_URL = 'YOUR_SCRIPT_URL';
-        console.log("Sending to URL:", GOOGLE_SCRIPT_URL);
-
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
+        const response = await fetch('YOUR_GOOGLE_SCRIPT_URL', {
             method: 'POST',
             mode: 'no-cors',
             headers: {
@@ -240,6 +241,8 @@ async function submitToGoogleSheets(votes) {
         });
 
         console.log("Response received:", response);
+        
+        // Since we're using no-cors, we won't get response data
         return { success: true, message: "Vote submitted" };
         
     } catch (error) {
