@@ -45,7 +45,7 @@ export async function getSettings() {
             const categorySettings = settings.dishesPerCategory?.[category] || {};
             acc[category] = {
                 min: categorySettings.min || 1,
-                max: categorySettings.max || 50
+                max: categorySettings.max || 60
             };
             return acc;
         }, {});
@@ -56,7 +56,7 @@ export async function getSettings() {
         showToast('Error loading settings. Using default values.', 'error');
         // Set default values if settings fetch fails
         DISHES_PER_CATEGORY = CATEGORIES.reduce((acc, category) => {
-            acc[category] = { min: 1, max: 50 };
+            acc[category] = { min: 1, max: 60 };
             return acc;
         }, {});
         return { dishesPerCategory: DISHES_PER_CATEGORY };

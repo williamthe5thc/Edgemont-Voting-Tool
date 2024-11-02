@@ -3,6 +3,7 @@
 import { kv } from '@vercel/kv';
 import { handleAPIError } from '../utils/errorUtils.js';
 import { validateSettings } from '../utils/validationUtils.js';
+import { API_CATEGORIES, API_CONFIG } from './config.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
