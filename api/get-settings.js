@@ -1,14 +1,6 @@
 // api/get-settings.js
 import { kv } from '@vercel/kv';
-
-// Define categories directly in the API to avoid import issues
-const CATEGORIES = [
-    'Bread',
-    'Appetizers',
-    'Dessert',
-    'Entrée & Soups'
-];
-console.log("loading get-settings.js")
+import { API_CATEGORIES, API_CONFIG } from './config.js';
 
 /**
  * Creates default settings object
@@ -16,10 +8,10 @@ console.log("loading get-settings.js")
  */
 function getDefaultSettings() {
     return {
-        dishesPerCategory: CATEGORIES.reduce((acc, category) => {
+        dishesPerCategory: API_CATEGORIES.reduce((acc, category) => {
             acc[category] = {
-                min: 1,
-                max: 50
+                min: API_CONFIG.MIN_DISHES_PER_CATEGORY,
+                max: API_CONFIG.MAX_DISHES_PER_CATEGORY
             };
             return acc;
         }, {})
@@ -57,11 +49,11 @@ export default async function handler(req, res) {
 
         // Merge existing settings with defaults
         if (settings.dishesPerCategory) {
-            CATEGORIES.forEach(category => {
+            API_CATEGORIES.forEach(category => {
                 if (settings.dishesPerCategory[category]) {
                     processedSettings.dishesPerCategory[category] = {
-                        min: settings.dishesPerCategory[category].min || 1,
-                        max: settings.dishesPerCategory[category].max || 50
+                        min: settings.dishesPerCategory[category].min || API_CONFIG.MIN_DISHES_PER_CATEGORY,
+                        max: settings.dishesPerCategory[category].max || API_CONFIG.MAX_DISHES_PER_CATEGORY
                     };
                 }
             });
@@ -83,7 +75,6 @@ export default async function handler(req, res) {
         }
 
         // For other errors, return default settings with 200 status
-        // This ensures the application can continue functioning
         return res.status(200).json({
             warning: 'Error fetching settings. Using default values.',
             ...getDefaultSettings()
