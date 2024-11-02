@@ -205,21 +205,45 @@ async function submitToVercelKV(votes) {
  * @returns {Promise<Object>} The response from Google Sheets
  */
 async function submitToGoogleSheets(votes) {
-    console.log("Submitting to Google Sheets");
-    const dataToSend = JSON.stringify([votes]);
-    console.log("Data being sent to Google Sheets:", dataToSend);
+    console.log("Starting Google Sheets submission");
     
-    const response = await fetch('https://script.google.com/macros/s/AKfycbzEjIDaDtYd4tSEdl5y3EA4UpfLYzAhNKqcJFvj21ZvE5SXsoQxq2iwz1RGl0jpJOnS/exec', {
-        method: 'POST',
-        body: dataToSend,
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-        },
-    });
-    const responseData = await response.text();
-    console.log("Google Sheets response:", responseData);
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}, message: ${responseData}`);
+    try {
+        const deviceFingerprint = await generateDeviceFingerprint();
+        
+        // Create payload
+        const payload = {
+            votes: votes,
+            metadata: {
+                timestamp: new Date().toISOString(),
+                deviceId: deviceFingerprint,
+                userAgent: navigator.userAgent,
+                confidence: 1.0
+            }
+        };
+        
+        console.log("Payload being sent:", payload);
+
+        // Create URL-encoded form data
+        const formData = new URLSearchParams();
+        formData.append('data', JSON.stringify(payload));
+
+        const GOOGLE_SCRIPT_URL = 'YOUR_SCRIPT_URL';
+        console.log("Sending to URL:", GOOGLE_SCRIPT_URL);
+
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString()
+        });
+
+        console.log("Response received:", response);
+        return { success: true, message: "Vote submitted" };
+        
+    } catch (error) {
+        console.error("Error in submitToGoogleSheets:", error);
+        throw error;
     }
-    return JSON.parse(responseData);
 }

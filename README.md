@@ -1,144 +1,136 @@
 # Dia de Los Ancestros Cooking Competition Voting System
 
-## Overview
+# Dia de Los Ancestros Voting Application
 
-A web-based voting system for the Edgemont 1st Ward Día de los Ancestros Cooking Competition. This application allows participants to vote for their favorite dishes across multiple categories, tracks votes securely, and displays results in real-time.
+A web-based voting system for managing dish voting in a cooking competition, built with vanilla JavaScript and Vercel KV storage.
 
-## Features
+## 🌟 Features
 
 ### Voting System
-- Multiple category support (Bread, Appetizers, Dessert, Entrée & Soups)
+- Vote for favorite dishes across multiple categories:
+  - Bread
+  - Appetizers
+  - Dessert
+  - Entrée & Soups
 - Up to 2 votes per category
 - Real-time input validation
-- Prevention of duplicate dish selections across categories
-- Local storage for saving incomplete votes
-- Device fingerprinting for vote tracking
+- Local storage for draft votes
+- Prevention of duplicate dish selections
 
 ### Admin Panel
-- Update number of dishes per category
-- Clear all votes functionality
-- Double confirmation for vote clearing
-- Settings management interface
+- Manage number of dishes per category
+- Clear all votes with double confirmation
+- Real-time settings updates
 
 ### Results Display
-- Real-time results viewing
+- Live vote counting
 - Top 3 rankings per category
-- Vote counts and statistics
-- Medal indicators for top places (🥇, 🥈, 🥉)
+- Medal indicators (🥇, 🥈, 🥉)
 
-### Data Storage & Security
-- Vercel KV store for vote data
-- Google Sheets integration for detailed vote tracking
-- Device fingerprinting for vote integrity
-- Error handling and data validation
-
-## Technology Stack
+## 🛠 Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Node.js with Vercel Serverless Functions
-- **Database**: Vercel KV (Redis-compatible key-value store)
-- **Additional Storage**: Google Sheets (via Google Apps Script)
+- **Backend**: Vercel Serverless Functions
+- **Database**: Vercel KV (Redis-compatible)
+- **Additional Storage**: Google Sheets integration
+- **Styling**: Custom CSS with Responsive Design
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 /
-├── api/                      # Serverless API endpoints
-│   ├── clear-votes.js       # Clear all votes
-│   ├── get-settings.js      # Retrieve competition settings
-│   ├── results.js           # Get voting results
-│   ├── update-settings.js   # Update competition settings
-│   └── vote.js             # Handle vote submission
+├── api/                      # API endpoints
+│   ├── clear-votes.js       # Clear votes endpoint
+│   ├── config.js            # API configuration
+│   ├── get-settings.js      # Settings retrieval
+│   ├── results.js           # Results endpoint
+│   ├── update-settings.js   # Settings update
+│   └── vote.js              # Vote submission
 ├── js/
-│   ├── utils/              # Utility functions
-│   │   ├── apiUtils.js     # API interaction
-│   │   ├── storageUtils.js # Local storage handling
-│   │   ├── uiUtils.js      # UI components
+│   ├── utils/               # Utility functions
+│   │   ├── apiUtils.js      # API interactions
+│   │   ├── configUtils.js   # Configuration
+│   │   ├── domUtils.js      # DOM manipulation
+│   │   ├── errorUtils.js    # Error handling
+│   │   ├── eventUtils.js    # Event management
+│   │   ├── formUtils.js     # Form handling
+│   │   ├── storageUtils.js  # Local storage
+│   │   ├── transformUtils.js # Data transformation
+│   │   ├── uiUtils.js       # UI components
 │   │   └── validationUtils.js # Input validation
-│   ├── admin.js           # Admin panel logic
-│   ├── categoryLoader.js  # Category loading
-│   ├── constants.js       # App constants
-│   ├── main.js           # Main application logic
-│   └── voteSubmitter.js  # Vote submission handling
-├── admin.html            # Admin interface
-├── index.html           # Main voting interface
-└── results.html         # Results display
+│   ├── admin.js             # Admin panel logic
+│   ├── categoryLoader.js    # Category loading
+│   ├── constants.js         # App constants
+│   ├── main.js              # Main application
+│   ├── preloader.js         # Loading screen
+│   ├── results-display.js   # Results page
+│   └── voteSubmitter.js     # Vote submission
+├── admin.html               # Admin interface
+├── index.html              # Voting interface
+├── results.html           # Results display
+└── styles.css             # Global styles
+
 ```
 
-## Setup Instructions
+## 🚀 Installation
 
-1. **Clone the Repository**
+1. **Clone the repository**
 ```bash
-git clone [repository-url]
+git clone [your-repo-url]
 cd dia-de-los-ancestros-voting
 ```
 
-2. **Install Dependencies**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Set Up Vercel KV**
-- Create a Vercel account if needed
-- Set up KV store in Vercel dashboard
-- Add KV connection string to environment variables
-
-4. **Set Up Google Sheets Integration**
-- Create a new Google Apps Script project
-- Copy the provided script code
-- Deploy as web app
-- Update the script URL in `voteSubmitter.js`
-
-5. **Configure Environment Variables**
-```
-KV_URL=your-kv-url
+3. **Set up environment variables**
+Create a `.env` file with:
+```env
+KV_URL=your-vercel-kv-url
 KV_REST_API_URL=your-kv-rest-api-url
 KV_REST_API_TOKEN=your-kv-rest-api-token
 KV_REST_API_READ_ONLY_TOKEN=your-read-only-token
 ```
 
-6. **Deploy**
+4. **Development**
 ```bash
-vercel deploy
+npm run dev
 ```
 
-## Usage
+5. **Deploy**
+```bash
+npm run deploy
+```
+
+## 💻 Usage
 
 ### For Voters
-1. Access the main page
-2. Select up to two dishes per category
+1. Visit the main page
+2. Enter dish numbers (1-N) for each category
 3. Submit votes
-4. Receive confirmation
+4. View confirmation
 
 ### For Administrators
 1. Access `/admin.html`
-2. Update dish counts as needed
-3. Clear votes if necessary
-4. Monitor voting patterns
+2. Update dish counts per category
+3. Clear votes if needed
+4. Monitor voting progress
 
 ### Viewing Results
-- Access `/results.html`
-- View real-time rankings
-- See vote counts per dish
-- Track participation statistics
+- Visit `/results.html`
+- See real-time rankings
+- Track vote counts
 
-## Error Handling
+## 🔒 Security Features
 
-The application includes comprehensive error handling for:
-- Invalid inputs
-- Network failures
-- Database connection issues
-- Missing or corrupt data
-- Concurrent access
-
-## Data Security
-
-- No personal information is stored
-- Device fingerprinting for vote integrity
+- No personal data collection
+- Input validation at multiple levels
 - Secure API endpoints
-- Data validation at multiple levels
+- Data integrity checks
 
-## Browser Support
+## 🌐 Browser Support
 
 - Chrome (recommended)
 - Firefox
@@ -146,29 +138,27 @@ The application includes comprehensive error handling for:
 - Edge
 - Mobile browsers
 
-## Known Limitations
+## ⚠️ Known Limitations
 
-- Maximum of 2 votes per category
 - No vote modification after submission
 - Admin actions are irreversible
-- Device fingerprinting is pseudo-unique
 
-## Contributing
+## 🤝 Contributing
 
-Contributions welcome! Please:
 1. Fork the repository
 2. Create a feature branch
-3. Commit changes
+3. Make your changes
 4. Submit a pull request
 
-## License
+## 📄 License
 
-MIT License
+MIT License - See [LICENSE](LICENSE) for details
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 - Vercel for hosting and KV store
-- Google Sheets for extended data storage
+- Google Sheets for extended storage
+- Vercel for hosting and KV store
 - All contributors (Claude and myself) and participants who helped test it and give feedback of the Día de los Ancestros Cooking Competition
 - My wife for tolerating me and helping me out while I made this
 ```
