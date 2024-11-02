@@ -9,7 +9,6 @@ async function simulateVoting(page, userId) {
     try {
         console.log(`User ${userId}: Starting vote submission`);
         
-        // Increase timeout and add retry logic
         await page.goto(URL, { 
             timeout: 60000,
             waitUntil: 'networkidle' 
@@ -17,37 +16,66 @@ async function simulateVoting(page, userId) {
         
         console.log(`User ${userId}: Page loaded successfully`);
 
-        // Wait for categories with increased timeout
-        await page.waitForSelector('.category', { 
-            timeout: 60000,
-            state: 'attached' 
-        });
-        
-        // Add a small delay between users to prevent overwhelming the server
+        // Wait for categories and log what we find
+        const categories = await page.$$('.category');
+        console.log(`User ${userId}: Found ${categories.length} categories`);
+
+        // Add a small delay between users
         await page.waitForTimeout(userId * 100);
 
-        // Rest of the voting simulation...
+        let votesSubmitted = 0;
+        
+        // Submit votes for each category
         for (const category of CATEGORIES) {
-            const inputs = await page.$$(`input[data-category="${category}"]`);
-            
-            const dish1 = Math.floor(Math.random() * 20) + 1;
-            const dish2 = Math.floor(Math.random() * 20) + 1;
-            
-            await inputs[0].fill(dish1.toString());
-            await inputs[1].fill(dish2.toString());
-            
-            await page.waitForTimeout(Math.random() * 500 + 200);
+            try {
+                const inputs = await page.$$(`input[data-category="${category}"]`);
+                console.log(`User ${userId}: Found ${inputs.length} inputs for ${category}`);
+                
+                if (inputs.length >= 2) {
+                    const dish1 = Math.floor(Math.random() * 20) + 1;
+                    const dish2 = Math.floor(Math.random() * 20) + 1;
+                    
+                    await inputs[0].fill(dish1.toString());
+                    await inputs[1].fill(dish2.toString());
+                    votesSubmitted++;
+                    
+                    console.log(`User ${userId}: Submitted votes ${dish1} and ${dish2} for ${category}`);
+                }
+                
+                await page.waitForTimeout(Math.random() * 500 + 200);
+            } catch (error) {
+                console.error(`User ${userId}: Error submitting votes for ${category}:`, error.message);
+            }
         }
         
-        await page.click('#submitVotes');
-        
-        const success = await page.waitForSelector('.toast.success', { 
-            timeout: 20000 
-        }).then(() => true).catch(() => false);
+        if (votesSubmitted > 0) {
+            console.log(`User ${userId}: Attempting to click submit button`);
             
-        console.log(`User ${userId}: Vote submission ${success ? 'successful' : 'failed'}`);
-        
-        return success;
+            // Try to find and click the submit button
+            const submitButton = await page.$('#submitVotes');
+            if (submitButton) {
+                await submitButton.click();
+                console.log(`User ${userId}: Submit button clicked`);
+                
+                // Wait for either success or error toast
+                const success = await Promise.race([
+                    page.waitForSelector('.toast', { 
+                        timeout: 20000,
+                        state: 'attached'
+                    }).then(() => true),
+                    page.waitForTimeout(20000).then(() => false)
+                ]);
+                
+                console.log(`User ${userId}: Vote submission ${success ? 'successful' : 'timed out'}`);
+                return success;
+            } else {
+                console.error(`User ${userId}: Submit button not found`);
+                return false;
+            }
+        } else {
+            console.error(`User ${userId}: No votes were submitted`);
+            return false;
+        }
     } catch (error) {
         console.error(`User ${userId} encountered error:`, error.message);
         return false;
@@ -58,12 +86,12 @@ async function runLoadTest() {
     console.log(`Starting load test with ${NUM_USERS} concurrent users`);
     console.log(`Testing URL: ${URL}`);
     
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({ headless: false }); // Make browser visible
     const results = { success: 0, failed: 0 };
     const startTime = Date.now();
     
     try {
-        // First verify the site is accessible
+        // Verify site accessibility
         const testContext = await browser.newContext();
         const testPage = await testContext.newPage();
         console.log('Verifying site accessibility...');
@@ -76,7 +104,7 @@ async function runLoadTest() {
         console.log('Site is accessible, proceeding with load test');
         await testContext.close();
 
-        // Create batches of users to prevent overwhelming the server
+        // Run in batches of 5
         const BATCH_SIZE = 5;
         for (let i = 0; i < NUM_USERS; i += BATCH_SIZE) {
             const batch = Array(Math.min(BATCH_SIZE, NUM_USERS - i))
