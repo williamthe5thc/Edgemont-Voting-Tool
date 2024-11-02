@@ -210,11 +210,9 @@ async function submitToGoogleSheets(votes) {
     console.log("Starting Google Sheets submission");
     
     try {
-        // Generate device fingerprint
         const deviceFingerprint = await generateDeviceFingerprint();
         console.log("Generated device fingerprint:", deviceFingerprint);
         
-        // Prepare data object
         const payload = {
             votes: votes,
             metadata: {
@@ -227,11 +225,13 @@ async function submitToGoogleSheets(votes) {
         
         console.log("Preparing to send payload:", payload);
 
-        // Create URL-encoded form data
+        // Use your actual Google Script URL here
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuvHJALZYN73okKkCfTuH-0mLVc98dZ5d3MvE_PwU5m41ObOjZhEIwnflVNPhLeXFe/exec';
+        
         const formData = new URLSearchParams();
         formData.append('data', JSON.stringify(payload));
 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzuvHJALZYN73okKkCfTuH-0mLVc98dZ5d3MvE_PwU5m41ObOjZhEIwnflVNPhLeXFe/exec', {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
             headers: {
@@ -241,8 +241,6 @@ async function submitToGoogleSheets(votes) {
         });
 
         console.log("Response received:", response);
-        
-        // Since we're using no-cors, we won't get response data
         return { success: true, message: "Vote submitted" };
         
     } catch (error) {
