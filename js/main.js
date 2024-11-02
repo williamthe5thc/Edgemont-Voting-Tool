@@ -1,9 +1,3 @@
-/**
- * main.js
- * 
- * This is the main entry point for the voting application.
- */
-
 import { THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
@@ -13,20 +7,20 @@ import { Preloader } from './preloader.js';
 async function init() {
     console.log("Initializing application");
     
-    // Initialize and start the preloader
+    // Create preloader instance
     const preloader = new Preloader();
-    await preloader.start();
+    const preloaderPromise = preloader.start();
     
     try {
         // Set the page title
         document.querySelector('h1').textContent = THEME;
         
-        // Update preloader progress as we fetch settings
+        // Simulate initial progress
         preloader.updateProgress(20);
-        const settings = await getSettings();
         
+        // Fetch settings
+        const settings = await getSettings();
         preloader.updateProgress(40);
-        console.log("Received settings in main:", settings);
         
         if (settings && settings.dishesPerCategory) {
             setDishesPerCategory(settings.dishesPerCategory);
@@ -35,14 +29,16 @@ async function init() {
             showToast('Error loading settings. Using default values.', 'error');
         }
         
+        // Load categories
         preloader.updateProgress(60);
         await loadCategoriesProgressively();
-        
         preloader.updateProgress(80);
+        
+        // Setup voting functionality
         setupVoting();
         loadVotesFromLocalStorage();
         
-        // Set up the submit button
+        // Set up submit button
         const submitButton = document.getElementById('submitVotes');
         if (submitButton) {
             submitButton.addEventListener('click', submitVotes);
@@ -50,19 +46,30 @@ async function init() {
             console.error("Submit button not found");
         }
         
-        // Complete the loading process
+        // Ensure everything is loaded before completing
         preloader.updateProgress(100);
-
+        
+        // Wait for any animations to complete
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
     } catch (error) {
         console.error("Error in init:", error);
         showToast('Failed to initialize the voting system. Please refresh the page.', 'error');
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM fully loaded, initializing application");
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM fully loaded, initializing application");
+        init().catch(error => {
+            console.error("Unhandled error in init:", error);
+            showToast('An unexpected error occurred. Please refresh the page.', 'error');
+        });
+    });
+} else {
     init().catch(error => {
         console.error("Unhandled error in init:", error);
         showToast('An unexpected error occurred. Please refresh the page.', 'error');
     });
-});
+}
