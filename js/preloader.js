@@ -1,22 +1,21 @@
-export class Preloader {
-    constructor() {
-        this.progress = 0;
-        this.container = null;
-        this.progressText = null;
-        this.progressFill = null;
-        this.isCompleting = false;
-        // Start immediately upon construction
-        this.start();
-    }
+import { THEME } from './constants.js';
 
-    async start() {
+// Add export statement at beginning
+const Preloader = {
+    progress: 0,
+    container: null,
+    progressText: null,
+    progressFill: null,
+    isCompleting: false,
+
+    start() {
         this.container = this.createStructure();
         document.body.appendChild(this.container);
         this.updateProgress(0); // Start at 0%
         return new Promise(resolve => {
             this.resolvePreloader = resolve;
         });
-    }
+    },
 
     updateProgress(percent) {
         if (this.isCompleting) return;
@@ -30,9 +29,8 @@ export class Preloader {
             this.progressFill.style.width = `${this.progress}%`;
         }
         
-        // Only complete if we explicitly call complete()
         console.log(`Progress updated to: ${this.progress}%`);
-    }
+    },
 
     complete() {
         if (this.isCompleting) return;
@@ -67,7 +65,7 @@ export class Preloader {
                 console.log('Preloader promise resolved');
             }
         }, 500);
-    }
+    },
 
     createStructure() {
         const container = document.createElement('div');
@@ -170,4 +168,7 @@ export class Preloader {
 
         return container;
     }
-}
+};
+
+// Export the Preloader object
+export { Preloader };
