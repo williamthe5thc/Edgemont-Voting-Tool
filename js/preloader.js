@@ -1,75 +1,12 @@
-import { THEME } from './constants.js';
+const createPreloader = () => {
+    let progress = 0;
+    let container = null;
+    let progressText = null;
+    let progressFill = null;
+    let isCompleting = false;
 
-// Add export statement at beginning
-const Preloader = {
-    progress: 0,
-    container: null,
-    progressText: null,
-    progressFill: null,
-    isCompleting: false,
-
-    start() {
-        this.container = this.createStructure();
-        document.body.appendChild(this.container);
-        this.updateProgress(0); // Start at 0%
-        return new Promise(resolve => {
-            this.resolvePreloader = resolve;
-        });
-    },
-
-    updateProgress(percent) {
-        if (this.isCompleting) return;
-        
-        this.progress = Math.min(percent, 100);
-        if (this.progressText) {
-            this.progressText.textContent = 
-                `Loading ${Math.round(this.progress)}% of the Dia de Los Ancestros Voting Tool...`;
-        }
-        if (this.progressFill) {
-            this.progressFill.style.width = `${this.progress}%`;
-        }
-        
-        console.log(`Progress updated to: ${this.progress}%`);
-    },
-
-    complete() {
-        if (this.isCompleting) return;
-        this.isCompleting = true;
-        
-        console.log('Completing preloader...');
-        if (!this.container) {
-            console.log('No container found to complete');
-            return;
-        }
-        
-        // Ensure 100% progress before fading
-        this.progress = 100;
-        if (this.progressFill) {
-            this.progressFill.style.width = '100%';
-        }
-        if (this.progressText) {
-            this.progressText.textContent = 'Loading 100% - Complete!';
-        }
-        
-        // Add fade out effect
-        this.container.style.opacity = '0';
-        this.container.style.transition = 'opacity 0.5s ease-out';
-        
-        setTimeout(() => {
-            if (this.container && this.container.parentNode) {
-                document.body.removeChild(this.container);
-                console.log('Preloader removed from DOM');
-            }
-            if (this.resolvePreloader) {
-                this.resolvePreloader();
-                console.log('Preloader promise resolved');
-            }
-        }, 500);
-    },
-
-    createStructure() {
+    const createStructure = () => {
         const container = document.createElement('div');
-        container.className = 'preloader-container';
         container.style.cssText = `
             position: fixed;
             top: 0;
@@ -143,19 +80,19 @@ const Preloader = {
         `;
 
         // Progress bar fill
-        this.progressFill = document.createElement('div');
-        this.progressFill.style.cssText = `
+        progressFill = document.createElement('div');
+        progressFill.style.cssText = `
             width: 0%;
             height: 100%;
             background-color: #E0144C;
             transition: width 0.3s ease-out;
         `;
 
-        progressBarContainer.appendChild(this.progressFill);
+        progressBarContainer.appendChild(progressFill);
 
         // Progress text
-        this.progressText = document.createElement('p');
-        this.progressText.style.cssText = `
+        progressText = document.createElement('p');
+        progressText.style.cssText = `
             color: white;
             font-size: 18px;
             margin-top: 20px;
@@ -164,11 +101,62 @@ const Preloader = {
 
         container.appendChild(instructions);
         container.appendChild(progressBarContainer);
-        container.appendChild(this.progressText);
+        container.appendChild(progressText);
 
         return container;
-    }
+    };
+
+    return {
+        start() {
+            container = createStructure();
+            document.body.appendChild(container);
+            this.updateProgress(0);
+        },
+
+        updateProgress(percent) {
+            if (isCompleting) return;
+            
+            progress = Math.min(percent, 100);
+            if (progressText) {
+                progressText.textContent = 
+                    `Loading ${Math.round(progress)}% of the Dia de Los Ancestros Voting Tool...`;
+            }
+            if (progressFill) {
+                progressFill.style.width = `${progress}%`;
+            }
+            
+            console.log(`Progress updated to: ${progress}%`);
+        },
+
+        complete() {
+            if (isCompleting) return;
+            isCompleting = true;
+            
+            console.log('Completing preloader...');
+            if (!container) {
+                console.log('No container found to complete');
+                return;
+            }
+            
+            progress = 100;
+            if (progressFill) {
+                progressFill.style.width = '100%';
+            }
+            if (progressText) {
+                progressText.textContent = 'Loading 100% - Complete!';
+            }
+            
+            container.style.opacity = '0';
+            container.style.transition = 'opacity 0.5s ease-out';
+            
+            setTimeout(() => {
+                if (container && container.parentNode) {
+                    document.body.removeChild(container);
+                    console.log('Preloader removed from DOM');
+                }
+            }, 500);
+        }
+    };
 };
 
-// Export the Preloader object
-export { Preloader };
+export const Preloader = createPreloader();
