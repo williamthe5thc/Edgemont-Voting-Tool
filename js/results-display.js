@@ -26,7 +26,7 @@ function createCategorySection(category, dishes) {
         
         let rankSymbol;
         switch (dish.rank) {
-            case 1: rankSymbol = '1st 🥇'; break;
+            case 1: rankSymbol = '🥇 1st'; break;
             case 2: rankSymbol = '🥈 2nd'; break;
             case 3: rankSymbol = '🥉 3rd'; break;
             default: rankSymbol = `#${dish.rank}`;
