@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dia de Los Ancestros Voting</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="modulepreload" href="js/main.js">
-    <link rel="modulepreload" href="js/preloader.js">
+    <!-- Move preloader initialization to head -->
+    <script type="module">
+        import { Preloader } from './js/preloader.js';
+        // Initialize preloader before DOM loads
+        document.addEventListener('DOMContentLoaded', () => {
+            Preloader.start();
+            window.preloader = Preloader;
+        });
+    </script>
 </head>
 <body>
-    <!-- Preloader script needs to run immediately -->
-    <script type="module">
-    import { Preloader } from './js/preloader.js';
-    Preloader.start();
-    window.preloader = Preloader;
-</script>
-
     <!-- Main content -->
     <div class="container">
         <h1></h1>
