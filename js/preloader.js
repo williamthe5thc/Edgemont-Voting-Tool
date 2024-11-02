@@ -68,7 +68,6 @@ export class Preloader {
             }
         }, 500);
     }
-}
 
     createStructure() {
         const container = document.createElement('div');
