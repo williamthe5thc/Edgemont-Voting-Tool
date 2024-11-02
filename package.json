@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel deploy --prod"
+    "deploy": "vercel deploy --prod",
+    "test:load": "node loadTest.js"
   },
   "dependencies": {
     "@vercel/kv": "^0.2.0"
   },
   "devDependencies": {
-    "vercel": "^28.0.0"
+    "vercel": "^28.0.0",
+    "playwright": "^1.42.1"
   },
   "engines": {
     "node": ">=14.0.0"

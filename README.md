@@ -1,7 +1,5 @@
 # Dia de Los Ancestros Cooking Competition Voting System
 
-# Dia de Los Ancestros Voting Application
-
 A web-based voting system for managing dish voting in a cooking competition, built with vanilla JavaScript and Vercel KV storage.
 
 ## 🌟 Features

@@ -21,7 +21,7 @@ async function init() {
             setDishesPerCategory(settings.dishesPerCategory);
         } else {
             console.error("Invalid settings structure:", settings);
-            showToast('Error loading settings. Using default values.', 'error');
+            /*showToast('Error loading settings. Using default values.', 'error');*/
         }
         
         // Load categories
