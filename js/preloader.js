@@ -3,11 +3,16 @@ export class Preloader {
         this.progress = 0;
         this.container = null;
         this.progressText = null;
+        this.progressBar = null;
+        this.progressFill = null;
+        // Start immediately upon construction
+        this.start();
     }
 
     async start() {
         this.container = this.createStructure();
         document.body.appendChild(this.container);
+        this.updateProgress(0); // Start at 0%
         return new Promise(resolve => {
             this.resolvePreloader = resolve;
         });
@@ -18,6 +23,9 @@ export class Preloader {
         if (this.progressText) {
             this.progressText.textContent = 
                 `Loading ${Math.round(percent)}% of the Dia de Los Ancestros Voting Tool...`;
+        }
+        if (this.progressFill) {
+            this.progressFill.style.width = `${percent}%`;
         }
         
         if (percent >= 100) {
@@ -105,6 +113,30 @@ export class Preloader {
         instructions.appendChild(title);
         instructions.appendChild(list);
 
+        // Progress bar container
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.style.cssText = `
+            width: 90%;
+            max-width: 600px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 2px solid #FFD166;
+        `;
+
+        // Progress bar fill
+        this.progressFill = document.createElement('div');
+        this.progressFill.style.cssText = `
+            width: 0%;
+            height: 100%;
+            background-color: #E0144C;
+            transition: width 0.3s ease-out;
+        `;
+
+        progressBarContainer.appendChild(this.progressFill);
+
         // Progress text
         this.progressText = document.createElement('p');
         this.progressText.style.cssText = `
@@ -115,6 +147,7 @@ export class Preloader {
         `;
 
         container.appendChild(instructions);
+        container.appendChild(progressBarContainer);
         container.appendChild(this.progressText);
 
         return container;

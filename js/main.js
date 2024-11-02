@@ -4,24 +4,21 @@ import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
 import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
 import { Preloader } from './preloader.js';
 
+// Create preloader immediately
+const preloader = new Preloader();
+
 async function init() {
     console.log("Initializing application");
-    
-    // Create preloader instance
-    const preloader = new Preloader();
-    const preloaderPromise = preloader.start();
     
     try {
         // Set the page title
         document.querySelector('h1').textContent = THEME;
         
-        // Simulate initial progress
-        preloader.updateProgress(20);
-        
         // Fetch settings
+        preloader.updateProgress(20);
         const settings = await getSettings();
-        preloader.updateProgress(40);
         
+        preloader.updateProgress(40);
         if (settings && settings.dishesPerCategory) {
             setDishesPerCategory(settings.dishesPerCategory);
         } else {
@@ -32,8 +29,8 @@ async function init() {
         // Load categories
         preloader.updateProgress(60);
         await loadCategoriesProgressively();
-        preloader.updateProgress(80);
         
+        preloader.updateProgress(80);
         // Setup voting functionality
         setupVoting();
         loadVotesFromLocalStorage();
@@ -46,11 +43,8 @@ async function init() {
             console.error("Submit button not found");
         }
         
-        // Ensure everything is loaded before completing
+        // Complete loading
         preloader.updateProgress(100);
-        
-        // Wait for any animations to complete
-        await new Promise(resolve => setTimeout(resolve, 500));
         
     } catch (error) {
         console.error("Error in init:", error);
@@ -58,18 +52,8 @@ async function init() {
     }
 }
 
-// Wait for DOM to be ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM fully loaded, initializing application");
-        init().catch(error => {
-            console.error("Unhandled error in init:", error);
-            showToast('An unexpected error occurred. Please refresh the page.', 'error');
-        });
-    });
-} else {
-    init().catch(error => {
-        console.error("Unhandled error in init:", error);
-        showToast('An unexpected error occurred. Please refresh the page.', 'error');
-    });
-}
+// Execute immediately without waiting for DOMContentLoaded
+init().catch(error => {
+    console.error("Unhandled error in init:", error);
+    showToast('An unexpected error occurred. Please refresh the page.', 'error');
+});
