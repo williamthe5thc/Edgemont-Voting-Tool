@@ -231,7 +231,7 @@ async function submitToGoogleSheets(votes) {
         const formData = new URLSearchParams();
         formData.append('data', JSON.stringify(payload));
 
-        const response = await fetch('YOUR_GOOGLE_SCRIPT_URL', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzuvHJALZYN73okKkCfTuH-0mLVc98dZ5d3MvE_PwU5m41ObOjZhEIwnflVNPhLeXFe/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: {
