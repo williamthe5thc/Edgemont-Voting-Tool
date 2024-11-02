@@ -320,3 +320,8 @@ h1 {
     color: var(--text-color);
     margin-bottom: 10px;
 }
+
+.container {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}

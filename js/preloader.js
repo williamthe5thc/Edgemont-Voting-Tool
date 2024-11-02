@@ -3,8 +3,8 @@ export class Preloader {
         this.progress = 0;
         this.container = null;
         this.progressText = null;
-        this.progressBar = null;
         this.progressFill = null;
+        this.isCompleting = false;
         // Start immediately upon construction
         this.start();
     }
@@ -19,37 +19,56 @@ export class Preloader {
     }
 
     updateProgress(percent) {
-        this.progress = percent;
+        if (this.isCompleting) return;
+        
+        this.progress = Math.min(percent, 100);
         if (this.progressText) {
             this.progressText.textContent = 
-                `Loading ${Math.round(percent)}% of the Dia de Los Ancestros Voting Tool...`;
+                `Loading ${Math.round(this.progress)}% of the Dia de Los Ancestros Voting Tool...`;
         }
         if (this.progressFill) {
-            this.progressFill.style.width = `${percent}%`;
+            this.progressFill.style.width = `${this.progress}%`;
         }
         
-        if (percent >= 100) {
-            setTimeout(() => {
-                this.complete();
-            }, 500);
-        }
+        // Only complete if we explicitly call complete()
+        console.log(`Progress updated to: ${this.progress}%`);
     }
 
     complete() {
-        if (!this.container) return;
+        if (this.isCompleting) return;
+        this.isCompleting = true;
         
+        console.log('Completing preloader...');
+        if (!this.container) {
+            console.log('No container found to complete');
+            return;
+        }
+        
+        // Ensure 100% progress before fading
+        this.progress = 100;
+        if (this.progressFill) {
+            this.progressFill.style.width = '100%';
+        }
+        if (this.progressText) {
+            this.progressText.textContent = 'Loading 100% - Complete!';
+        }
+        
+        // Add fade out effect
         this.container.style.opacity = '0';
         this.container.style.transition = 'opacity 0.5s ease-out';
         
         setTimeout(() => {
             if (this.container && this.container.parentNode) {
                 document.body.removeChild(this.container);
+                console.log('Preloader removed from DOM');
             }
             if (this.resolvePreloader) {
                 this.resolvePreloader();
+                console.log('Preloader promise resolved');
             }
         }, 500);
     }
+}
 
     createStructure() {
         const container = document.createElement('div');
