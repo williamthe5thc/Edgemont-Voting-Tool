@@ -2,11 +2,13 @@ import { THEME } from './constants.js';
 import { showToast } from './utils/uiUtils.js';
 import { getSettings, loadCategoriesProgressively } from './categoryLoader.js';
 import { setupVoting, loadVotesFromLocalStorage, submitVotes, setDishesPerCategory } from './voteSubmitter.js';
+import { Preloader } from './preloader.js';
+
+// Create preloader immediately
+const preloader = new Preloader();
 
 async function init() {
     console.log("Initializing application");
-    
-    const preloader = window.preloader;
     
     try {
         // Set the page title
@@ -41,12 +43,6 @@ async function init() {
             console.error("Submit button not found");
         }
         
-        // Hide loading spinner
-        const loadingSpinner = document.getElementById('loading-spinner');
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'none';
-        }
-        
         // Complete loading
         preloader.updateProgress(100);
         
@@ -56,7 +52,7 @@ async function init() {
     }
 }
 
-// Start initialization immediately
+// Execute immediately without waiting for DOMContentLoaded
 init().catch(error => {
     console.error("Unhandled error in init:", error);
     showToast('An unexpected error occurred. Please refresh the page.', 'error');
