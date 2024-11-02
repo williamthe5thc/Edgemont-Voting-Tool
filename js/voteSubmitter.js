@@ -226,7 +226,7 @@ async function submitToGoogleSheets(votes) {
         console.log("Preparing to send payload:", payload);
 
         // Use your actual Google Script URL here
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuvHJALZYN73okKkCfTuH-0mLVc98dZ5d3MvE_PwU5m41ObOjZhEIwnflVNPhLeXFe/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcfei_YDOZquNZqOZFU9EhY2vAzfzZwTnwmIWxbhVQCUGGLvDj3tOLwg1GiT-gkwOH/exec';
         
         const formData = new URLSearchParams();
         formData.append('data', JSON.stringify(payload));
