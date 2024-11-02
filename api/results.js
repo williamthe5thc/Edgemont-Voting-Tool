@@ -1,7 +1,6 @@
 // api/results.js
 import { kv } from '@vercel/kv';
-
-import CATEGORIES from './constants.js';
+import { API_CATEGORIES } from './config.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -20,7 +19,7 @@ export default async function handler(req, res) {
         // Transform votes into category rankings
         const results = {};
         
-        CATEGORIES.forEach(category => {
+        API_CATEGORIES.forEach(category => {
             const categoryVotes = votes[category] || {};
             const dishScores = Object.entries(categoryVotes).map(([dishNumber, count]) => ({
                 dishNumber: parseInt(dishNumber),
