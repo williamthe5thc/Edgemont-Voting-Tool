@@ -11,12 +11,10 @@
 <body>
     <!-- Preloader script needs to run immediately -->
     <script type="module">
-        import { Preloader } from './js/preloader.js';
-        // Start preloader immediately
-        Preloader.start();
-        // Make it globally available
-        window.preloader = Preloader;
-    </script>
+    import { Preloader } from './js/preloader.js';
+    Preloader.start();
+    window.preloader = Preloader;
+</script>
 
     <!-- Main content -->
     <div class="container">
