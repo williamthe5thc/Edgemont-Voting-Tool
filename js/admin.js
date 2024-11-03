@@ -57,7 +57,7 @@ function setupValidation() {
             let value = parseInt(this.value);
             if (isNaN(value) || value < 1) {
                 this.value = 1;
-            } else if (value > 100) {
+            } else if (value > 100) {  // Updated max value
                 this.value = 100;
             }
         });
