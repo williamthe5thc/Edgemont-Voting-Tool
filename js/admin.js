@@ -36,14 +36,14 @@ async function loadCurrentSettings() {
                     <input type="number" id="${category}-min" name="${category}-min" value="${minCount}" min="1" max="100">
                     <input type="number" id="${category}-max" name="${category}-max" value="${maxCount}" min="1" max="100">
                 </div>
-            ;
+            `;
             dishCountContainer.innerHTML += inputHtml;
         });
 
         setupValidation();
     } catch (error) {
         console.error('Error loading settings:', error);
-        /* showToast(`Failed to load current settings: ${error.message}`, 'error'); */
+        showToast(`Failed to load current settings: ${error.message}`, 'error');
     }
 }
 
@@ -57,7 +57,7 @@ function setupValidation() {
             let value = parseInt(this.value);
             if (isNaN(value) || value < 1) {
                 this.value = 1;
-            } else if (value > 100) {  // Updated max value
+            } else if (value > 100) {
                 this.value = 100;
             }
         });
