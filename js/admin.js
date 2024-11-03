@@ -43,7 +43,7 @@ async function loadCurrentSettings() {
         setupValidation();
     } catch (error) {
         console.error('Error loading settings:', error);
-        showToast(`Failed to load current settings: ${error.message}`, 'error');
+        /*showToast(`Failed to load current settings: ${error.message}`, 'error');*/
     }
 }
 
